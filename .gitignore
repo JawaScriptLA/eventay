@@ -1,0 +1,12 @@
+## Mac OSX ##
+.DS_Store
+
+## NPM ##
+node_modules/
+package-lock.json
+
+## Webpack ##
+bundle.js
+
+# API
+config.js
