@@ -1,10 +1,9 @@
 module.exports = {
-  entry: ['./src/index.js'],
+  entry: ['./client/src/index.js'],
   output: {
     filename: './client/public/bundle.js'
   },
   watch: true,
-  devtool: options.devTool,
   module: {
     loaders: [
       {
