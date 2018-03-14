@@ -8,5 +8,5 @@ package-lock.json
 ## Webpack ##
 bundle.js
 
-# API
+## API ##
 config.js
