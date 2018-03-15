@@ -29,14 +29,15 @@ app.use("/api/", router);
 app.use(morgan("tiny"));
 
 /* Start auth area!*/
+const db = require("./auth/models/user.js");
 var passport = require("passport");
 var expressSession = require("express-session");
-var LocalStrategy = require("passport-local").Strategy;
 
 app.use(expressSession({ secret: "eventay" }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+<<<<<<< HEAD
 passport.serializeUser((user, done) => {
   done(null, user._id);
 });
@@ -77,6 +78,8 @@ passport.use(
   )
 );
 
+=======
+>>>>>>> [ops] Modularized passport code
 /*End auth area!*/
 
 const port = 1337;

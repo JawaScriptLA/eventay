@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/eventay");
-
-let db = mongoose.connection;
+const mongoUri = "mongodb://localhost/eventay";
+mongoose.connect(mongoUri);
+const db = mongoose.connection;
 
 db.on("error", function() {
   console.log("mongoose connection error");
@@ -17,4 +17,7 @@ let userSchema = mongoose.Schema({
   email: String
 });
 
-let Movie = mongoose.model("User", userSchema);
+let User = mongoose.model("User", userSchema);
+
+module.exports.db = db;
+module.exports.User = User;
