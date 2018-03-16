@@ -28,9 +28,10 @@ app.use("/", express.static(path.join(__dirname, "/../client/public/")));
 
 /* Start auth area!*/
 // const db = require("./auth/models/user.js");
-const passport = require("passport");
+const passportObj = require("passport");
 const expressSession = require("express-session");
 app.use(expressSession({ secret: "eventay" }));
+<<<<<<< HEAD
 app.use(passport.initialize());
 app.use(passport.session());
 <<<<<<< HEAD
@@ -79,8 +80,12 @@ passport.use(
 =======
 >>>>>>> [ops] Modularized passport code
 =======
+=======
+app.use(passportObj.initialize());
+app.use(passportObj.session());
+>>>>>>> [ops] pulling from master
 const initPassport = require("./auth/init.js");
-initPassport(passport);
+initPassport(passportObj);
 app.use("/auth", authRouter);
 >>>>>>> [ops] basic routing for auth router
 /*End auth area!*/
@@ -92,3 +97,5 @@ const port = 1337;
 app.listen(port, () => {
   console.log("Listening in port", port);
 });
+
+module.exports.passportObj = passportObj;

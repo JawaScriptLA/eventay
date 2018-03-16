@@ -1,19 +1,20 @@
-const AuthRouter = require("express").Router();
+const authRouter = require("express").Router();
+const passportObj = require("../index.js");
 
-AuthRouter.get("/signup", (req, res) => {
+authRouter.get("/signup", (req, res) => {
   res.send("render signup page");
 });
 
-AuthRouter.get("/login", (req, res) => {
+authRouter.get("/login", (req, res) => {
   res.send("render login page");
 });
 
-AuthRouter.post("/signup", (req, res) => {
+authRouter.post("/signup", (req, res) => {
   res.send("trying to sign up!");
 });
 
-AuthRouter.post("/login", (req, res) => {
+authRouter.post("/login", (req, res) => {
   res.send("trying to login!");
 });
 
-module.exports = AuthRouter;
+module.exports = authRouter;
