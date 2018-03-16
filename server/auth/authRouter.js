@@ -2,6 +2,13 @@ const express = require("express");
 const authRouter = express.Router();
 var path = require("path");
 
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect("/");
+};
+
 module.exports = passportObj => {
   authRouter.get("/signup", (req, res) => {
     res.sendFile(path.join(__dirname + "../../../client/public/signup.html"));
@@ -27,13 +34,8 @@ module.exports = passportObj => {
     })
   );
 
-  authRouter.get(
-    "/home",
-    /*isAuthenticated,*/ (req, res) => {
-      res.sendFile(path.join(__dirname + "../../../client/public/home.html"));
-    }
-  );
+  authRouter.get("/home", isAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname + "../../../client/public/home.html"));
+  });
   return authRouter;
 };
-
-// module.exports = authRouter;

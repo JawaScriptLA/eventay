@@ -3,7 +3,6 @@ const signup = require("./signup.js");
 const User = require("./models/user.js");
 
 module.exports = passportObj => {
-  // Passport needs to be able to serialize and deserialize users to support persistent login sessions
   passportObj.serializeUser((user, done) => {
     console.log("serializing user:", user);
     done(null, user._id);
@@ -16,7 +15,7 @@ module.exports = passportObj => {
     });
   });
 
-  // Setting up Passport Strategies for Login and SignUp/Registration
+  // Passport strategies for login/signup
   login(passportObj);
   signup(passportObj);
 };

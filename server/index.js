@@ -25,8 +25,9 @@ app.get("/*", function(req, res) {
 
 const port = 1337;
 app.use("/", express.static(path.join(__dirname, "/../client/public/")));
+app.use(morgan("tiny"));
 
-/* Start auth area!*/
+/* Start auth*/
 const passportObj = require("passport");
 const expressSession = require("express-session");
 app.use(expressSession({ secret: "eventay" }));
@@ -90,11 +91,14 @@ app.use("/auth", authRouter);
 >>>>>>> [ops] basic routing for auth router
 =======
 app.use("/auth", authRouter(passportObj));
+<<<<<<< HEAD
 >>>>>>> [ops] allow users to create new account and login; connection to db
 /*End auth area!*/
+=======
+/*End auth*/
+>>>>>>> [ops] refactors auth code
 
 app.use("/api", router);
-app.use(morgan("tiny"));
 
 const port = 1337;
 app.listen(port, () => {

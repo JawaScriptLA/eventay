@@ -11,18 +11,11 @@ db.once("open", function() {
   console.log("mongoose connected successfully");
 });
 
-// let userSchema = mongoose.Schema({
-//   username: String,
-//   password: String,
-//   email: String
-// });
-
-module.exports = mongoose.model("User", {
-  id: String,
+let userSchema = mongoose.Schema({
   username: String,
-  password: String
+  password: String,
+  email: String
 });
-// let User = mongoose.model("User", userSchema);
 
-// module.exports.db = db;
-// module.exports.User = User;
+let User = mongoose.model("User", userSchema);
+module.exports = User;
