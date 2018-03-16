@@ -11,6 +11,8 @@ router.post('api/friendReq', sendRequest);
 router.put('api/friendReq', acceptRequest);
 router.delete('api/friendReq', declineRequest);
 
+router.all('/test', (req, res) => res.send({ message: 'test' }));
+
 // router.post('api/event', createEvent);
 // router.get('api/event/:id', seeUserEvents);
 // router.post('api/event/invite/:eventId/:targetId');
