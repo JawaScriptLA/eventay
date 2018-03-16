@@ -2,9 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const path = require("path");
+const authRouter = require("./auth/authRouter.js");
 const router = require("./router.js");
 const app = express();
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/", express.static(path.join(__dirname, "/../client/public/")));
@@ -25,17 +25,15 @@ app.get("/*", function(req, res) {
 
 const port = 1337;
 app.use("/", express.static(path.join(__dirname, "/../client/public/")));
-app.use("/api/", router);
-app.use(morgan("tiny"));
 
 /* Start auth area!*/
-const db = require("./auth/models/user.js");
-var passport = require("passport");
-var expressSession = require("express-session");
-
+// const db = require("./auth/models/user.js");
+const passport = require("passport");
+const expressSession = require("express-session");
 app.use(expressSession({ secret: "eventay" }));
 app.use(passport.initialize());
 app.use(passport.session());
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 passport.serializeUser((user, done) => {
@@ -80,7 +78,15 @@ passport.use(
 
 =======
 >>>>>>> [ops] Modularized passport code
+=======
+const initPassport = require("./auth/init.js");
+initPassport(passport);
+app.use("/auth", authRouter);
+>>>>>>> [ops] basic routing for auth router
 /*End auth area!*/
+
+app.use("/api", router);
+app.use(morgan("tiny"));
 
 const port = 1337;
 app.listen(port, () => {

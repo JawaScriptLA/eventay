@@ -23,7 +23,7 @@ export default class App extends Component {
       </Router>
       <div>
         <h1>Hello from React!</h1>
-        <form action="/login" method="post">
+        <form action="/auth/login" method="post">
           <div>
             <label>Username:</label>
             <input type="text" name="username" />
@@ -35,6 +35,9 @@ export default class App extends Component {
           <div>
             <input type="submit" value="Log In" />
           </div>
+        </form>
+        <form action="/auth/signup" method="post">
+          <input type="submit" value="Sign up" />
         </form>
       </div>
     );
