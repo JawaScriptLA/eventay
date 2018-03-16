@@ -1,6 +1,6 @@
 const login = require("./login.js");
 const signup = require("./signup.js");
-const user = require("./models/user.js");
+const User = require("./models/user.js");
 
 module.exports = passportObj => {
   // Passport needs to be able to serialize and deserialize users to support persistent login sessions

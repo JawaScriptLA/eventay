@@ -36,7 +36,7 @@ export default class App extends Component {
             <input type="submit" value="Log In" />
           </div>
         </form>
-        <form action="/auth/signup" method="post">
+        <form action="/auth/signup" method="get">
           <input type="submit" value="Sign up" />
         </form>
       </div>

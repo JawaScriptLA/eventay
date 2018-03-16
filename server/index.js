@@ -27,7 +27,6 @@ const port = 1337;
 app.use("/", express.static(path.join(__dirname, "/../client/public/")));
 
 /* Start auth area!*/
-// const db = require("./auth/models/user.js");
 const passportObj = require("passport");
 const expressSession = require("express-session");
 app.use(expressSession({ secret: "eventay" }));
@@ -86,8 +85,12 @@ app.use(passportObj.session());
 >>>>>>> [ops] pulling from master
 const initPassport = require("./auth/init.js");
 initPassport(passportObj);
+<<<<<<< HEAD
 app.use("/auth", authRouter);
 >>>>>>> [ops] basic routing for auth router
+=======
+app.use("/auth", authRouter(passportObj));
+>>>>>>> [ops] allow users to create new account and login; connection to db
 /*End auth area!*/
 
 app.use("/api", router);

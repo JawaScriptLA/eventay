@@ -1,20 +1,39 @@
-const authRouter = require("express").Router();
-const passportObj = require("../index.js");
+const express = require("express");
+const authRouter = express.Router();
+var path = require("path");
 
-authRouter.get("/signup", (req, res) => {
-  res.send("render signup page");
-});
+module.exports = passportObj => {
+  authRouter.get("/signup", (req, res) => {
+    res.sendFile(path.join(__dirname + "../../../client/public/signup.html"));
+  });
 
-authRouter.get("/login", (req, res) => {
-  res.send("render login page");
-});
+  authRouter.get("/login", (req, res) => {
+    res.sendFile(path.join(__dirname + "../../../client/public/index.html"));
+  });
 
-authRouter.post("/signup", (req, res) => {
-  res.send("trying to sign up!");
-});
+  authRouter.post(
+    "/signup",
+    passportObj.authenticate("signup", {
+      successRedirect: "/auth/home",
+      failureRedirect: "/auth/signup"
+    })
+  );
 
-authRouter.post("/login", (req, res) => {
-  res.send("trying to login!");
-});
+  authRouter.post(
+    "/login",
+    passportObj.authenticate("login", {
+      successRedirect: "/auth/home",
+      failureRedirect: "/"
+    })
+  );
 
-module.exports = authRouter;
+  authRouter.get(
+    "/home",
+    /*isAuthenticated,*/ (req, res) => {
+      res.sendFile(path.join(__dirname + "../../../client/public/home.html"));
+    }
+  );
+  return authRouter;
+};
+
+// module.exports = authRouter;
