@@ -1,5 +1,4 @@
 import express from 'express';
-import authRouter from './components/auth/authRouter';
 import { pendingRequests, sendRequest, acceptRequest, declineRequest } from './components/friendReq/friendReqController';
 
 const router = express.Router();
