@@ -1,9 +1,10 @@
-import db from '../../db/db';
+const db = require('../../db/db');
+// import db from '../../db/db';
 
-export const pendingRequests = async () => {
-};
+// export const pendingRequests = async () => {
+// };
 
-export const sendRequest = async (payload) => {
+const sendRequest = async (payload) => {
   try {
     const query = `
       INSERT INTO friendships (userId, targetId, isAccepted)
@@ -17,7 +18,7 @@ export const sendRequest = async (payload) => {
   }
 };
 
-export const acceptRequest = async (payload) => {
+const acceptRequest = async (payload) => {
   try {
     const query = `
       UPDATE friendships
@@ -32,7 +33,7 @@ export const acceptRequest = async (payload) => {
   }
 };
 
-export const declineRequest = async (payload) => {
+const declineRequest = async (payload) => {
   try {
     const query = `
       DELETE FROM friendships
@@ -44,4 +45,10 @@ export const declineRequest = async (payload) => {
   } catch (err) {
     console.log(`Error during frienship DELETE request: ${err}`);
   }
+};
+
+module.exports = {
+  sendRequest,
+  acceptRequest,
+  declineRequest,
 };
