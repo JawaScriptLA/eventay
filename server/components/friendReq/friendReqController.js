@@ -19,7 +19,7 @@ export const sendRequest = async (payload) => {
 
 export const acceptRequest = async (payload) => {
   try {
-    let query = `
+    const query = `
       UPDATE friendships
       SET isAccepted='TRUE'
       WHERE userId='${payload.userId}', targetId='${payload.targetId}'
@@ -34,11 +34,13 @@ export const acceptRequest = async (payload) => {
 
 export const declineRequest = async (payload) => {
   try {
-    let query = `
+    const query = `
       DELETE FROM friendships
       WHERE userId='${payload.userId}', targetId='${payload.targetId}'
       RETURNING userId, targetId
     `;
+    const data = await db.queryAsync(query);
+    return data;
   } catch (err) {
     console.log(`Error during frienship DELETE request: ${err}`);
   }
