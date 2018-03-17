@@ -1,3 +1,5 @@
+// setup
+
 const {
   dropDatabase,
   createDatabase,
