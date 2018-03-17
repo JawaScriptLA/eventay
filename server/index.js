@@ -24,8 +24,6 @@ app.get("/*", function(req, res) {
 });
 
 const port = 1337;
-app.use("/", express.static(path.join(__dirname, "/../client/public/")));
-app.use(morgan("tiny"));
 
 /* Start auth*/
 
@@ -33,15 +31,12 @@ const passportObj = require("passport");
 const expressSession = require("express-session");
 const flash = require("connect-flash");
 const cookieParser = require("cookie-parser");
-app.use(flash());
 app.use(cookieParser());
+app.use(flash());
 app.use(expressSession({ secret: "eventay" }));
-<<<<<<< HEAD
 app.use(passport.initialize());
 app.use(passport.session());
-<<<<<<< HEAD
 
-<<<<<<< HEAD
 passport.serializeUser((user, done) => {
   done(null, user._id);
 });
@@ -82,26 +77,12 @@ passport.use(
   )
 );
 
-=======
->>>>>>> [ops] Modularized passport code
-=======
-=======
 app.use(passportObj.initialize());
 app.use(passportObj.session());
->>>>>>> [ops] pulling from master
 const initPassport = require("./auth/init.js");
 initPassport(passportObj);
-<<<<<<< HEAD
-app.use("/auth", authRouter);
->>>>>>> [ops] basic routing for auth router
-=======
 app.use("/auth", authRouter(passportObj));
-<<<<<<< HEAD
->>>>>>> [ops] allow users to create new account and login; connection to db
-/*End auth area!*/
-=======
 /*End auth*/
->>>>>>> [ops] refactors auth code
 
 app.use("/api", router);
 
