@@ -15,7 +15,8 @@ module.exports = passportObj => {
   });
 
   authRouter.get("/login", (req, res) => {
-    res.sendFile(path.join(__dirname + "../../../client/public/index.html"));
+    res.send("in the login route!");
+    // res.sendFile(path.join(__dirname + "../../../client/public/index.html"));
   });
 
   authRouter.post(

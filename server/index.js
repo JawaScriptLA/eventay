@@ -81,10 +81,10 @@ app.use(passportObj.initialize());
 app.use(passportObj.session());
 const initPassport = require("./auth/init.js");
 initPassport(passportObj);
-app.use("/auth", authRouter(passportObj));
+// app.use("/auth", authRouter(passportObj));
 /*End auth*/
 
-app.use("/api", router);
+app.use("/api", router(passportObj));
 
 const port = 1337;
 app.listen(port, () => {
