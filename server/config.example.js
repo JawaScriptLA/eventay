@@ -1,1 +1,3 @@
-// Placeholder for config.js
+module.exports = {
+  
+};

@@ -1,5 +1,7 @@
 const db = require('./db.js');
-const config = require('../config.js');
+const dev = require('../config.js');
+const local = require('../config.example.js');
+const config = dev || local;
 
 module.exports = {
   dropDatabase: async () => {
