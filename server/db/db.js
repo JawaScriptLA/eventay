@@ -1,12 +1,6 @@
-const getConfig = () => {
-  try {
-    return require('../config.js');
-  } catch (err) {
-    return require('../config.example.js');
-  }
-};
-
-const config = getConfig();
+const dev = require('../config.js');
+const local = require('../config.example.js');
+const config = dev || local;
 const { Client } = require('pg');
 const db = new Client(config.relationalDbUrl);
 
