@@ -1,5 +1,5 @@
 const db = require('./db.js');
-const { relationalDbName } = require('../config.js');
+const { relationalDbName } = require('../config.example.js');
 
 const database = relationalDbName;
 
