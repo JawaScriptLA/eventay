@@ -7,9 +7,9 @@ const db = require('../../db/db');
 const sendRequest = async (payload) => {
   try {
     const query = `
-      INSERT INTO friendships (userId, targetId, isAccepted)
-      VALUES (${payload.userId}, ${payload.targetId}, FALSE)
-      RETURNING userId, targetId
+      INSERT INTO friendships (userid, targetid, isAccepted)
+      VALUES (${payload.body.userid}, ${payload.body.targetid}, FALSE)
+      RETURNING userid, targetid
     `;
     const data = await db.queryAsync(query);
     return data;
@@ -22,9 +22,9 @@ const acceptRequest = async (payload) => {
   try {
     const query = `
       UPDATE friendships
-      SET isAccepted='TRUE'
-      WHERE userId='${payload.userId}', targetId='${payload.targetId}'
-      RETURNING userId, targetId, isAccepted
+      SET isaccepted='TRUE'
+      WHERE userid=${payload.body.userid} AND targetid=${payload.body.targetid}
+      RETURNING userid, targetid, isaccepted
     `;
     const data = await db.queryAsync(query);
     return data;
@@ -37,8 +37,8 @@ const declineRequest = async (payload) => {
   try {
     const query = `
       DELETE FROM friendships
-      WHERE userId='${payload.userId}', targetId='${payload.targetId}'
-      RETURNING userId, targetId
+      WHERE userid=${payload.body.userid} AND targetid=${payload.body.targetid} AND isaccepted='FALSE'
+      RETURNING userid, targetid
     `;
     const data = await db.queryAsync(query);
     return data;
