@@ -1,6 +1,6 @@
 // setup
 
-import {
+const {
   dropDatabase,
   createDatabase,
   useDatabase,
@@ -14,7 +14,7 @@ import {
   createFriendshipsTable,
   dropGuestsTable,
   createGuestsTable,
-} from './sql';
+} =  require('./sql');
 
 const setup = async () => {
   await dropDatabase();
