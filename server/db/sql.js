@@ -1,9 +1,9 @@
 const db = require('./db.js');
-const { localDatabase } = require('../config.js');
+const { relationalDbName } = require('../config.js');
 
-const database = localDatabase;
+const database = relationalDbName;
 
-export const dropDatabase = async () => {
+const dropDatabase = async () => {
   try {
     await db.queryAsync(`
     DROP DATABASE IF EXISTS ${database}
@@ -14,7 +14,7 @@ export const dropDatabase = async () => {
   }
 };
 
-export const createDatabase = async () => {
+const createDatabase = async () => {
   try {
     await db.queryAsync(`
       CREATE DATABASE ${database}
@@ -25,7 +25,7 @@ export const createDatabase = async () => {
   }
 };
 
-export const useDatabase = async () => {
+const useDatabase = async () => {
   try {
     await db.queryAsync(`
       USE IF EXISTS ${database}
@@ -36,7 +36,7 @@ export const useDatabase = async () => {
   }
 };
 
-export const dropUsersTable = async () => {
+const dropUsersTable = async () => {
   try {
     await db.queryAsync(`
       DROP TABLE IF EXISTS users
@@ -47,7 +47,7 @@ export const dropUsersTable = async () => {
   }
 };
 
-export const createUsersTable = async () => {
+const createUsersTable = async () => {
   try {
     await db.queryAsync(`
       CREATE TABLE IF NOT EXISTS users
@@ -64,7 +64,7 @@ export const createUsersTable = async () => {
   }
 };
 
-export const dropEventsTable = async () => {
+const dropEventsTable = async () => {
   try {
     await db.queryAsync(`
       DROP TABLE IF EXISTS events
@@ -75,7 +75,7 @@ export const dropEventsTable = async () => {
   }
 };
 
-export const createEventsTable = async () => {
+const createEventsTable = async () => {
   try {
     await db.queryAsync(`
       CREATE TABLE IF NOT EXISTS events
@@ -100,7 +100,7 @@ export const createEventsTable = async () => {
   }
 };
 
-export const dropCommentsTable = async () => {
+const dropCommentsTable = async () => {
   try {
     await db.queryAsync(`
       DROP TABLE IF EXISTS comments
@@ -111,7 +111,7 @@ export const dropCommentsTable = async () => {
   }
 };
 
-export const createCommentsTable = async () => {
+const createCommentsTable = async () => {
   try {
     await db.queryAsync(`
       CREATE TABLE IF NOT EXISTS comments
@@ -134,7 +134,7 @@ export const createCommentsTable = async () => {
   }
 };
 
-export const dropFriendshipsTable = async () => {
+const dropFriendshipsTable = async () => {
   try {
     await db.queryAsync(`
       DROP TABLE IF EXISTS friendships
@@ -145,7 +145,7 @@ export const dropFriendshipsTable = async () => {
   }
 };
 
-export const createFriendshipsTable = async () => {
+const createFriendshipsTable = async () => {
   try {
     await db.queryAsync(`
       CREATE TABLE IF NOT EXISTS friendships
@@ -168,7 +168,7 @@ export const createFriendshipsTable = async () => {
   }
 };
 
-export const dropGuestsTable = async () => {
+const dropGuestsTable = async () => {
   try {
     await db.queryAsync(`
       DROP TABLE IF EXISTS guests
@@ -179,7 +179,7 @@ export const dropGuestsTable = async () => {
   }
 };
 
-export const createGuestsTable = async () => {
+const createGuestsTable = async () => {
   try {
     await db.queryAsync(`
       CREATE TYPE status AS ENUM (
@@ -208,4 +208,20 @@ export const createGuestsTable = async () => {
   } catch (err) {
     console.log('Error creating guests table.');
   }
+};
+
+module.exports = {
+  dropDatabase,
+  createDatabase,
+  useDatabase,
+  dropUsersTable,
+  createUsersTable,
+  dropEventsTable,
+  createEventsTable,
+  dropCommentsTable,
+  createCommentsTable,
+  dropFriendshipsTable,
+  createFriendshipsTable,
+  dropGuestsTable,
+  createGuestsTable,
 };
