@@ -86,6 +86,16 @@ initPassport(passportObj);
 
 app.use("/api", router(passportObj));
 
+app.get("/*", function(req, res) {
+  res.sendFile(path.join(__dirname, "/../client/public/index.html"), function(
+    err
+  ) {
+    if (err) {
+      res.status(500).send(err);
+    }
+  });
+});
+
 const port = 1337;
 app.listen(port, () => {
   console.log("Listening in port", port);
