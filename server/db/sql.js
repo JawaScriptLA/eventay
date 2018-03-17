@@ -44,7 +44,10 @@ const createUsersTable = async () => {
       (
         id SERIAL,
         username VARCHAR(255) UNIQUE NOT NULL,
-        CONSTRAINT usersPk
+        profile_picture VARCHAR(255),
+        bio TEXT,
+        likes_count INT NOT NULL DEFAULT 0,
+        CONSTRAINT users_pk
           PRIMARY KEY(id)
       )
     `);
@@ -54,7 +57,48 @@ const createUsersTable = async () => {
   }
 };
 
-const dropEventsTable = async () => {
+export const dropFriendsTable = async () => {
+  try {
+    await db.queryAsync('DROP TABLE IF EXISTS friends');
+    console.log('Successfully dropped friends table.');
+  } catch (err) {
+    console.log('Error dropping friends table.');
+  }
+};
+
+export const createFriendsTable = async () => {
+  try {
+    await db.queryAsync(`
+      CREATE TYPE FRIEND_STATUS AS ENUM (
+        'pending',
+        'accepted',
+        'blocked'
+      )
+    `);
+    await db.queryAsync(`
+      CREATE TABLE IF NOT EXISTS friends
+      (
+        id SERIAL,
+        status FRIEND_STATUS NOT NULL DEFAULT 'pending',
+        user_id INT NOT NULL,
+        target_id INT NOT NULL,
+        CONSTRAINT friends_id
+          PRIMARY KEY(id),
+        CONSTRAINT fk_friends_user_id
+          FOREIGN KEY(user_id) REFERENCES users(id)
+          ON DELETE CASCADE,
+        CONSTRAINT fk_friends_target_id
+          FOREIGN KEY(target_id) REFERENCES users(id)
+          ON DELETE CASCADE
+      )
+    `);
+    console.log('Successfully created friends table.');
+  } catch (err) {
+    console.log('Error creating friends table.');
+  }
+};
+
+export const dropEventsTable = async () => {
   try {
     await db.queryAsync('DROP TABLE IF EXISTS events');
     console.log('Successfully dropped events table.');
@@ -63,22 +107,25 @@ const dropEventsTable = async () => {
   }
 };
 
-const createEventsTable = async () => {
+export const createEventsTable = async () => {
   try {
     await db.queryAsync(`
       CREATE TABLE IF NOT EXISTS events
       (
         id SERIAL,
-        hostId INT NOT NULL,
         title VARCHAR(255) NOT NULL,
         description TEXT,
+        thumbnail VARCHAR(255),
         location VARCHAR(255),
-        startTime TIMESTAMP,
-        endTime TIMESTAMP,
-        CONSTRAINT eventsPk
+        likes_count INT NOT NULL DEFAULT 0,
+        start_time TIMESTAMP,
+        end_time TIMESTAMP,
+        publicity BOOLEAN NOT NULL DEFAULT false,
+        host_id INT NOT NULL,
+        CONSTRAINT events_pk
           PRIMARY KEY(id),
-        CONSTRAINT fkEventsHostId
-          FOREIGN KEY(hostId) REFERENCES users(id)
+        CONSTRAINT fk_events_host_id
+          FOREIGN KEY(host_id) REFERENCES users(id)
           ON DELETE CASCADE
       )
     `);
@@ -88,107 +135,88 @@ const createEventsTable = async () => {
   }
 };
 
-const dropCommentsTable = async () => {
+export const dropAttendantsTable = async () => {
   try {
-    await db.queryAsync('DROP TABLE IF EXISTS comments');
-    console.log('Successfully dropped comments table.');
+    await db.queryAsync('DROP TABLE IF EXISTS attendants');
+    console.log('Successfully dropped attendants table.');
   } catch (err) {
-    console.log('Error dropping comments table.');
+    console.log('Error dropping attendants table.');
   }
 };
 
-const createCommentsTable = async () => {
+export const createAttendantsTable = async () => {
   try {
     await db.queryAsync(`
-      CREATE TABLE IF NOT EXISTS comments
-      (
-        id SERIAL,
-        userId INT NOT NULL,
-        eventId INT NOT NULL,
-        commentBody TEXT,
-        CONSTRAINT commentId
-          PRIMARY KEY(id),
-        CONSTRAINT fkCommentsUserId
-          FOREIGN KEY(userId) REFERENCES users(id),
-        CONSTRAINT fkCommentsEventId
-          FOREIGN KEY(eventId) REFERENCES events(id)
-      )
-    `);
-    console.log('Successfully created comments table.');
-  } catch (err) {
-    console.log('Error creating comments table.');
-  }
-};
-
-const dropFriendshipsTable = async () => {
-  try {
-    await db.queryAsync('DROP TABLE IF EXISTS friendships');
-    console.log('Successfully dropped friendships table.');
-  } catch (err) {
-    console.log('Error dropping friendships table.');
-  }
-};
-
-const createFriendshipsTable = async () => {
-  try {
-    await db.queryAsync(`
-      CREATE TABLE IF NOT EXISTS friendships
-      (
-        id SERIAL,
-        userId INT NOT NULL,
-        targetId INT NOT NULL,
-        isAccepted BOOLEAN,
-        CONSTRAINT friendshipsId
-          PRIMARY KEY(id),
-        CONSTRAINT fkFriendshipsUserId
-          FOREIGN KEY(userId) REFERENCES users(id),
-        CONSTRAINT fkFriendshipsTargetId
-          FOREIGN KEY(targetId) REFERENCES users(id)
-      )
-    `);
-    console.log('Successfully created friendships table.');
-  } catch (err) {
-    console.log('Error creating friendships table.');
-  }
-};
-
-const dropGuestsTable = async () => {
-  try {
-    await db.queryAsync('DROP TABLE IF EXISTS guests');
-    console.log('Successfully dropped guests table.');
-  } catch (err) {
-    console.log('Error dropping guests table.');
-  }
-};
-
-const createGuestsTable = async () => {
-  try {
-    await db.queryAsync(`
-      CREATE TYPE status AS ENUM (
+      CREATE TYPE ATTENDANTS_STATUS AS ENUM (
         'pending', 
         'going', 
         'declined',
         'maybe'
       )
-    `)
+    `);
     await db.queryAsync(`
-      CREATE TABLE IF NOT EXISTS guests
+      CREATE TABLE IF NOT EXISTS attendants
       (
         id SERIAL,
-        eventId INT NOT NULL,
-        userId INT NOT NULL,
-        eventStatus status,
-        CONSTRAINT guestsId
+        access INT NOT NULL DEFAULT 0,
+        status ATTENDANTS_STATUS NOT NULL DEFAULT 'pending',
+        user_id INT NOT NULL,
+        event_id INT NOT NULL,
+        invitor_id INT,
+        CONSTRAINT attendants_id
           PRIMARY KEY(id),
-        CONSTRAINT fkGuestsEventId
-          FOREIGN KEY(eventId) REFERENCES events(id),
-        CONSTRAINT fkGuestsUserId
-          FOREIGN KEY(userId) REFERENCES users(id),
+        CONSTRAINT fk_attendants_user_id
+          FOREIGN KEY(user_id) REFERENCES users(id)
+          ON DELETE CASCADE,
+        CONSTRAINT fk_attendants_event_id
+          FOREIGN KEY(event_id) REFERENCES events(id)
+          ON DELETE CASCADE,
+        CONSTRAINT fk_attendants_invitor_id
+          FOREIGN KEY(invitor_id) REFERENCES users(id)
+          ON DELETE CASCADE
       )
     `);
-    console.log('Successfully created guests table.');
+    console.log('Successfully created attendants table.');
   } catch (err) {
-    console.log('Error creating guests table.');
+    console.log('Error creating attendants table.');
+  }
+};
+
+export const dropPostsTable = async () => {
+  try {
+    await db.queryAsync('DROP TABLE IF EXISTS posts');
+    console.log('Successfully dropped posts table.');
+  } catch (err) {
+    console.log('Error dropping posts table.');
+  }
+};
+
+export const createPostsTable = async () => {
+  try {
+    await db.queryAsync(`
+      CREATE TABLE IF NOT EXISTS posts
+      (
+        id SERIAL,
+        body TEXT,
+        user_id INT NOT NULL,
+        event_id INT NOT NULL,
+        parent_id INT,
+        CONSTRAINT post_id
+          PRIMARY KEY(id),
+        CONSTRAINT fk_posts_user_id
+          FOREIGN KEY(user_id) REFERENCES users(id)
+          ON DELETE CASCADE,
+        CONSTRAINT fk_posts_event_id
+          FOREIGN KEY(event_id) REFERENCES events(id)
+          ON DELETE CASCADE,
+        CONSTRAINT fk_posts_parent_id
+          FOREIGN KEY(parent_id) REFERENCES posts(id)
+          ON DELETE CASCADE
+      )
+    `);
+    console.log('Successfully created posts table.');
+  } catch (err) {
+    console.log('Error creating posts table.');
   }
 };
 
