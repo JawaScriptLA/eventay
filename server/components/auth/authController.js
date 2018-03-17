@@ -1,10 +1,11 @@
 const db = require('../../db/db.js');
 
 const signup = async (payload) => {
+  console.log(`SIGNUP payload body is: `, payload.body);
   try {
     const query = `
-      INSERT INTO users (username)
-      VALUES (${payload.body.username})
+      INSERT INTO users
+      VALUES (DEFAULT, '${payload.body.username}')
       RETURNING username
     `;
     data = db.queryAsync(query);
@@ -18,7 +19,7 @@ const login = async (payload) => {
   try {
     const query = `
       SELECT username FROM users
-      WHERE username=${payload.username}
+      WHERE username='${payload.username}'
     `;
     const data = db.queryAsync(query);
     return data;
