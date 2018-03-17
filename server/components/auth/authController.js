@@ -4,8 +4,8 @@ const signup = async (payload) => {
   console.log(`SIGNUP payload body is: `, payload.body);
   try {
     const query = `
-      INSERT INTO users
-      VALUES (DEFAULT, '${payload.body.username}')
+      INSERT INTO users (username, likes_count)
+      VALUES ('${payload.body.username}', DEFAULT)
       RETURNING username
     `;
     data = db.queryAsync(query);
