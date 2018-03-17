@@ -1,6 +1,4 @@
-// setup
-
-import {
+const {
   dropDatabase,
   createDatabase,
   useDatabase,
@@ -14,7 +12,7 @@ import {
   createFriendshipsTable,
   dropGuestsTable,
   createGuestsTable,
-} from './sql';
+} = require('./sql');
 
 const setup = async () => {
   await dropDatabase();
@@ -24,11 +22,15 @@ const setup = async () => {
   await dropFriendshipsTable();
   await dropGuestsTable();
   await createDatabase();
-  await useDatabase();
-  await createUsersTable();
-  await createEventsTable();
-  await createCommentsTable();
-  await createFriendshipsTable();
-  await createGuestsTable();
+  // useDatabase()
+  //   .then(async () => {
+      await createUsersTable();
+      await createEventsTable();
+      await createCommentsTable();
+      await createFriendshipsTable();
+      await createGuestsTable();
+    // });
   process.exit();
 };
+
+setup();
