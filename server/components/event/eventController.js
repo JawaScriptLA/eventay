@@ -3,17 +3,20 @@ const db = require('../../db/db');
 const createEvent = async (payload) => {
   console.log('BODY IS: ', payload.body);
   try {
-    const query = `
-      INSERT INTO events (hostId, title, description, location, startTime, endTime)
-      VALUES (${payload.body.hostid},
-        ${payload.body.title},
-        ${payload.body.description ? payload.body.description : ''},
-        ${payload.body.location ? payload.body.location : ''},
-        ${payload.body.startTime ? payload.body.startTime : ''},
-        ${payload.body.endTime ? payload.body.endTime : ''}
-      )
-      RETURNING hostId, title
-    `;
+    let query;
+    if (!(payload.body.startTime) || !(payload.body.endTime)) {
+      query = `
+        INSERT INTO events (hostid, title)
+        VALUES ('${payload.body.hostId}', '${payload.body.title}')
+        RETURNING hostid, title
+      `;
+    } else {
+      query = `
+        INSERT INTO events (hostid, title)
+        VALUES ('${payload.body.hostId}', '${payload.body.title}')
+        RETURNING hostid, title
+      `;
+    }
     const data = db.queryAsync(query);
     return data;
   } catch (err) {
@@ -25,7 +28,7 @@ const seeUserEvents = async (payload) => {
   try {
     const query = `
       SELECT title FROM event
-      WHERE hostId=${payload.hostId}
+      WHERE hostId='${payload.hostId}'
       RETURNING title
     `;
     const data = db.queryAsync(query);
