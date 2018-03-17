@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const config = require('../config.js');
+const config = require('../config.example.js');
 Promise = require('bluebird');
 const db = Promise.promisifyAll(new Pool(config.relationalDbUrl));
 db.on('connect', () => {
