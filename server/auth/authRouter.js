@@ -22,7 +22,8 @@ module.exports = passportObj => {
     "/signup",
     passportObj.authenticate("signup", {
       successRedirect: "/auth/home",
-      failureRedirect: "/auth/signup"
+      failureRedirect: "/auth/signup",
+      successFlash: "Correct!"
     })
   );
 
@@ -30,7 +31,9 @@ module.exports = passportObj => {
     "/login",
     passportObj.authenticate("login", {
       successRedirect: "/auth/home",
-      failureRedirect: "/"
+      failureRedirect: "/",
+      failureFlash: "WRONG.",
+      successFlash: "Correct!"
     })
   );
 

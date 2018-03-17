@@ -28,8 +28,13 @@ app.use("/", express.static(path.join(__dirname, "/../client/public/")));
 app.use(morgan("tiny"));
 
 /* Start auth*/
+
 const passportObj = require("passport");
 const expressSession = require("express-session");
+const flash = require("connect-flash");
+const cookieParser = require("cookie-parser");
+app.use(flash());
+app.use(cookieParser());
 app.use(expressSession({ secret: "eventay" }));
 <<<<<<< HEAD
 app.use(passport.initialize());
