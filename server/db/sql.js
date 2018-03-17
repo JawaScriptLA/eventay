@@ -252,3 +252,37 @@ export const createLikesTable = async () => {
     console.log('Error creating likes table.');
   }
 };
+
+export const dropEmojisTable = async () => {
+  try {
+    await db.queryAsync('DROP TABLE IF EXISTS emojis');
+    console.log('Successfully dropped emojis table.');
+  } catch (err) {
+    console.log('Error dropping emojis table.');
+  }
+};
+
+export const createEmojisTable = async () => {
+  try {
+    await db.queryAsync(`
+      CREATE TABLE IF NOT EXISTS emojis
+      (
+        id SERIAL,
+        body VARCHAR(255) NOT NULL,
+        user_id INT NOT NULL,
+        event_id INT NOT NULL,
+        CONSTRAINT emoji_id
+          PRIMARY KEY(id),
+        CONSTRAINT fk_emojis_user_id
+          FOREIGN KEY(user_id) REFERENCES users(id)
+          ON DELETE CASCADE,
+        CONSTRAINT fk_emojis_event_id
+          FOREIGN KEY(event_id) REFERENCES events(id)
+          ON DELETE CASCADE
+      )
+    `);
+    console.log('Successfully created emojis table.');
+  } catch (err) {
+    console.log('Error creating emojis table.');
+  }
+};
