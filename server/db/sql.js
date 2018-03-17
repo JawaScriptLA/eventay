@@ -220,18 +220,35 @@ export const createPostsTable = async () => {
   }
 };
 
-module.exports = {
-  dropDatabase,
-  createDatabase,
-  useDatabase,
-  dropUsersTable,
-  createUsersTable,
-  dropEventsTable,
-  createEventsTable,
-  dropCommentsTable,
-  createCommentsTable,
-  dropFriendshipsTable,
-  createFriendshipsTable,
-  dropGuestsTable,
-  createGuestsTable,
+export const dropLikesTable = async () => {
+  try {
+    await db.queryAsync('DROP TABLE IF EXISTS likes');
+    console.log('Successfully dropped likes table.');
+  } catch (err) {
+    console.log('Error dropping likes table.');
+  }
+};
+
+export const createLikesTable = async () => {
+  try {
+    await db.queryAsync(`
+      CREATE TABLE IF NOT EXISTS likes
+      (
+        id SERIAL,
+        user_id INT NOT NULL,
+        event_id iNT NOT NULL,
+        CONSTRAINT likes_id
+          PRIMARY KEY(id),
+        CONSTRAINT fk_likes_user_id
+          FOREIGN KEY(user_id) REFERENCES users(id)
+          ON DELETE CASCADE,
+        CONSTRAINT fk_likes_event_id
+          FOREIGN KEY(event_id) REFERENCES events(id)
+          ON DELETE CASCADE
+      )
+    `);
+    console.log('Successfully created likes table.');
+  } catch (err) {
+    console.log('Error creating likes table.');
+  }
 };
