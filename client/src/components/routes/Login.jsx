@@ -18,6 +18,7 @@ export default class Login extends React.Component {
       })
       .then(res => {
         if (res.data === "success") {
+          localStorage.setItem("id", "loginStorage");
           this.props.history.push("/");
         }
       })
@@ -40,54 +41,34 @@ export default class Login extends React.Component {
       <div>
         Login page
         <div>
-          <label>Please enter your username:</label>
           <input
             type="text"
             name="username"
+            placeholder="Username"
             onChange={this.handleInputChange}
           />
         </div>
         <div>
-          <label>Please enter your password:</label>
           <input
             type="password"
             name="password"
+            placeholder="Password"
             onChange={this.handleInputChange}
           />
         </div>
         <div>
           <input
             type="submit"
-            value="submit"
+            value="Submit"
             onClick={this.handleSubmitClick}
           />
         </div>
-        <input type="submit" value="Sign up" onClick={this.handleSignupClick} />
+        <input
+          type="submit"
+          value="Create new account"
+          onClick={this.handleSignupClick}
+        />
       </div>
     );
   }
 }
-
-// const Login = () => (
-// <div>
-//   Login page
-//   <form action="/auth/login" method="post">
-//     <div>
-//       <label>Username:</label>
-//       <input type="text" name="username" />
-//     </div>
-//     <div>
-//       <label>Password:</label>
-//       <input type="password" name="password" />
-//     </div>
-//     <div>
-//       <input type="submit" value="Log In" />
-//     </div>
-//   </form>
-//   <form action="/auth/signup" method="get">
-//     <input type="submit" value="Sign up" />
-//   </form>
-// </div>
-// );
-
-// export default Login;

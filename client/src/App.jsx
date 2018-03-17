@@ -7,6 +7,7 @@ import Login from "./components/routes/Login.jsx";
 import EventCreator from "./components/routes/EventCreator.jsx";
 import EventViewer from "./components/routes/EventViewer.jsx";
 import Profile from "./components/routes/Profile.jsx";
+import Protected from "./components/Protected.jsx";
 
 export default class App extends Component {
   render() {
@@ -15,10 +16,26 @@ export default class App extends Component {
         <Switch>
           <Route path="/signup" exact component={Signup} />
           <Route path="/login" exact component={Login} />
-          <Route path="/profile" exact component={Profile} />
-          <Route path="/create" exact component={EventCreator} />
-          <Route path="/event" exact component={EventViewer} />
-          <Route path="/" exact component={Home} />
+          <Route
+            path="/profile"
+            component={props => <Protected component={Profile} {...props} />}
+          />
+          <Route
+            path="/create"
+            component={props => (
+              <Protected component={EventCreator} {...props} />
+            )}
+          />
+          <Route
+            path="/event"
+            component={props => (
+              <Protected component={EventViewer} {...props} />
+            )}
+          />
+          <Route
+            path="/"
+            component={props => <Protected component={Home} {...props} />}
+          />
         </Switch>
       </Router>
     );

@@ -19,6 +19,7 @@ export default class Signup extends React.Component {
       .then(res => {
         if (res.data === "success") {
           this.props.history.push("/");
+          localStorage.setItem("id", "signupStorage");
         }
       })
       .catch(error => {
@@ -36,25 +37,25 @@ export default class Signup extends React.Component {
       <div>
         Signup page
         <div>
-          <label>Please enter a username:</label>
           <input
             type="text"
             name="username"
+            placeholder="Username"
             onChange={this.handleInputChange}
           />
         </div>
         <div>
-          <label>Please enter a password:</label>
           <input
             type="password"
             name="password"
+            placeholder="Password"
             onChange={this.handleInputChange}
           />
         </div>
         <div>
           <input
             type="submit"
-            value="submit"
+            value="Submit"
             onClick={this.handleSubmitClick}
           />
         </div>
