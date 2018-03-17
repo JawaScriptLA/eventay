@@ -269,8 +269,8 @@ export const createEmojisTable = async () => {
       (
         id SERIAL,
         body VARCHAR(255) NOT NULL,
-        user_id INT NOT NULL,
-        event_id INT NOT NULL,
+        user_id INT,
+        event_id INT,
         CONSTRAINT emoji_id
           PRIMARY KEY(id),
         CONSTRAINT fk_emojis_user_id
@@ -284,5 +284,42 @@ export const createEmojisTable = async () => {
     console.log('Successfully created emojis table.');
   } catch (err) {
     console.log('Error creating emojis table.');
+  }
+};
+
+export const dropReactionsTable = async () => {
+  try {
+    await db.queryAsync('DROP TABLE IF EXISTS reactions');
+    console.log('Successfully dropped reactions table.');
+  } catch (err) {
+    console.log('Error dropping reactions table.');
+  }
+};
+
+export const createReactionsTable = async () => {
+  try {
+    await db.queryAsync(`
+      CREATE TABLE IF NOT EXISTS reactions
+      (
+        id SERIAL,
+        user_id INT NOT NULL,
+        emoji_id INT NOT NULL,
+        post_id INT NOT NULL,
+        CONSTRAINT post_id
+          PRIMARY KEY(id),
+        CONSTRAINT fk_reactions_user_id
+          FOREIGN KEY(user_id) REFERENCES users(id)
+          ON DELETE CASCADE,
+        CONSTRAINT fk_reactions_emoji_id
+          FOREIGN KEY(emoji_id) REFERENCES emojis(id)
+          ON DELETE CASCADE,
+        CONSTRAINT fk_reactions_post_id
+          FOREIGN KEY(post_id) REFERENCES posts(id)
+          ON DELETE CASCADE
+      )
+    `);
+    console.log('Successfully created reactions table.');
+  } catch (err) {
+    console.log('Error creating reactions table.');
   }
 };
