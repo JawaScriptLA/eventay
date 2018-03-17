@@ -1,37 +1,18 @@
-// setup
-
-const {
-  dropDatabase,
-  createDatabase,
-  useDatabase,
-  dropUsersTable,
-  createUsersTable,
-  dropEventsTable,
-  createEventsTable,
-  dropCommentsTable,
-  createCommentsTable,
-  dropFriendshipsTable,
-  createFriendshipsTable,
-  dropGuestsTable,
-  createGuestsTable,
-} = require('./sql');
+const sql = require('./sql.js');
 
 const setup = async () => {
-  await dropDatabase();
-  await dropUsersTable();
-  await dropEventsTable();
-  await dropCommentsTable();
-  await dropFriendshipsTable();
-  await dropGuestsTable();
-  await createDatabase();
-  // useDatabase()
-  //   .then(async () => {
-      await createUsersTable();
-      await createEventsTable();
-      await createCommentsTable();
-      await createFriendshipsTable();
-      await createGuestsTable();
-    // });
+  await sql.dropDatabase();
+  await sql.dropUsersTable();
+  await sql.dropEventsTable();
+  await sql.dropCommentsTable();
+  await sql.dropFriendshipsTable();
+  await sql.dropGuestsTable();
+  await sql.createDatabase();
+  await sql.createUsersTable();
+  await sql.createEventsTable();
+  await sql.createCommentsTable();
+  await sql.createFriendshipsTable();
+  await sql.createGuestsTable();
   process.exit();
 };
 

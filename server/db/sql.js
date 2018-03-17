@@ -1,46 +1,36 @@
 const db = require('./db.js');
-const { relationalDbName } = require('../config.example.js');
-
-const database = relationalDbName;
+const config = require('../config.js');
 
 const dropDatabase = async () => {
   try {
-    await db.queryAsync(`
-    DROP DATABASE IF EXISTS ${database}
-    `);
-    console.log('Successfully dropped database ', database);
+    await db.queryAsync(`DROP DATABASE IF EXISTS ${config.relationalDbName}`);
+    console.log('Successfully dropped database', config.relationalDbName);
   } catch (err) {
-    console.log('Error dropping database ', database);
+    console.log('Error dropping database', config.relationalDbName);
   }
 };
 
 const createDatabase = async () => {
   try {
-    await db.queryAsync(`
-      CREATE DATABASE ${database}
-    `);
-    console.log('Successfully created database ', database);
+    await db.queryAsync(`CREATE DATABASE ${config.relationalDbName}`);
+    console.log('Successfully created database', config.relationalDbName);
   } catch (err) {
-    console.log('Error creating database ', database);
+    console.log('Error creating database', config.relationalDbName);
   }
 };
 
 const useDatabase = async () => {
   try {
-    await db.queryAsync(`
-      USE IF EXISTS ${database}
-    `);
-    console.log('Successfully using database ', database);
+    await db.queryAsync(`USE IF EXISTS ${config.relationalDbName}`);
+    console.log('Successfully using database', config.relationalDbName);
   } catch (err) {
-    console.log('Error using database ', database);
+    console.log('Error using database', config.relationalDbName);
   }
 };
 
 const dropUsersTable = async () => {
   try {
-    await db.queryAsync(`
-      DROP TABLE IF EXISTS users
-    `);
+    await db.queryAsync('DROP TABLE IF EXISTS users');
     console.log('Successfully dropped users table.');
   } catch (err) {
     console.log('Error dropping users table.');
@@ -66,9 +56,7 @@ const createUsersTable = async () => {
 
 const dropEventsTable = async () => {
   try {
-    await db.queryAsync(`
-      DROP TABLE IF EXISTS events
-    `);
+    await db.queryAsync('DROP TABLE IF EXISTS events');
     console.log('Successfully dropped events table.');
   } catch (err) {
     console.log('Error dropping events table.');
@@ -102,9 +90,7 @@ const createEventsTable = async () => {
 
 const dropCommentsTable = async () => {
   try {
-    await db.queryAsync(`
-      DROP TABLE IF EXISTS comments
-    `);
+    await db.queryAsync('DROP TABLE IF EXISTS comments');
     console.log('Successfully dropped comments table.');
   } catch (err) {
     console.log('Error dropping comments table.');
@@ -136,9 +122,7 @@ const createCommentsTable = async () => {
 
 const dropFriendshipsTable = async () => {
   try {
-    await db.queryAsync(`
-      DROP TABLE IF EXISTS friendships
-    `);
+    await db.queryAsync('DROP TABLE IF EXISTS friendships');
     console.log('Successfully dropped friendships table.');
   } catch (err) {
     console.log('Error dropping friendships table.');
@@ -170,9 +154,7 @@ const createFriendshipsTable = async () => {
 
 const dropGuestsTable = async () => {
   try {
-    await db.queryAsync(`
-      DROP TABLE IF EXISTS guests
-    `);
+    await db.queryAsync('DROP TABLE IF EXISTS guests');
     console.log('Successfully dropped guests table.');
   } catch (err) {
     console.log('Error dropping guests table.');
