@@ -12,7 +12,7 @@ before_script:
 
 install:
   - npm install
-  - npm run build-db
+  - npm run db:setup
 
 script: 
   - npm run build &
