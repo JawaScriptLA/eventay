@@ -8,9 +8,9 @@ const sendRequest = async payload => {
   try {
     console.log("in the friend req controller");
     const query = `
-      INSERT INTO friendships (userid, targetid, isAccepted)
-      VALUES (${payload.body.userid}, ${payload.body.targetid}, FALSE)
-      RETURNING userid, targetid
+      INSERT INTO friendships (userId, targetId, isAccepted)
+      VALUES (${payload.body.userId}, ${payload.body.targetId}, FALSE)
+      RETURNING userId, targetId
     `;
     const data = await db.queryAsync(query);
     return data;
@@ -23,9 +23,9 @@ const acceptRequest = async payload => {
   try {
     const query = `
       UPDATE friendships
-      SET isaccepted='TRUE'
-      WHERE userid=${payload.body.userid} AND targetid=${payload.body.targetid}
-      RETURNING userid, targetid, isaccepted
+      SET isAccepted='TRUE'
+      WHERE userId=${payload.body.userId} AND targetId=${payload.body.targetId}
+      RETURNING userId, targetId, isAccepted
     `;
     const data = await db.queryAsync(query);
     return data;
@@ -38,10 +38,8 @@ const declineRequest = async payload => {
   try {
     const query = `
       DELETE FROM friendships
-      WHERE userid=${payload.body.userid} AND targetid=${
-      payload.body.targetid
-    } AND isaccepted='FALSE'
-      RETURNING userid, targetid
+      WHERE userId=${payload.body.userId} AND targetId=${payload.body.targetId} AND isAccepted='FALSE'
+      RETURNING userId, targetId
     `;
     const data = await db.queryAsync(query);
     return data;
