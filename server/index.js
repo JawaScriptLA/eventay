@@ -12,7 +12,7 @@ app.use('/api/', router);
 
 app.use(morgan('tiny'));
 
-app.get('/*', function(req, res) {
+app.get('/*', function(req, res) { //React routes catch all method source: http://bit.ly/2DqrztT
   res.sendFile(path.join(__dirname, '/../client/public/index.html'), function(err) {
     if (err) {
       res.status(500).send(err)

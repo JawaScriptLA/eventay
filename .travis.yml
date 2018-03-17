@@ -1,0 +1,21 @@
+language: node_js
+node_js: "stable"
+cache:
+  directories:
+    - node_modules
+services:
+  - postgresql
+
+before_script: 
+  - sudo apt-get -qq update
+  - psql -c 'create database eventayRDB;' -U postgres
+
+install:
+  - npm install
+  - npm run build-db
+
+script: 
+  - npm run build &
+  - sleep 10
+  - npm start &
+  - sleep 10
