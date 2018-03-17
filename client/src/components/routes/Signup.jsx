@@ -18,8 +18,8 @@ export default class Signup extends React.Component {
       })
       .then(res => {
         if (res.data === "success") {
-          this.props.history.push("/");
           localStorage.setItem("id", "signupStorage");
+          this.props.history.push("/");
         }
       })
       .catch(error => {
@@ -63,24 +63,3 @@ export default class Signup extends React.Component {
     );
   }
 }
-
-// const Signup = () => (
-//   <div>
-//     Signup page
-//     <form action="/auth/signup" method="post">
-//       <div>
-//         <label>Please enter a username:</label>
-//         <input type="text" name="username" />
-//       </div>
-//       <div>
-//         <label>Please enter a password:</label>
-//         <input type="password" name="password" />
-//       </div>
-//       <div>
-//         <input type="submit" value="Submit" />
-//       </div>
-//     </form>
-//   </div>
-// );
-
-// export default Signup

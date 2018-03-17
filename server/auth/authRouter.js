@@ -10,15 +10,6 @@ const isAuthenticated = (req, res, next) => {
 };
 
 module.exports = passportObj => {
-  // authRouter.get("/signup", (req, res) => {
-  //   res.sendFile(path.join(__dirname + "../../../client/public/signup.html"));
-  // });
-
-  // authRouter.get("/login", (req, res) => {
-  //   res.send("in the login route!");
-  //   // res.sendFile(path.join(__dirname + "../../../client/public/index.html"));
-  // });
-
   authRouter.post("/signup", (req, res, next) => {
     passportObj.authenticate("signup", (err, user, info) => {
       if (err) {
@@ -53,9 +44,5 @@ module.exports = passportObj => {
       });
     })(req, res, next);
   });
-
-  // authRouter.get("/home", isAuthenticated, (req, res) => {
-
-  // });
   return authRouter;
 };

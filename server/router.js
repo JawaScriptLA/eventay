@@ -9,15 +9,15 @@ const {
   createEvent,
   seeUserEvents
 } = require("./components/event/eventController");
+const authRouter = require("./auth/authRouter.js");
 
-router.use("/auth/signup", signup);
-router.use("/auth/login", login);
+// router.use("/auth/signup", signup);
+// router.use("/auth/login", login);
 
 // router.get('/friendReq/:id', pendingRequests);
 router.post("/friendReq", sendRequest); // PASSING TESTS
 router.put("/friendReq", acceptRequest); // PASSING TESTS
 router.delete("/friendReq", declineRequest); // PASSING TESTS
-const authRouter = require("./auth/authRouter.js");
 
 module.exports = passportObj => {
   // const { createEvent, seeUserEvents } = require('./components/event/eventController');
