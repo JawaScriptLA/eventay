@@ -17,10 +17,8 @@ export default class Signup extends React.Component {
         password: this.state.password
       })
       .then(res => {
-        if (res.data === "success") {
-          localStorage.setItem("id", "signupStorage");
-          this.props.history.push("/");
-        }
+        localStorage.setItem("token", res.data);
+        this.props.history.push("/");
       })
       .catch(error => {
         console.log(error);

@@ -1,12 +1,14 @@
 var LocalStrategy = require("passport-local").Strategy;
 var User = require("./models/user.js");
 var bCrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 module.exports = passport => {
   passport.use(
     "signup",
     new LocalStrategy(
       {
+        session: false,
         passReqToCallback: true
       },
       (req, username, password, done) => {
@@ -35,8 +37,16 @@ module.exports = passport => {
                 console.log("Error in Saving user:", err);
                 throw err;
               }
-              console.log("User Registration succesful");
-              return done(null, newUser);
+              console.log("User Registration successful");
+              const payload = {
+                userId: newUser._id,
+                username: newUser.username
+              };
+
+              // create a token string
+              const token = jwt.sign(payload, "mySecret");
+              return done(null, newUser, token);
+              // return done(null, newUser);
             });
           }
         });

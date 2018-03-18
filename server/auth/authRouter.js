@@ -13,34 +13,31 @@ module.exports = passportObj => {
   authRouter.post("/signup", (req, res, next) => {
     passportObj.authenticate("signup", (err, user, info) => {
       if (err) {
-        return res.send("error1");
+        return res.status(401).end();
       }
       req.login(user, err => {
         if (err) {
-          return res.send("error2");
-          // return next(err);
+          return res.status(401).end();
+        } else {
+          return res.send(info);
         }
-        return res.send("success");
       });
     })(req, res, next);
   });
 
   authRouter.post("/login", (req, res, next) => {
-    console.log("in my routerrere", req.body);
     passportObj.authenticate("login", (err, user, info) => {
       if (err) {
-        return next(err);
+        return res.status(401).end();
       }
       if (!user) {
-        res.send("back to login page");
-        return;
+        return res.status(401).end();
       }
       req.logIn(user, err => {
         if (err) {
-          return next(err);
+          return res.status(401).end();
         }
-        res.send("success");
-        return;
+        res.send(info);
       });
     })(req, res, next);
   });

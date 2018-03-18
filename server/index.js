@@ -15,23 +15,22 @@ app.use(morgan("tiny"));
 /* Start auth*/
 
 const passportObj = require("passport");
-const expressSession = require("express-session");
+// const expressSession = require("express-session");
 const flash = require("connect-flash");
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
+// const cookieParser = require("cookie-parser");
+// app.use(cookieParser());
 app.use(flash());
-app.use(
-  expressSession({
-    secret: "eventay",
-    resave: false,
-    saveUninitialized: false
-  })
-);
+// app.use(
+//   expressSession({
+//     secret: "eventay",
+//     resave: false,
+//     saveUninitialized: false
+//   })
+// );
 app.use(passportObj.initialize());
 app.use(passportObj.session());
 const initPassport = require("./auth/init.js");
 initPassport(passportObj);
-// app.use("/auth", authRouter(passportObj));
 /*End auth*/
 
 app.use("/api", router(passportObj));
