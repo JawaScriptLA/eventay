@@ -1,55 +1,73 @@
-const db = require("../../db/db");
-// import db from '../../db/db';
+const db = require('../../db/db');
 
-// export const pendingRequests = async () => {
-// };
+const sendRequest = async (req, res) => {
+  const { user_id, target_id } = req.body;
+  try {
+    const query = `
+    INSERT INTO friends (status, user_id, target_id)
+    SELECT 'pending', ${user_id}, ${target_id}
+    WHERE NOT EXISTS (
+      SELECT user_id, target_id
+      FROM friends
+      WHERE user_id=${user_id} AND target_id=${target_id}
+    ) RETURNING user_id, target_id;
+    `;
+    const data = await db.queryAsync(query);
+    res.send(201);
+  } catch (err) {
+    console.log(`Error during friends POST request: ${err}`);
+  }
+};
 
-const sendRequest = async payload => {
+const pendingRequests = async (req, res) => {
+  const { user_id } = req.params;
   try {
     console.log("in the friend req controller");
     const query = `
-      INSERT INTO friendships (userId, targetId, isAccepted)
-      VALUES (${payload.body.userId}, ${payload.body.targetId}, FALSE)
-      RETURNING userId, targetId
+      SELECT * FROM friends
+      WHERE user_id=${user_id} AND status='pending'
     `;
     const data = await db.queryAsync(query);
-    return data;
+    res.send(data.rows);
   } catch (err) {
-    console.log(`Error during friendship POST request: ${err}`);
+    res.send(`Error during friends GET request: ${err}`);
   }
 };
 
-const acceptRequest = async payload => {
+const acceptRequest = async (req, res) => {
+  const { user_id, target_id } = req.body;
   try {
     const query = `
-      UPDATE friendships
-      SET isAccepted='TRUE'
-      WHERE userId=${payload.body.userId} AND targetId=${payload.body.targetId}
-      RETURNING userId, targetId, isAccepted
+      UPDATE friends
+      SET status='accepted'
+      WHERE user_id=${target_id} AND target_id=${user_id}
+      RETURNING user_id, target_id, status
     `;
     const data = await db.queryAsync(query);
-    return data;
+    res.send(201);
   } catch (err) {
-    console.log(`Error during friendship GET request: ${err}`);
+    console.log(`Error during friends GET request: ${err}`);
   }
 };
 
-const declineRequest = async payload => {
+const declineRequest = async (req, res) => {
+  const { user_id, target_id } = req.body;
   try {
     const query = `
-      DELETE FROM friendships
-      WHERE userId=${payload.body.userId} AND targetId=${payload.body.targetId} AND isAccepted='FALSE'
-      RETURNING userId, targetId
+      DELETE FROM friends
+      WHERE user_id=${target_id} AND target_id=${user_id} AND status='pending'
+      RETURNING user_id, target_id
     `;
     const data = await db.queryAsync(query);
-    return data;
+    res.send(200);
   } catch (err) {
-    console.log(`Error during frienship DELETE request: ${err}`);
+    console.log(`Error during friends DELETE request: ${err}`);
   }
 };
 
 module.exports = {
   sendRequest,
+  pendingRequests,
   acceptRequest,
   declineRequest
 };
