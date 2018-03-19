@@ -14,13 +14,19 @@ const {
   createEvent,
   seeUserEvents,
 } = require('./components/event/eventController');
-const { inviteTargetToEvent } = require('./components/attendants/attendantsController');
+const {
+  inviteTargetToEvent,
+  seeAllEventAttendants,
+  respondToEventInvite,
+  attendantSeeTheirInvites,
+} = require('./components/attendants/attendantsController');
+
 
 module.exports = passportObj => {
   router.use("/auth", authRouter(passportObj));
   router.use("/", checkAuth);
+  router.all('/test', (req, res) => res.send({ message: 'test' }));
 
-  router.all("/test", (req, res) => res.send({ message: "test" }));
   router.use('/auth/signup', signup);
   router.use('/auth/login', login);
   router.post('/friendReq', sendRequest);
@@ -30,6 +36,9 @@ module.exports = passportObj => {
   router.post('/event', createEvent);
   router.get('/event/:user_id', seeUserEvents);
   router.post('/event/invite', inviteTargetToEvent);
+  router.get('/event/invite/:event_id', seeAllEventAttendants);
+  router.put('/event/invite', respondToEventInvite);
+  router.get('/event/invitations/:user_id', attendantSeeTheirInvites);
   
   return router;
 };
