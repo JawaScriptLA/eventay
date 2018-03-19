@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // TODO
 import { createStore, applyMiddleware } from 'redux';
 import rootReducer from '../reducers/rootReducer';
@@ -10,3 +11,6 @@ export default function configureStore() {
     applyMiddleware(thunk)
   );
 }
+=======
+// TODO
+>>>>>>> f40d93314447cf7d7e6b4a946b4baa39f4eaa015
