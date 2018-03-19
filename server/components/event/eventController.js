@@ -1,35 +1,57 @@
 const db = require('../../db/db');
 
-const createEvent = async (payload) => {
-  console.log('BODY IS: ', payload.body);
+const createEvent = async (req, res) => {
+  const {
+    title,
+    description,
+    thumbnail,
+    location,
+    likes_count,
+    start_time,
+    end_time,
+    publicity,
+    host_id,
+  } = req.body;
   try {
     const query = `
-      INSERT INTO events (hostId, title, description, location, startTime, endTime)
-      VALUES (${payload.body.hostid},
-        ${payload.body.title},
-        ${payload.body.description ? payload.body.description : ''},
-        ${payload.body.location ? payload.body.location : ''},
-        ${payload.body.startTime ? payload.body.startTime : ''},
-        ${payload.body.endTime ? payload.body.endTime : ''}
-      )
-      RETURNING hostId, title
+      INSERT INTO events (
+        title,
+        description,
+        thumbnail,
+        location,
+        likes_count,
+        start_time,
+        end_time,
+        publicity,
+        host_id
+      ) VALUES (
+        '${title}',
+        ${description ? '' + description : null},
+        ${thumbnail ? '' + thumbnail : null},
+        ${location ? '' + location : null},
+        ${likes_count ? likes_count : 'DEFAULT'},
+        ${start_time ? start_time : null},
+        ${end_time ? end_time : null},
+        ${publicity ? publicity : 'DEFAULT'},
+        '${host_id}'
+      ) RETURNING title, likes_count, publicity, host_id
     `;
-    const data = db.queryAsync(query);
-    return data;
+    const data = await db.queryAsync(query);
+    res.send(data.rows);
   } catch (err) {
     console.log(`Error during event POST request: ${err}`);
   }
 };
 
-const seeUserEvents = async (payload) => {
+const seeUserEvents = async (req, res) => {
+  const { user_id } = req.params;
   try {
     const query = `
-      SELECT title FROM event
-      WHERE hostId=${payload.hostId}
-      RETURNING title
+      SELECT * FROM events
+      WHERE host_id='${user_id}'
     `;
-    const data = db.queryAsync(query);
-    return data;
+    const data = await db.queryAsync(query);
+    res.send(data.rows);
   } catch (err) {
     console.log(`Error during event GET request: ${err}`);
   }
