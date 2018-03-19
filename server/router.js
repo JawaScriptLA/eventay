@@ -20,7 +20,11 @@ const {
   respondToEventInvite,
   attendantSeeTheirInvites,
 } = require('./components/attendants/attendantsController');
-
+const {
+  createPost,
+  editPost,
+  deletePost
+} = require('./components/posts/postsController');
 
 module.exports = passportObj => {
   router.use("/auth", authRouter(passportObj));
@@ -39,6 +43,9 @@ module.exports = passportObj => {
   router.get('/event/invite/:event_id', seeAllEventAttendants);
   router.put('/event/invite', respondToEventInvite);
   router.get('/event/invitations/:user_id', attendantSeeTheirInvites);
+  router.post('/event/post', createPost);
+  router.put('/event/post', editPost);
+  router.delete('/event/post', deletePost);
   
   return router;
 };
