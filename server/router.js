@@ -10,6 +10,7 @@ const {
   seeUserEvents
 } = require("./components/event/eventController");
 const authRouter = require("./auth/authRouter.js");
+const checkAuth = require("./auth/check-auth.js");
 
 // router.use("/auth/signup", signup);
 // router.use("/auth/login", login);
@@ -23,6 +24,7 @@ module.exports = passportObj => {
   // const { createEvent, seeUserEvents } = require('./components/event/eventController');
 
   router.use("/auth", authRouter(passportObj));
+  router.use("/*", checkAuth);
 
   // router.get('api/friendReq/:id', pendingRequests);
   router.post("api/friendReq", sendRequest);

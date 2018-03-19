@@ -46,7 +46,6 @@ module.exports = passport => {
               // create a token string
               const token = jwt.sign(payload, "mySecret");
               return done(null, newUser, token);
-              // return done(null, newUser);
             });
           }
         });

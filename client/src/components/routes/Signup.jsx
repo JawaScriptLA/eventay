@@ -17,6 +17,7 @@ export default class Signup extends React.Component {
         password: this.state.password
       })
       .then(res => {
+        console.log(res.data);
         localStorage.setItem("token", res.data);
         this.props.history.push("/");
       })
