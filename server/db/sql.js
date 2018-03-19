@@ -1,12 +1,16 @@
 const db = require('./db.js');
-const dev = require('../config.js');
-const local = require('../config.example.js');
-const config = dev || local;
+let config;
+
+try {
+  config = require('../config.js');
+} catch (err) {
+  config = require('../config.example.js');
+}
 
 module.exports = {
   dropDatabase: async () => {
     try {
-      await db.query(`DROP DATABASE IF EXISTS ${config.relationalDbName}`);
+      await db.queryAsync(`DROP DATABASE IF EXISTS ${config.relationalDbName}`);
       console.log('Successfully dropped database', config.relationalDbName);
     } catch (err) {
       console.log('Error dropping database', config.relationalDbName);
@@ -14,7 +18,7 @@ module.exports = {
   },
   createDatabase: async () => {
     try {
-      await db.query(`CREATE DATABASE ${config.relationalDbName}`);
+      await db.queryAsync(`CREATE DATABASE ${config.relationalDbName}`);
       console.log('Successfully created database', config.relationalDbName);
     } catch (err) {
       console.log('Error creating database', config.relationalDbName);
@@ -22,7 +26,7 @@ module.exports = {
   },
   useDatabase: async () => {
     try {
-      await db.query(`USE IF EXISTS ${config.relationalDbName}`);
+      await db.queryAsync(`USE IF EXISTS ${config.relationalDbName}`);
       console.log('Successfully using database', config.relationalDbName);
     } catch (err) {
       console.log('Error using database', config.relationalDbName);
@@ -30,7 +34,7 @@ module.exports = {
   },
   dropUsersTable: async () => {
     try {
-      await db.query('DROP TABLE IF EXISTS users');
+      await db.queryAsync('DROP TABLE IF EXISTS users');
       console.log('Successfully dropped users table.');
     } catch (err) {
       console.log('Error dropping users table.', err);
@@ -38,7 +42,7 @@ module.exports = {
   },
   createUsersTable: async () => {
     try {
-      await db.query(`
+      await db.queryAsync(`
         CREATE TABLE IF NOT EXISTS users
         (
           id SERIAL,
@@ -57,7 +61,7 @@ module.exports = {
   },
   dropFriendsTable: async () => {
     try {
-      await db.query('DROP TABLE IF EXISTS friends');
+      await db.queryAsync('DROP TABLE IF EXISTS friends');
       console.log('Successfully dropped friends table.');
     } catch (err) {
       console.log('Error dropping friends table.', err);
@@ -65,15 +69,15 @@ module.exports = {
   },
   createFriendsTable: async () => {
     try {
-      await db.query('DROP TYPE IF EXISTS FRIEND_STATUS');
-      await db.query(`
+      await db.queryAsync('DROP TYPE IF EXISTS FRIEND_STATUS');
+      await db.queryAsync(`
         CREATE TYPE FRIEND_STATUS AS ENUM (
           'pending',
           'accepted',
           'blocked'
         )
       `);
-      await db.query(`
+      await db.queryAsync(`
         CREATE TABLE IF NOT EXISTS friends
         (
           id SERIAL,
@@ -97,7 +101,7 @@ module.exports = {
   },
   dropEventsTable: async () => {
     try {
-      await db.query('DROP TABLE IF EXISTS events');
+      await db.queryAsync('DROP TABLE IF EXISTS events');
       console.log('Successfully dropped events table.');
     } catch (err) {
       console.log('Error dropping events table.', err);
@@ -105,7 +109,7 @@ module.exports = {
   },
   createEventsTable: async () => {
     try {
-      await db.query(`
+      await db.queryAsync(`
         CREATE TABLE IF NOT EXISTS events
         (
           id SERIAL,
@@ -132,7 +136,7 @@ module.exports = {
   },
   dropAttendantsTable: async () => {
     try {
-      await db.query('DROP TABLE IF EXISTS attendants');
+      await db.queryAsync('DROP TABLE IF EXISTS attendants');
       console.log('Successfully dropped attendants table.');
     } catch (err) {
       console.log('Error dropping attendants table.', err);
@@ -140,8 +144,8 @@ module.exports = {
   },
   createAttendantsTable: async () => {
     try {
-      await db.query('DROP TYPE IF EXISTS ATTENDANTS_STATUS');
-      await db.query(`
+      await db.queryAsync('DROP TYPE IF EXISTS ATTENDANTS_STATUS');
+      await db.queryAsync(`
         CREATE TYPE ATTENDANTS_STATUS AS ENUM (
           'pending', 
           'going', 
@@ -149,7 +153,7 @@ module.exports = {
           'maybe'
         )
       `);
-      await db.query(`
+      await db.queryAsync(`
         CREATE TABLE IF NOT EXISTS attendants
         (
           id SERIAL,
@@ -178,7 +182,7 @@ module.exports = {
   },
   dropPostsTable: async () => {
     try {
-      await db.query('DROP TABLE IF EXISTS posts');
+      await db.queryAsync('DROP TABLE IF EXISTS posts');
       console.log('Successfully dropped posts table.');
     } catch (err) {
       console.log('Error dropping posts table.', err);
@@ -186,7 +190,7 @@ module.exports = {
   },
   createPostsTable: async () => {
     try {
-      await db.query(`
+      await db.queryAsync(`
         CREATE TABLE IF NOT EXISTS posts
         (
           id SERIAL,
@@ -214,7 +218,7 @@ module.exports = {
   },
   dropLikesTable: async () => {
     try {
-      await db.query('DROP TABLE IF EXISTS likes');
+      await db.queryAsync('DROP TABLE IF EXISTS likes');
       console.log('Successfully dropped likes table.');
     } catch (err) {
       console.log('Error dropping likes table.', err);
@@ -222,7 +226,7 @@ module.exports = {
   },
   createLikesTable: async () => {
     try {
-      await db.query(`
+      await db.queryAsync(`
         CREATE TABLE IF NOT EXISTS likes
         (
           id SERIAL,
@@ -245,7 +249,7 @@ module.exports = {
   },
   dropEmojisTable: async () => {
     try {
-      await db.query('DROP TABLE IF EXISTS emojis');
+      await db.queryAsync('DROP TABLE IF EXISTS emojis');
       console.log('Successfully dropped emojis table.');
     } catch (err) {
       console.log('Error dropping emojis table.', err);
@@ -253,7 +257,7 @@ module.exports = {
   },
   createEmojisTable: async () => {
     try {
-      await db.query(`
+      await db.queryAsync(`
         CREATE TABLE IF NOT EXISTS emojis
         (
           id SERIAL,
@@ -277,7 +281,7 @@ module.exports = {
   },
   dropReactionsTable: async () => {
     try {
-      await db.query('DROP TABLE IF EXISTS reactions');
+      await db.queryAsync('DROP TABLE IF EXISTS reactions');
       console.log('Successfully dropped reactions table.');
     } catch (err) {
       console.log('Error dropping reactions table.', err);
@@ -285,7 +289,7 @@ module.exports = {
   },
   createReactionsTable: async () => {
     try {
-      await db.query(`
+      await db.queryAsync(`
         CREATE TABLE IF NOT EXISTS reactions
         (
           id SERIAL,
