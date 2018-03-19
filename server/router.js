@@ -1,25 +1,26 @@
 const router = require("express").Router();
+
+const authRouter = require("./auth/authRouter.js");
+const checkAuth = require("./auth/check-auth.js");
+
 const { signup, login } = require("./components/auth/authController");
 const {
   sendRequest,
   pendingRequests,
   acceptRequest,
-  declineRequest
-} = require("./components/friendReq/friendReqController");
+  declineRequest,
+} = require('./components/friendReq/friendReqController');
 const {
   createEvent,
-  seeUserEvents
-} = require("./components/event/eventController");
-const authRouter = require("./auth/authRouter.js");
-const checkAuth = require("./auth/check-auth.js");
-
+  seeUserEvents,
+} = require('./components/event/eventController');
+const { inviteTargetToEvent } = require('./components/attendants/attendantsController');
 
 module.exports = passportObj => {
   router.use("/auth", authRouter(passportObj));
   router.use("/", checkAuth);
 
   router.all("/test", (req, res) => res.send({ message: "test" }));
-
   router.use('/auth/signup', signup);
   router.use('/auth/login', login);
   router.post('/friendReq', sendRequest);
@@ -28,8 +29,8 @@ module.exports = passportObj => {
   router.delete('/friendReq', declineRequest);
   router.post('/event', createEvent);
   router.get('/event/:user_id', seeUserEvents);
-// router.post('/event/invite/:eventId/:targetId');
-
+  router.post('/event/invite', inviteTargetToEvent);
+  
   return router;
 };
 
