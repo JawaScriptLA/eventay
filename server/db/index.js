@@ -24,7 +24,7 @@ const setup = async () => {
   await dropFriendshipsTable();
   await dropGuestsTable();
   await createDatabase();
-  // useDatabase()
+  await useDatabase();
   //   .then(async () => {
       await createUsersTable();
       await createEventsTable();
