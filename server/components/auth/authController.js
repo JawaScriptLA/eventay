@@ -1,28 +1,29 @@
 const db = require('../../db/db.js');
 
-const signup = async (payload) => {
-  console.log(`SIGNUP payload body is: `, payload.body);
+const signup = async (req, res) => {
+  const { username } = req.body;
   try {
     const query = `
       INSERT INTO users (username, likes_count)
-      VALUES ('${payload.body.username}', DEFAULT)
+      VALUES ('${username}', DEFAULT)
       RETURNING username
     `;
-    data = db.queryAsync(query);
-    return data;
+    const data = await db.queryAsync(query);
+    res.send(201);
   } catch (err) {
     console.log(`Error during signup: ${err}`);
   }
 };
 
-const login = async (payload) => {
+const login = async (req, res) => {
+  const { username } = req.body;
   try {
     const query = `
       SELECT username FROM users
-      WHERE username='${payload.username}'
+      WHERE username='${username}'
     `;
-    const data = db.queryAsync(query);
-    return data;
+    const data = await db.queryAsync(query);
+    res.send(200);
   } catch (err) {
     console.log(`Error during login: ${err}`);
   }
