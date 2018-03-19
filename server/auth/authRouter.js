@@ -1,13 +1,6 @@
 const express = require("express");
 const authRouter = express.Router();
 
-const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/login");
-};
-
 module.exports = passportObj => {
   authRouter.post("/signup", (req, res, next) => {
     passportObj.authenticate("signup", (err, user, info) => {
@@ -39,6 +32,15 @@ module.exports = passportObj => {
         res.send(info);
       });
     })(req, res, next);
+  });
+
+  authRouter.post("/logout", (req, res, next) => {
+    delete req.decoded;
+    req.logout();
+    res.json("User successfully logged out");
+    // TODO (client side):
+    // Delete token (local storage)
+    // Redirect to login page
   });
   return authRouter;
 };

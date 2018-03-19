@@ -1,11 +1,12 @@
-const db = require('../../db/db');
+const db = require("../../db/db");
 // import db from '../../db/db';
 
 // export const pendingRequests = async () => {
 // };
 
-const sendRequest = async (payload) => {
+const sendRequest = async payload => {
   try {
+    console.log("in the friend req controller");
     const query = `
       INSERT INTO friendships (userid, targetid, isAccepted)
       VALUES (${payload.body.userid}, ${payload.body.targetid}, FALSE)
@@ -18,7 +19,7 @@ const sendRequest = async (payload) => {
   }
 };
 
-const acceptRequest = async (payload) => {
+const acceptRequest = async payload => {
   try {
     const query = `
       UPDATE friendships
@@ -33,11 +34,13 @@ const acceptRequest = async (payload) => {
   }
 };
 
-const declineRequest = async (payload) => {
+const declineRequest = async payload => {
   try {
     const query = `
       DELETE FROM friendships
-      WHERE userid=${payload.body.userid} AND targetid=${payload.body.targetid} AND isaccepted='FALSE'
+      WHERE userid=${payload.body.userid} AND targetid=${
+      payload.body.targetid
+    } AND isaccepted='FALSE'
       RETURNING userid, targetid
     `;
     const data = await db.queryAsync(query);
@@ -50,5 +53,5 @@ const declineRequest = async (payload) => {
 module.exports = {
   sendRequest,
   acceptRequest,
-  declineRequest,
+  declineRequest
 };

@@ -16,15 +16,15 @@ const checkAuth = require("./auth/check-auth.js");
 // router.use("/auth/login", login);
 
 // router.get('/friendReq/:id', pendingRequests);
-router.post("/friendReq", sendRequest); // PASSING TESTS
-router.put("/friendReq", acceptRequest); // PASSING TESTS
-router.delete("/friendReq", declineRequest); // PASSING TESTS
+// router.post("/friendReq", sendRequest); // PASSING TESTS
+// router.put("/friendReq", acceptRequest); // PASSING TESTS
+// router.delete("/friendReq", declineRequest); // PASSING TESTS
 
 module.exports = passportObj => {
   // const { createEvent, seeUserEvents } = require('./components/event/eventController');
 
   router.use("/auth", authRouter(passportObj));
-  router.use("/*", checkAuth);
+  router.use("/", checkAuth);
 
   // router.get('api/friendReq/:id', pendingRequests);
   router.post("api/friendReq", sendRequest);

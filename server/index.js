@@ -5,28 +5,16 @@ const path = require("path");
 const authRouter = require("./auth/authRouter.js");
 const router = require("./router.js");
 const app = express();
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/", express.static(path.join(__dirname, "/../client/public/")));
-// app.use("/api/", router);
-
 app.use(morgan("tiny"));
+app.use("/", express.static(path.join(__dirname, "/../client/public/")));
 
 /* Start auth*/
-
 const passportObj = require("passport");
-// const expressSession = require("express-session");
 const flash = require("connect-flash");
-// const cookieParser = require("cookie-parser");
-// app.use(cookieParser());
 app.use(flash());
-// app.use(
-//   expressSession({
-//     secret: "eventay",
-//     resave: false,
-//     saveUninitialized: false
-//   })
-// );
 app.use(passportObj.initialize());
 app.use(passportObj.session());
 const initPassport = require("./auth/init.js");

@@ -12,9 +12,7 @@ module.exports = passport => {
         passReqToCallback: true
       },
       (req, username, password, done) => {
-        console.log("in the strategy", username, password);
         User.findOne({ username: username }, (err, user) => {
-          console.log("!!!", err, user);
           if (err) {
             return done(err);
           }
