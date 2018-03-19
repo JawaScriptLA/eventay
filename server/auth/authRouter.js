@@ -1,6 +1,5 @@
 const express = require("express");
 const authRouter = express.Router();
-var path = require("path");
 
 const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
