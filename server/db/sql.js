@@ -10,26 +10,26 @@ try {
 module.exports = {
   dropDatabase: async () => {
     try {
-      await db.queryAsync(`DROP DATABASE IF EXISTS ${config.relationalDbName}`);
-      console.log('Successfully dropped database', config.relationalDbName);
+      await db.queryAsync(`DROP DATABASE IF EXISTS ${config.rdb.name}`);
+      console.log('Successfully dropped database', config.rdb.name);
     } catch (err) {
-      console.log('Error dropping database', config.relationalDbName);
+      console.log('Error dropping database', config.rdb.name);
     }
   },
   createDatabase: async () => {
     try {
-      await db.queryAsync(`CREATE DATABASE ${config.relationalDbName}`);
-      console.log('Successfully created database', config.relationalDbName);
+      await db.queryAsync(`CREATE DATABASE ${config.rdb.name}`);
+      console.log('Successfully created database', config.rdb.name);
     } catch (err) {
-      console.log('Error creating database', config.relationalDbName);
+      console.log('Error creating database', config.rdb.name);
     }
   },
   useDatabase: async () => {
     try {
-      await db.queryAsync(`USE IF EXISTS ${config.relationalDbName}`);
-      console.log('Successfully using database', config.relationalDbName);
+      await db.queryAsync(`USE IF EXISTS ${config.rdb.name}`);
+      console.log('Successfully using database', config.rdb.name);
     } catch (err) {
-      console.log('Error using database', config.relationalDbName);
+      console.log('Error using database', config.rdb.name);
     }
   },
   dropUsersTable: async () => {
