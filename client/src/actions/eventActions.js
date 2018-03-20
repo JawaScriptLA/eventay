@@ -10,7 +10,7 @@ export const fetchEvent = () => {
     axios.get('https://jsonplaceholder.typicode.com/todos')
       .then(response => {
         if (response.status === 200) {
-          dispatch(receiveEvent(response.data))
+          dispatch(receiveEvent(response.data)) // equivalent to setState({ event: response.data }) if not using redux
         } else {
           const flash = {
             type: 'error',
@@ -20,7 +20,7 @@ export const fetchEvent = () => {
           dispatch({
             type: "DISPLAY_FLASH",
             data: flash,
-          })
+          });
         }
       });
   };
