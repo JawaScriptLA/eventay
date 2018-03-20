@@ -3,7 +3,6 @@ const router = require("express").Router();
 const authRouter = require("./auth/authRouter.js");
 const checkAuth = require("./auth/check-auth.js");
 
-const { signup, login } = require("./components/auth/authController");
 const {
   sendRequest,
   pendingRequests,
@@ -25,14 +24,13 @@ const {
   editPost,
   deletePost
 } = require('./components/posts/postsController');
+const { select } = require('./queries/select.js');
 
 module.exports = passportObj => {
   router.use("/auth", authRouter(passportObj));
   router.use("/", checkAuth);
   router.all('/test', (req, res) => res.send({ message: 'test' }));
 
-  router.use('/auth/signup', signup);
-  router.use('/auth/login', login);
   router.post('/friendReq', sendRequest);
   router.get('/friendReq/:user_id', pendingRequests);
   router.put('/friendReq', acceptRequest);
@@ -46,8 +44,8 @@ module.exports = passportObj => {
   router.post('/event/post', createPost);
   router.put('/event/post', editPost);
   router.delete('/event/post', deletePost);
-  
+  router.get('/select/:table_name', async (req, res) => {
+    res.send(await select(req.params.table_name));
+  });
   return router;
 };
-
-// module.exports = router;

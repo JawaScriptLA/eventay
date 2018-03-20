@@ -1,12 +1,26 @@
 const express = require("express");
 const authRouter = express.Router();
+const db = require('../db/db.js');
 
 module.exports = passportObj => {
   authRouter.post("/signup", (req, res, next) => {
-    passportObj.authenticate("signup", (err, user, info) => {
+    passportObj.authenticate("signup", async (err, user, info) => {
       if (err) {
         return res.status(401).end();
       }
+      
+      const { username } = req.body;
+      try {
+        const query = `
+          INSERT INTO users (username, likes_count)
+          VALUES ('${username}', DEFAULT)
+          RETURNING username
+        `;
+        const data = await db.queryAsync(query);
+      } catch (err) {
+        console.log(`Error during signup: ${err}`);
+      }
+
       req.login(user, err => {
         if (err) {
           return res.status(401).end();
@@ -38,9 +52,6 @@ module.exports = passportObj => {
     delete req.decoded;
     req.logout();
     res.json("User successfully logged out");
-    // TODO (client side):
-    // Delete token (local storage)
-    // Redirect to login page
   });
   return authRouter;
 };
