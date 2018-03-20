@@ -27,7 +27,6 @@ module.exports = passportObj => {
 
       req.login(user, err => {
         if (err) {
-          console.log('Error during login is: ', err);
           return res.status(401).end();
         } else {
           return res.send(info);
