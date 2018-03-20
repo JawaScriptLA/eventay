@@ -47,7 +47,7 @@ module.exports = passportObj => {
   router.put('/event/post', editPost);
   router.delete('/event/post', deletePost);
   router.get('/select/:table_name', async (req, res) => {
-    res.send(await select(req.params.table_name));
+  res.send(await select(req.params.table_name));
   });
   return router;
 };
