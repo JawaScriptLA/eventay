@@ -32,7 +32,7 @@ class Test extends React.Component {
   }
 }
 
-Test.PropTypes = {
+Test.propTypes = {
   eventActions: PropTypes.object,
   event: PropTypes.array,
 }
