@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon server",
     "build": "webpack -w",
-    "db:setup": "node server/db/index.js"
+    "db:setup": "node server/db/index.js",
+    "db:seed": "psql -d eventayRDB -a -f server/db/seedData.sql"
   },
   "repository": {
     "type": "git",
