@@ -8,6 +8,7 @@ const {
   pendingRequests,
   acceptRequest,
   declineRequest,
+  seeMyFriends,
 } = require('./components/friendReq/friendReqController');
 const {
   createEvent,
@@ -35,6 +36,7 @@ module.exports = passportObj => {
   router.get('/friendReq/:user_id', pendingRequests);
   router.put('/friendReq', acceptRequest);
   router.delete('/friendReq', declineRequest);
+  router.get('/friends/:user_id', seeMyFriends);
   router.post('/event', createEvent);
   router.get('/event/:user_id', seeUserEvents);
   router.post('/event/invite', inviteTargetToEvent);

@@ -65,9 +65,25 @@ const declineRequest = async (req, res) => {
   }
 };
 
+const seeMyFriends = async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const query = `
+      SELECT * FROM friends
+      WHERE user_id=${user_id} OR target_id=${user_id}
+    `;
+    const data = await db.queryAsync(query);
+    res.send(data.rows);
+  } catch (err) {
+    console.log(`Error during friends GET request: ${err}`);
+    res.end();
+  }
+};
+
 module.exports = {
   sendRequest,
   pendingRequests,
   acceptRequest,
-  declineRequest
+  declineRequest,
+  seeMyFriends,
 };
