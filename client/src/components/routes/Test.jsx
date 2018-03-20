@@ -35,19 +35,19 @@ class Test extends React.Component {
 Test.propTypes = {
   eventActions: PropTypes.object,
   event: PropTypes.array,
-}
+};
 
 const mapStateToProps = (state) => {
   return {
     event: state.event
   };
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
     eventActions: bindActionCreators(eventActions, dispatch)
   };
-}
+};
 
 export default connect(
   mapStateToProps,
