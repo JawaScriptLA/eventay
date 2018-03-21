@@ -3,7 +3,7 @@
 import initialState from './initialState';
 import { FETCH_EVENT, RECEIVE_EVENT } from '../actions/actionTypes.js';
 
-export default function event(state = initialState.event, action) {
+export default event = (state = initialState.event, action) => {
   let newState;
   if (action.type === FETCH_EVENT) {
     console.log(`FETCH_EVENT action`);
@@ -16,4 +16,4 @@ export default function event(state = initialState.event, action) {
 
   console.log('eventReducer default...');
   return state;
-}
+};

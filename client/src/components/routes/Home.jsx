@@ -7,14 +7,14 @@ export default class Home extends React.Component {
     super(props);
     this.handleLogoutClick = this.handleLogoutClick.bind(this);
   }
+  
   handleLogoutClick() {
-    axios
-      .post('/api/auth/logout', {})
-      .then(res => {
+    axios.post('/api/auth/logout', {})
+      .then(() => {
         localStorage.removeItem('token');
         this.props.history.push('/login');
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }

@@ -33,7 +33,7 @@ class Login extends React.Component {
 
         this.props.history.push('/');
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }
