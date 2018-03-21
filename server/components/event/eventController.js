@@ -47,6 +47,7 @@ const createEvent = async (req, res) => {
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during event POST request: ${err}`);
+    res.sendStatus(500);
   }
 };
 
@@ -60,7 +61,7 @@ const seeHostingEvents = async (req, res) => {
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during event GET request: ${err}`);
-    res.sendStatus(401);
+    res.sendStatus(500);
   }
 };
 
@@ -74,7 +75,7 @@ const seeUserEventsAndInvites = async (req, res) => {
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during event GET request: ${err}`);
-    res.end();
+    res.sendStatus(500);
   }
 };
 

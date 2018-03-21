@@ -24,7 +24,7 @@ const inviteTargetToEvent = async (req, res) => {
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during attendants POST request: ${err}`);
-    res.end();
+    res.sendStatus(500);
   }
 };
 
@@ -38,7 +38,7 @@ const seeAllEventAttendants = async (req, res) => {
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during attendants GET request: ${err}`);
-    res.end();
+    res.sendStatus(500);
   }
 };
 
@@ -53,8 +53,8 @@ const respondToEventInvite = async (req, res) => {
     `);
     res.send(data.rows);
   } catch (err) {
-    console.log(`Error during attendants PUT request: ${err}`);
-    res.end();
+    console.log(`Error during attendants PUT request: ${err}`)
+    res.sendStatus(500);
   }
 };
 
@@ -68,7 +68,7 @@ const attendantSeeTheirInvites = async (req, res) => {
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during attendants GET request: ${err}`);
-    res.end();
+    res.sendStatus(500);
   }
 };
 

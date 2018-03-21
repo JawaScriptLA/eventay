@@ -3,7 +3,7 @@ var User = require('./models/user.js');
 var bCrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-module.exports = passport => {
+module.exports = (passport) => {
   passport.use(
     'login',
     new LocalStrategy(

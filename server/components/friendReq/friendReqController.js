@@ -12,9 +12,10 @@ const sendRequest = async (req, res) => {
         WHERE user_id=${user_id} AND target_id=${target_id}
       ) RETURNING user_id, target_id;
     `);
-    res.send(201);
+    res.sendStatus(201);
   } catch (err) {
     console.log(`Error during friends POST request: ${err}`);
+    res.sendStatus(500);
   }
 };
 
@@ -28,7 +29,7 @@ const pendingRequests = async (req, res) => {
     `);
     res.send(data.rows);
   } catch (err) {
-    res.sendStatus(401);
+    res.sendStatus(500);
   }
 };
 
@@ -41,9 +42,10 @@ const acceptRequest = async (req, res) => {
       WHERE user_id=${target_id} AND target_id=${user_id}
       RETURNING user_id, target_id, status
     `);
-    res.send(201);
+    res.sendStatus(201);
   } catch (err) {
     console.log(`Error during friends GET request: ${err}`);
+    res.sendStatus(500);
   }
 };
 
@@ -55,10 +57,10 @@ const declineRequest = async (req, res) => {
       WHERE user_id=${target_id} AND target_id=${user_id} AND status='pending'
       RETURNING user_id, target_id
     `);
-    res.send(200);
+    res.sendStatus(200);
   } catch (err) {
     console.log(`Error during friends DELETE request: ${err}`);
-    res.sendStatus(501);
+    res.sendStatus(500);
   }
 };
 
@@ -72,7 +74,7 @@ const seeMyFriends = async (req, res) => {
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during friends GET request: ${err}`);
-    res.end();
+    res.sendStatus(500);
   }
 };
 

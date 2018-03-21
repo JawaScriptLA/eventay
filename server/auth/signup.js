@@ -3,7 +3,7 @@ var User = require('./models/user.js');
 var bCrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-module.exports = passport => {
+module.exports = (passport) => {
   passport.use(
     'signup',
     new LocalStrategy(
@@ -26,7 +26,7 @@ module.exports = passport => {
             newUser.password = createHash(password);
 
             // Save the user
-            newUser.save(err => {
+            newUser.save((err) => {
               if (err) {
                 console.log('Error in Saving user:', err);
                 throw err;

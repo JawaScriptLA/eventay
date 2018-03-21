@@ -15,7 +15,7 @@ const createPost = async (req, res) => {
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during posts POST requests: ${err}`);
-    res.end();
+    res.sendStatus(500);
   }
 };
 
@@ -31,7 +31,7 @@ const editPost = async (req, res) => {
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during posts UPDATE: ${err}`);
-    res.end();
+    res.sendStatus(500);
   }
 };
 
@@ -43,10 +43,10 @@ const deletePost = async (req, res) => {
       WHERE user_id=${user_id} AND event_id=${event_id}
       RETURNING body, user_id, event_id
     `);
-    res.send(200);
+    res.sendStatus(200);
   } catch (err) {
     console.log(`Error during posts DELETE: ${err}`);
-    res.end();
+    res.sendStatus(500);
   }
 };
 
