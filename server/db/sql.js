@@ -153,11 +153,19 @@ module.exports = {
           'maybe'
         )
       `);
+      await db.queryAsync('DROP TYPE IF EXISTS ACCESS');
+      await db.queryAsync(`
+        CREATE TYPE ACCESS AS ENUM (
+          'host',
+          'privileged-member',
+          'member'
+        )
+      `);
       await db.queryAsync(`
         CREATE TABLE IF NOT EXISTS attendants
         (
           id SERIAL,
-          access INT NOT NULL DEFAULT 0,
+          access ACCESS NOT NULL DEFAULT 'member',
           status ATTENDANTS_STATUS NOT NULL DEFAULT 'pending',
           user_id INT NOT NULL,
           event_id INT NOT NULL,

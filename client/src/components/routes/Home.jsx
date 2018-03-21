@@ -19,6 +19,10 @@ export default class Home extends React.Component {
   }
 
   render() {
-    return <button onClick={this.handleLogoutClick}>Logout!</button>;
+    return (
+      <div>
+        <button onClick={this.handleLogoutClick}>Logout!</button>
+      </div>
+    );
   }
 }

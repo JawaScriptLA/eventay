@@ -30,7 +30,7 @@ const pendingRequests = async (req, res) => {
     const data = await db.queryAsync(query);
     res.send(data.rows);
   } catch (err) {
-    res.send(`Error during friends GET request: ${err}`);
+    res.sendStatus(401);
   }
 };
 
@@ -62,6 +62,22 @@ const declineRequest = async (req, res) => {
     res.send(200);
   } catch (err) {
     console.log(`Error during friends DELETE request: ${err}`);
+    res.sendStatus(501);
+  }
+};
+
+const seeMyFriends = async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const query = `
+      SELECT * FROM friends
+      WHERE user_id=${user_id} OR target_id=${user_id}
+    `;
+    const data = await db.queryAsync(query);
+    res.send(data.rows);
+  } catch (err) {
+    console.log(`Error during friends GET request: ${err}`);
+    res.end();
   }
 };
 
@@ -69,5 +85,6 @@ module.exports = {
   sendRequest,
   pendingRequests,
   acceptRequest,
-  declineRequest
+  declineRequest,
+  seeMyFriends,
 };

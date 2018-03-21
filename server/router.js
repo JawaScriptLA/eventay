@@ -8,10 +8,12 @@ const {
   pendingRequests,
   acceptRequest,
   declineRequest,
+  seeMyFriends,
 } = require('./components/friendReq/friendReqController');
 const {
   createEvent,
-  seeUserEvents,
+  seeHostingEvents,
+  seeUserEventsAndInvites,
 } = require('./components/event/eventController');
 const {
   inviteTargetToEvent,
@@ -22,7 +24,7 @@ const {
 const {
   createPost,
   editPost,
-  deletePost
+  deletePost,
 } = require('./components/posts/postsController');
 const { select } = require('./queries/select.js');
 
@@ -35,8 +37,10 @@ module.exports = passportObj => {
   router.get('/friendReq/:user_id', pendingRequests);
   router.put('/friendReq', acceptRequest);
   router.delete('/friendReq', declineRequest);
+  router.get('/friends/:user_id', seeMyFriends);
   router.post('/event', createEvent);
-  router.get('/event/:user_id', seeUserEvents);
+  router.get('/event/:user_id', seeHostingEvents);
+  router.get('/event/all/:user_id', seeUserEventsAndInvites);
   router.post('/event/invite', inviteTargetToEvent);
   router.get('/event/invite/:event_id', seeAllEventAttendants);
   router.put('/event/invite', respondToEventInvite);
@@ -45,7 +49,7 @@ module.exports = passportObj => {
   router.put('/event/post', editPost);
   router.delete('/event/post', deletePost);
   router.get('/select/:table_name', async (req, res) => {
-    res.send(await select(req.params.table_name));
+  res.send(await select(req.params.table_name));
   });
   return router;
 };

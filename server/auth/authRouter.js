@@ -12,8 +12,12 @@ module.exports = passportObj => {
       const { username } = req.body;
       try {
         const query = `
-          INSERT INTO users (username, likes_count)
-          VALUES ('${username}', DEFAULT)
+          INSERT INTO users (username)
+          SELECT '${username}'
+          WHERE NOT EXISTS (
+            SELECT username FROM users
+            WHERE username='${username}'
+          )
           RETURNING username
         `;
         const data = await db.queryAsync(query);
