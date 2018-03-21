@@ -77,7 +77,7 @@ const seeMyFriends = async (req, res) => {
 
     const friendsUserInfo = [];
     for (let i = 0; i < data.rows.length; i++) {
-      const id = data.rows[i].user_id === user_id ? data.rows[i].user_id : data.rows[i].target_id;
+      const id = Number(data.rows[i].user_id) === Number(user_id) ? data.rows[i].target_id : data.rows[i].user_id;
       const userInfo = await db.queryAsync(`SELECT * FROM users WHERE id=${id}`);
       friendsUserInfo.push(userInfo.rows);
     }
