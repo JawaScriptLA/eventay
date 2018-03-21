@@ -79,16 +79,25 @@ const attendantSeeTheirInvites = async (req, res) => {
 const showUserEvents = async (req, res) => {
   const { user_id } = req.params;
   try {
-    const query = `
+    const queryForEventIds = `
       SELECT * FROM attendants
       WHERE user_id=${user_id}
     `;
-    const data = await db.queryAsync(query);
+    const data = await db.queryAsync(queryForEventIds);
     const userEvents = [];
     data.rows.forEach(row => {
       userEvents.push(row.event_id);
     });
-    res.send(userEvents);
+    let queryForEvent;
+    let eventData;
+    const eventList = [];
+    for (let i = 0; i < userEvents.length; i++) {
+      queryForEvent = `SELECT * FROM events
+      WHERE id=${userEvents[i]}`;
+      eventData = await db.queryAsync(queryForEvent);
+      eventList.push(eventData.rows);
+    }
+    res.send(eventList);
   } catch (err) {
     console.log(`Error during attendants GET request: ${err}`);
     res.end();
