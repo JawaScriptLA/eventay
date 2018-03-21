@@ -62,7 +62,7 @@ const seeHostingEvents = async (req, res) => {
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during event GET request: ${err}`);
-    res.end();
+    res.sendStatus(401);
   }
 };
 
