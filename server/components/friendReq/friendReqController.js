@@ -30,7 +30,7 @@ const pendingRequests = async (req, res) => {
     const data = await db.queryAsync(query);
     res.send(data.rows);
   } catch (err) {
-    res.send(`Error during friends GET request: ${err}`);
+    res.sendStatus(401);
   }
 };
 
@@ -62,6 +62,7 @@ const declineRequest = async (req, res) => {
     res.send(200);
   } catch (err) {
     console.log(`Error during friends DELETE request: ${err}`);
+    res.sendStatus(501);
   }
 };
 
