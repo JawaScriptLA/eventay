@@ -1,16 +1,16 @@
-const login = require("./login.js");
-const signup = require("./signup.js");
-const User = require("./models/user.js");
+const login = require('./login.js');
+const signup = require('./signup.js');
+const User = require('./models/user.js');
 
 module.exports = passportObj => {
   passportObj.serializeUser((user, done) => {
-    console.log("serializing user:", user);
+    console.log('serializing user:', user);
     done(null, user._id);
   });
 
   passportObj.deserializeUser((id, done) => {
     User.findById(id, function(err, user) {
-      console.log("deserializing user:", user);
+      console.log('deserializing user:', user);
       done(err, user);
     });
   });

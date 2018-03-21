@@ -7,7 +7,7 @@ import userInfo from './userInfoReducer';
 const rootReducer = combineReducers({
   event,
   friendsList,
-  userInfo,
+  userInfo
 });
 
 export default rootReducer;

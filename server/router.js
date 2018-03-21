@@ -1,36 +1,36 @@
-const router = require("express").Router();
+const router = require('express').Router();
 
-const authRouter = require("./auth/authRouter.js");
-const checkAuth = require("./auth/check-auth.js");
+const authRouter = require('./auth/authRouter.js');
+const checkAuth = require('./auth/check-auth.js');
 
 const {
   sendRequest,
   pendingRequests,
   acceptRequest,
   declineRequest,
-  seeMyFriends,
+  seeMyFriends
 } = require('./components/friendReq/friendReqController');
 const {
   createEvent,
   seeHostingEvents,
-  seeUserEventsAndInvites,
+  seeUserEventsAndInvites
 } = require('./components/event/eventController');
 const {
   inviteTargetToEvent,
   seeAllEventAttendants,
   respondToEventInvite,
-  attendantSeeTheirInvites,
+  attendantSeeTheirInvites
 } = require('./components/attendants/attendantsController');
 const {
   createPost,
   editPost,
-  deletePost,
+  deletePost
 } = require('./components/posts/postsController');
 const { select } = require('./queries/select.js');
 
 module.exports = passportObj => {
-  router.use("/auth", authRouter(passportObj));
-  router.use("/", checkAuth);
+  router.use('/auth', authRouter(passportObj));
+  router.use('/', checkAuth);
   router.all('/test', (req, res) => res.send({ message: 'test' }));
 
   router.post('/friendReq', sendRequest);
@@ -49,7 +49,7 @@ module.exports = passportObj => {
   router.put('/event/post', editPost);
   router.delete('/event/post', deletePost);
   router.get('/select/:table_name', async (req, res) => {
-  res.send(await select(req.params.table_name));
+    res.send(await select(req.params.table_name));
   });
   return router;
 };
