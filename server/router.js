@@ -2,6 +2,7 @@ const router = require('express').Router();
 const authRouter = require('./auth/authRouter.js');
 const checkAuth = require('./auth/checkAuth.js');
 const { select } = require('./queries/select.js');
+const attendantsRouter = require('./components/attendants/attendantsRouter.js');
 
 const {
   sendRequest,
@@ -49,6 +50,7 @@ module.exports = passportObj => {
   router.use('/', checkAuth);
   router.all('/test', (req, res) => res.send({ message: 'test' }));
 
+  router.use('/attendant', attendantsRouter);
   router.post('/friendReq', sendRequest);
   router.get('/friendReq/:user_id', pendingRequests);
   router.put('/friendReq', acceptRequest);

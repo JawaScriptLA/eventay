@@ -16,20 +16,20 @@ module.exports = {
       console.log(`Error dropping ${type} ${name}.`);
     }
   },
+  useDatabase: async () => {
+    try {
+      await db.queryAsync(`USE IF EXISTS ${config.rdb.name}`);
+      console.log('Using database', config.rdb.name);
+    } catch (err) {
+      console.log('Error using database', config.rdb.name);
+    }
+  },
   createDatabase: async () => {
     try {
       await db.queryAsync(`CREATE DATABASE ${config.rdb.name}`);
       console.log('Successfully created database', config.rdb.name);
     } catch (err) {
       console.log('Error creating database', config.rdb.name);
-    }
-  },
-  useDatabase: async () => {
-    try {
-      await db.queryAsync(`USE IF EXISTS ${config.rdb.name}`);
-      console.log('Successfully using database', config.rdb.name);
-    } catch (err) {
-      console.log('Error using database', config.rdb.name);
     }
   },
   createUsersTable: async () => {

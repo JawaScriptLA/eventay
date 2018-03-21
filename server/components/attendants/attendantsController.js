@@ -1,17 +1,9 @@
 const db = require('../../db/db');
 
 module.exports = {
-  inviteTargetToEvent: async (req, res) => {
-    let {
-      access,
-      status,
-      user_id,
-      event_id,
-      invitor_id,
-    } = req.body;
-  
+  inviteTargetToEvent: async ({ access, status, user_id, event_id, invitor_id }) => {
     try {
-      const data = await db.queryAsync(`
+      await db.queryAsync(`
         INSERT INTO attendants (
           access,
           status,
@@ -19,48 +11,41 @@ module.exports = {
           event_id,
           invitor_id
         ) SELECT
-        ${access || 0},
+        ${access || 'member'},
         '${status || 'pending'}',
         ${user_id},
         ${event_id},
-        ${invitor_id || null}
+        ${invitor_id ? invitor_id : null}
         WHERE NOT EXISTS (
           SELECT * FROM attendants
           WHERE event_id=${event_id} AND invitor_id=${invitor_id}
         ) RETURNING user_id, event_id, invitor_id
       `);
-      res.send(data.rows);
     } catch (err) {
-      console.log(`Error during attendants POST request: ${err}`);
-      res.sendStatus(500);
+      throw err;
     }
   },
-  seeAllEventAttendants: async (req, res) => {
+  seeAllEventAttendants: async ({ event_id }) => {
     try {
-      const { event_id } = req.params;
       const data = await db.queryAsync(`
         SELECT * FROM attendants
         WHERE event_id=${event_id}
       `);
-      res.send(data.rows);
+      return data.rows;
     } catch (err) {
-      console.log(`Error during attendants GET request: ${err}`);
-      res.sendStatus(500);
+      throw err;
     }
   },
-  respondToEventInvite: async (req, res) => {
+  respondToEventInvite: async ({ status, user_id, event_id }) => {
     try {
-      const { user_id, status, event_id } = req.body;
-      const data = await db.queryAsync(`
+      await db.queryAsync(`
         UPDATE attendants
         SET status='${status}'
         WHERE user_id=${user_id} AND event_id=${event_id}
         RETURNING access, status, user_id, event_id, invitor_id
       `);
-      res.send(data.rows);
     } catch (err) {
-      console.log(`Error during attendants PUT request: ${err}`)
-      res.sendStatus(500);
+      throw err;
     }
   },
   attendantSeeTheirInvites: async (req, res) => {
@@ -74,6 +59,16 @@ module.exports = {
     } catch (err) {
       console.log(`Error during attendants GET request: ${err}`);
       res.sendStatus(500);
+    }
+  },
+  declineEventInvite: async ({ user_id, event_id }) => {
+    try {
+      await db.queryAsync(`
+        DELETE FROM attendants
+        WHERE user_id=${user_id} AND event_id=${event_id}
+      `);
+    } catch (err) {
+      throw err;
     }
   }
 };
