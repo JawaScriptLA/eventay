@@ -1,6 +1,12 @@
 const db = require('../../db/db');
 
 const createEvent = async (req, res) => {
+  console.log(req.body);
+
+  // {
+  //   "title": "test event",
+  //   "description": "tester"
+  // }
   const {
     title,
     description,
@@ -10,9 +16,11 @@ const createEvent = async (req, res) => {
     start_time,
     end_time,
     publicity,
-    host_id,
+    host_id
   } = req.body;
+  console.log('likescount: ', likes_count);
   try {
+    console.log('hi');
     const query = `
       INSERT INTO events (
         title,
@@ -26,24 +34,27 @@ const createEvent = async (req, res) => {
         host_id
       ) VALUES (
         '${title}',
-        ${description ? '' + description : null},
-        ${thumbnail ? '' + thumbnail : null},
+        ${description ? `'${description}'` : null},
+        ${thumbnail ? thumbnail : null},
         ${location ? '' + location : null},
         ${likes_count ? likes_count : 'DEFAULT'},
         ${start_time ? start_time : null},
         ${end_time ? end_time : null},
-        ${publicity ? publicity : 'DEFAULT'},
+        ${publicity ? publicity : 'DEFAULT'}, 
         '${host_id}'
       ) RETURNING id, title, likes_count, publicity, host_id
     `;
+    // console.log('MY QUERY IS:', query);
     const data = await db.queryAsync(query);
+    console.log('in the clear');
     const addHostToAttendants = `
       INSERT INTO attendants (
         access, status, user_id, event_id, invitor_id
       ) VALUES (
-        'host', 'going', ${host_id}, ${data.rows[0].id}, null
+        0, 'going', ${host_id}, ${data.rows[0].id}, null
       )
     `;
+    console.log(addHostToAttendants);
     const dataAddingHost = await db.queryAsync(addHostToAttendants);
     res.send(data.rows);
   } catch (err) {
@@ -84,5 +95,5 @@ const seeUserEventsAndInvites = async (req, res) => {
 module.exports = {
   createEvent,
   seeHostingEvents,
-  seeUserEventsAndInvites,
+  seeUserEventsAndInvites
 };

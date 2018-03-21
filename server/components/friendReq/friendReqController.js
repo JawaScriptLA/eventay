@@ -22,10 +22,10 @@ const sendRequest = async (req, res) => {
 const pendingRequests = async (req, res) => {
   const { user_id } = req.params;
   try {
-    console.log("in the friend req controller");
+    console.log('in the friend req controller');
     const query = `
       SELECT * FROM friends
-      WHERE user_id=${user_id} AND status='pending'
+      WHERE target_id=${user_id} AND status='pending'
     `;
     const data = await db.queryAsync(query);
     res.send(data.rows);
@@ -35,6 +35,7 @@ const pendingRequests = async (req, res) => {
 };
 
 const acceptRequest = async (req, res) => {
+  console.log('accepting the request');
   const { user_id, target_id } = req.body;
   try {
     const query = `
@@ -44,6 +45,7 @@ const acceptRequest = async (req, res) => {
       RETURNING user_id, target_id, status
     `;
     const data = await db.queryAsync(query);
+    console.log('DATAAA', user_id, target_id, data);
     res.send(201);
   } catch (err) {
     console.log(`Error during friends GET request: ${err}`);
@@ -93,5 +95,5 @@ module.exports = {
   pendingRequests,
   acceptRequest,
   declineRequest,
-  seeMyFriends,
+  seeMyFriends
 };
