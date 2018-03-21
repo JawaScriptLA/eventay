@@ -19,7 +19,8 @@ const {
   inviteTargetToEvent,
   seeAllEventAttendants,
   respondToEventInvite,
-  attendantSeeTheirInvites
+  attendantSeeTheirInvites,
+  showUserEvents
 } = require('./components/attendants/attendantsController');
 const {
   createPost,
@@ -48,6 +49,9 @@ module.exports = passportObj => {
   router.post('/event/post', createPost);
   router.put('/event/post', editPost);
   router.delete('/event/post', deletePost);
+
+  router.get('/schedule/showUserEvents/:user_id', showUserEvents);
+
   router.get('/select/:table_name', async (req, res) => {
     res.send(await select(req.params.table_name));
   });
