@@ -5,7 +5,6 @@ import { FETCH_EVENT, RECEIVE_EVENT } from '../actions/actionTypes.js';
 
 export default function event(state = initialState.event, action) {
   let newState;
-
   if (action.type === FETCH_EVENT) {
     console.log(`FETCH_EVENT action`);
     return action;
