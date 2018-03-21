@@ -51,7 +51,7 @@ const createEvent = async (req, res) => {
   }
 };
 
-const seeUserEvents = async (req, res) => {
+const seeHostingEvents = async (req, res) => {
   const { user_id } = req.params;
   try {
     const query = `
@@ -67,5 +67,5 @@ const seeUserEvents = async (req, res) => {
 
 module.exports = {
   createEvent,
-  seeUserEvents,
+  seeHostingEvents,
 };

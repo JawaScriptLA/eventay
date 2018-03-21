@@ -12,7 +12,7 @@ const {
 } = require('./components/friendReq/friendReqController');
 const {
   createEvent,
-  seeUserEvents,
+  seeHostingEvents,
 } = require('./components/event/eventController');
 const {
   inviteTargetToEvent,
@@ -38,7 +38,7 @@ module.exports = passportObj => {
   router.delete('/friendReq', declineRequest);
   router.get('/friends/:user_id', seeMyFriends);
   router.post('/event', createEvent);
-  router.get('/event/:user_id', seeUserEvents);
+  router.get('/event/:user_id', seeHostingEvents);
   router.post('/event/invite', inviteTargetToEvent);
   router.get('/event/invite/:event_id', seeAllEventAttendants);
   router.put('/event/invite', respondToEventInvite);
