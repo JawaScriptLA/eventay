@@ -14,7 +14,7 @@ export default function event(state = initialState.event, action) {
     newState = action.event;
     return newState;
   }
-  
+
   console.log('eventReducer default...');
   return state;
 }
