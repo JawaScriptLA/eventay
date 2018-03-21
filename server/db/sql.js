@@ -8,12 +8,12 @@ try {
 }
 
 module.exports = {
-  dropDatabase: async () => {
+  drop: async (type, name) => {
     try {
-      await db.queryAsync(`DROP DATABASE IF EXISTS ${config.rdb.name}`);
-      console.log('Successfully dropped database', config.rdb.name);
+      await db.queryAsync(`DROP ${type} IF EXISTS ${name}`);
+      console.log(`Successfully dropped ${type} ${name}.`);
     } catch (err) {
-      console.log('Error dropping database', config.rdb.name);
+      console.log(`Error dropping ${type} ${name}.`);
     }
   },
   createDatabase: async () => {
@@ -30,14 +30,6 @@ module.exports = {
       console.log('Successfully using database', config.rdb.name);
     } catch (err) {
       console.log('Error using database', config.rdb.name);
-    }
-  },
-  dropUsersTable: async () => {
-    try {
-      await db.queryAsync('DROP TABLE IF EXISTS users');
-      console.log('Successfully dropped users table.');
-    } catch (err) {
-      console.log('Error dropping users table.', err);
     }
   },
   createUsersTable: async () => {
@@ -57,14 +49,6 @@ module.exports = {
       console.log('Successfully created users table.');
     } catch (err) {
       console.log('Error creating users table.', err);
-    }
-  },
-  dropFriendsTable: async () => {
-    try {
-      await db.queryAsync('DROP TABLE IF EXISTS friends');
-      console.log('Successfully dropped friends table.');
-    } catch (err) {
-      console.log('Error dropping friends table.', err);
     }
   },
   createFriendsTable: async () => {
@@ -99,14 +83,6 @@ module.exports = {
       console.log('Error creating friends table.', err);
     }
   },
-  dropEventsTable: async () => {
-    try {
-      await db.queryAsync('DROP TABLE IF EXISTS events');
-      console.log('Successfully dropped events table.');
-    } catch (err) {
-      console.log('Error dropping events table.', err);
-    }
-  },
   createEventsTable: async () => {
     try {
       await db.queryAsync(`
@@ -132,14 +108,6 @@ module.exports = {
       console.log('Successfully created events table.');
     } catch (err) {
       console.log('Error creating events table.', err);
-    }
-  },
-  dropAttendantsTable: async () => {
-    try {
-      await db.queryAsync('DROP TABLE IF EXISTS attendants');
-      console.log('Successfully dropped attendants table.');
-    } catch (err) {
-      console.log('Error dropping attendants table.', err);
     }
   },
   createAttendantsTable: async () => {
@@ -188,14 +156,6 @@ module.exports = {
       console.log('Error creating attendants table.', err);
     }
   },
-  dropPostsTable: async () => {
-    try {
-      await db.queryAsync('DROP TABLE IF EXISTS posts');
-      console.log('Successfully dropped posts table.');
-    } catch (err) {
-      console.log('Error dropping posts table.', err);
-    }
-  },
   createPostsTable: async () => {
     try {
       await db.queryAsync(`
@@ -224,14 +184,6 @@ module.exports = {
       console.log('Error creating posts table.', err);
     }
   },
-  dropLikesTable: async () => {
-    try {
-      await db.queryAsync('DROP TABLE IF EXISTS likes');
-      console.log('Successfully dropped likes table.');
-    } catch (err) {
-      console.log('Error dropping likes table.', err);
-    }
-  },
   createLikesTable: async () => {
     try {
       await db.queryAsync(`
@@ -253,14 +205,6 @@ module.exports = {
       console.log('Successfully created likes table.');
     } catch (err) {
       console.log('Error creating likes table.', err);
-    }
-  },
-  dropEmojisTable: async () => {
-    try {
-      await db.queryAsync('DROP TABLE IF EXISTS emojis');
-      console.log('Successfully dropped emojis table.');
-    } catch (err) {
-      console.log('Error dropping emojis table.', err);
     }
   },
   createEmojisTable: async () => {
@@ -285,14 +229,6 @@ module.exports = {
       console.log('Successfully created emojis table.');
     } catch (err) {
       console.log('Error creating emojis table.', err);
-    }
-  },
-  dropReactionsTable: async () => {
-    try {
-      await db.queryAsync('DROP TABLE IF EXISTS reactions');
-      console.log('Successfully dropped reactions table.');
-    } catch (err) {
-      console.log('Error dropping reactions table.', err);
     }
   },
   createReactionsTable: async () => {
