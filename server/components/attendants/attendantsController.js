@@ -36,6 +36,18 @@ module.exports = {
       throw err;
     }
   },
+  attendantSeeTheirInvites: async ({ user_id }) => {
+    try {
+      const data = await db.queryAsync(`
+        SELECT * FROM attendants
+        WHERE user_id=${user_id}
+      `);
+      res.send(data.rows);
+    } catch (err) {
+      console.log(`Error during attendants GET request: ${err}`);
+      res.sendStatus(500);
+    }
+  },
   respondToEventInvite: async ({ status, user_id, event_id }) => {
     try {
       await db.queryAsync(`
@@ -46,19 +58,6 @@ module.exports = {
       `);
     } catch (err) {
       throw err;
-    }
-  },
-  attendantSeeTheirInvites: async (req, res) => {
-    const { user_id } = req.params;
-    try {
-      const data = await db.queryAsync(`
-        SELECT * FROM attendants
-        WHERE user_id=${user_id}
-      `);
-      res.send(data.rows);
-    } catch (err) {
-      console.log(`Error during attendants GET request: ${err}`);
-      res.sendStatus(500);
     }
   },
   declineEventInvite: async ({ user_id, event_id }) => {

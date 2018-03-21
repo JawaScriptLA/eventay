@@ -3,6 +3,7 @@ const authRouter = require('./auth/authRouter.js');
 const checkAuth = require('./auth/checkAuth.js');
 const { select } = require('./queries/select.js');
 const attendantsRouter = require('./components/attendants/attendantsRouter.js');
+const { attendantSeeTheirInvites } = require('./components/attendants/attendantsController');
 
 const {
   sendRequest,
@@ -16,13 +17,6 @@ const {
   seeHostingEvents,
   seeUserEventsAndInvites
 } = require('./components/event/eventController');
-const {
-  inviteTargetToEvent,
-  seeAllEventAttendants,
-  respondToEventInvite,
-  attendantSeeTheirInvites,
-  showUserEvents
-} = require('./components/attendants/attendantsController');
 const {
   createPost,
   editPost,
@@ -51,6 +45,14 @@ module.exports = passportObj => {
   router.all('/test', (req, res) => res.send({ message: 'test' }));
 
   router.use('/attendant', attendantsRouter);
+  router.get('/attendants', async (req, res) => {
+    try {
+      let data = await attendantSeeTheirInvites(req.body);
+      res.send(data);
+    } catch (err) {
+      res.sendStatus(500);
+    }
+  });
   router.post('/friendReq', sendRequest);
   router.get('/friendReq/:user_id', pendingRequests);
   router.put('/friendReq', acceptRequest);
