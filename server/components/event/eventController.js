@@ -12,8 +12,9 @@ const createEvent = async (req, res) => {
     publicity,
     host_id
   } = req.body;
+
   try {
-    const query = `
+    const data = await db.queryAsync(`
       INSERT INTO events (
         title,
         description,
@@ -35,16 +36,14 @@ const createEvent = async (req, res) => {
         ${publicity ? publicity : 'DEFAULT'}, 
         '${host_id}'
       ) RETURNING id, title, likes_count, publicity, host_id
-    `;
-    const data = await db.queryAsync(query);
-    const addHostToAttendants = `
+    `);
+    const dataAddingHost = await db.queryAsync(`
       INSERT INTO attendants (
         access, status, user_id, event_id, invitor_id
       ) VALUES (
         'host', 'going', ${host_id}, ${data.rows[0].id}, null
       )
-    `;
-    const dataAddingHost = await db.queryAsync(addHostToAttendants);
+    `);
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during event POST request: ${err}`);
@@ -52,13 +51,12 @@ const createEvent = async (req, res) => {
 };
 
 const seeHostingEvents = async (req, res) => {
-  const { user_id } = req.params;
   try {
-    const query = `
+    const { user_id } = req.params;
+    const data = await db.queryAsync(`
       SELECT * FROM events
       WHERE host_id='${user_id}'
-    `;
-    const data = await db.queryAsync(query);
+    `);
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during event GET request: ${err}`);
@@ -67,13 +65,12 @@ const seeHostingEvents = async (req, res) => {
 };
 
 const seeUserEventsAndInvites = async (req, res) => {
-  const { user_id } = req.params;
   try {
-    const query = `
+    const { user_id } = req.params;
+    const data = await db.queryAsync(`
       SELECT title FROM attendants, events
       WHERE user_id=${user_id} OR host_id=${user_id}
-    `;
-    const data = await db.queryAsync(query);
+    `);
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during event GET request: ${err}`);

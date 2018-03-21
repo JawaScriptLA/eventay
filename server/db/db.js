@@ -31,4 +31,5 @@ db.on('error', () => {
 
 db.connect();
 Promise.promisifyAll(db);
+
 module.exports = db;

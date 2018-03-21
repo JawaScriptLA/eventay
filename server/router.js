@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const authRouter = require('./auth/authRouter.js');
 const checkAuth = require('./auth/check-auth.js');
+const { select } = require('./queries/select.js');
 
 const {
   sendRequest,
@@ -26,7 +27,6 @@ const {
   editPost,
   deletePost
 } = require('./components/posts/postsController');
-const { select } = require('./queries/select.js');
 
 const conflictExists = (
   firstStartTime,

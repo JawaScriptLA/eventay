@@ -9,8 +9,8 @@ module.exports = passportObj => {
         return res.status(401).end();
       }
       
-      const { username } = req.body;
       try {
+        const { username } = req.body;
         const query = `
           INSERT INTO users (username)
           SELECT '${username}'
@@ -41,10 +41,7 @@ module.exports = passportObj => {
 
   authRouter.post('/login', (req, res, next) => {
     passportObj.authenticate('login', (err, user, info) => {
-      if (err) {
-        return res.status(401).end();
-      }
-      if (!user) {
+      if (err || !user) {
         return res.status(401).end();
       }
       req.logIn(user, async (err) => {
@@ -67,5 +64,6 @@ module.exports = passportObj => {
     req.logout();
     res.json('User successfully logged out');
   });
+
   return authRouter;
 };

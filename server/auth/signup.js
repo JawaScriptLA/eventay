@@ -7,24 +7,18 @@ module.exports = passport => {
   passport.use(
     'signup',
     new LocalStrategy(
-      {
-        session: false,
-        passReqToCallback: true
-      },
+      { session: false, passReqToCallback: true},
       (req, username, password, done) => {
         User.findOne({ username: username }, (err, user) => {
           if (err) {
             console.log('Error in SignUp: ' + err);
             return done(err);
           }
+
           // User already exists
           if (user) {
             console.log('User already exists with username: ' + username);
-            return done(
-              null,
-              false
-              // req.flash('message', 'User Already Exists')
-            );
+            return done(null, false /*req.flash('message', 'User Already Exists')*/);
           } else {
             // Create new user
             var newUser = new User();
@@ -37,11 +31,9 @@ module.exports = passport => {
                 console.log('Error in Saving user:', err);
                 throw err;
               }
+
               console.log('User Registration successful');
-              const payload = {
-                userId: newUser._id,
-                username: newUser.username
-              };
+              const payload = { userId: newUser._id, username: newUser.username };
 
               // create a token string
               const token = jwt.sign(payload, 'mySecret');
@@ -54,7 +46,5 @@ module.exports = passport => {
   );
 
   // Generates hash using bCrypt
-  var createHash = password => {
-    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
-  };
+  var createHash = password => bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 };
