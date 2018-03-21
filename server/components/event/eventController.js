@@ -62,10 +62,27 @@ const seeHostingEvents = async (req, res) => {
     res.send(data.rows);
   } catch (err) {
     console.log(`Error during event GET request: ${err}`);
+    res.end();
+  }
+};
+
+const seeUserEventsAndInvites = async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const query = `
+      SELECT title FROM attendants, events
+      WHERE user_id=${user_id} OR host_id=${user_id}
+    `;
+    const data = await db.queryAsync(query);
+    res.send(data.rows);
+  } catch (err) {
+    console.log(`Error during event GET request: ${err}`);
+    res.end();
   }
 };
 
 module.exports = {
   createEvent,
   seeHostingEvents,
+  seeUserEventsAndInvites,
 };
