@@ -1,11 +1,11 @@
-var LocalStrategy = require("passport-local").Strategy;
-var User = require("./models/user.js");
-var bCrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+var LocalStrategy = require('passport-local').Strategy;
+var User = require('./models/user.js');
+var bCrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 module.exports = passport => {
   passport.use(
-    "login",
+    'login',
     new LocalStrategy(
       {
         session: false,
@@ -18,18 +18,18 @@ module.exports = passport => {
           }
           // user doesn't exist
           if (!user) {
-            // console.log("No user with username: " + username);
+            // console.log('No user with username: ' + username);
             return done(
               null,
-              false /*req.flash("message", "User Not found.")*/
+              false /*req.flash('message', 'User Not found.')*/
             );
           }
           // Wrong password
           if (!bCrypt.compareSync(password, user.password)) {
-            // console.log("Invalid Password");
+            // console.log('Invalid Password');
             return done(
               null,
-              false /*req.flash("message", "Invalid Password")*/
+              false /*req.flash('message', 'Invalid Password')*/
             );
           }
           // successful login
@@ -38,7 +38,7 @@ module.exports = passport => {
             userId: user._id,
             username: user.username
           };
-          const token = jwt.sign(payload, "mySecret");
+          const token = jwt.sign(payload, 'mySecret');
           return done(null, user, token);
         });
       }

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const EventViewer = () => <div>Event Viewer Page</div>;
 

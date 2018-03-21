@@ -1,14 +1,14 @@
-const mongoose = require("mongoose");
-const mongoUri = "mongodb://localhost/eventay";
+const mongoose = require('mongoose');
+const mongoUri = 'mongodb://localhost/eventay';
 mongoose.connect(mongoUri);
 const db = mongoose.connection;
 
-db.on("error", function() {
-  console.log("mongoose connection error");
+db.on('error', function() {
+  console.log('mongoose connection error');
 });
 
-db.once("open", function() {
-  console.log("mongoose connected successfully");
+db.once('open', function() {
+  console.log('mongoose connected successfully');
 });
 
 let userSchema = mongoose.Schema({
@@ -17,5 +17,5 @@ let userSchema = mongoose.Schema({
   email: String
 });
 
-let User = mongoose.model("User", userSchema);
+let User = mongoose.model('User', userSchema);
 module.exports = User;

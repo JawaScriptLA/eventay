@@ -1,6 +1,6 @@
-import React from "react";
-import axios from "axios";
-import FriendsList from "../misc/friendsList.jsx";
+import React from 'react';
+import axios from 'axios';
+import FriendsList from '../misc/friendsList.jsx';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -9,10 +9,10 @@ export default class Home extends React.Component {
   }
   handleLogoutClick() {
     axios
-      .post("/api/auth/logout", {})
+      .post('/api/auth/logout', {})
       .then(res => {
-        localStorage.removeItem("token");
-        this.props.history.push("/login");
+        localStorage.removeItem('token');
+        this.props.history.push('/login');
       })
       .catch(error => {
         console.log(error);

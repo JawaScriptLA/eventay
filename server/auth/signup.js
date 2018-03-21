@@ -1,11 +1,11 @@
-var LocalStrategy = require("passport-local").Strategy;
-var User = require("./models/user.js");
-var bCrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+var LocalStrategy = require('passport-local').Strategy;
+var User = require('./models/user.js');
+var bCrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 module.exports = passport => {
   passport.use(
-    "signup",
+    'signup',
     new LocalStrategy(
       {
         session: false,
@@ -14,16 +14,16 @@ module.exports = passport => {
       (req, username, password, done) => {
         User.findOne({ username: username }, (err, user) => {
           if (err) {
-            console.log("Error in SignUp: " + err);
+            console.log('Error in SignUp: ' + err);
             return done(err);
           }
           // User already exists
           if (user) {
-            console.log("User already exists with username: " + username);
+            console.log('User already exists with username: ' + username);
             return done(
               null,
               false
-              // req.flash("message", "User Already Exists")
+              // req.flash('message', 'User Already Exists')
             );
           } else {
             // Create new user
@@ -34,17 +34,17 @@ module.exports = passport => {
             // Save the user
             newUser.save(err => {
               if (err) {
-                console.log("Error in Saving user:", err);
+                console.log('Error in Saving user:', err);
                 throw err;
               }
-              console.log("User Registration successful");
+              console.log('User Registration successful');
               const payload = {
                 userId: newUser._id,
                 username: newUser.username
               };
 
               // create a token string
-              const token = jwt.sign(payload, "mySecret");
+              const token = jwt.sign(payload, 'mySecret');
               return done(null, newUser, token);
             });
           }

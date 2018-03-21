@@ -1,10 +1,10 @@
-const express = require("express");
+const express = require('express');
 const authRouter = express.Router();
 const db = require('../db/db.js');
 
 module.exports = passportObj => {
-  authRouter.post("/signup", (req, res, next) => {
-    passportObj.authenticate("signup", async (err, user, info) => {
+  authRouter.post('/signup', (req, res, next) => {
+    passportObj.authenticate('signup', async (err, user, info) => {
       if (err) {
         return res.status(401).end();
       }
@@ -39,8 +39,8 @@ module.exports = passportObj => {
     })(req, res, next);
   });
 
-  authRouter.post("/login", (req, res, next) => {
-    passportObj.authenticate("login", (err, user, info) => {
+  authRouter.post('/login', (req, res, next) => {
+    passportObj.authenticate('login', (err, user, info) => {
       if (err) {
         return res.status(401).end();
       }
@@ -62,10 +62,10 @@ module.exports = passportObj => {
     })(req, res, next);
   });
 
-  authRouter.post("/logout", (req, res, next) => {
+  authRouter.post('/logout', (req, res, next) => {
     delete req.decoded;
     req.logout();
-    res.json("User successfully logged out");
+    res.json('User successfully logged out');
   });
   return authRouter;
 };

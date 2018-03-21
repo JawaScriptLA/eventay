@@ -18,7 +18,7 @@ export const fetchEvent = () => {
             content: 'There was an error getting the event list. Please try again.',
           }
           dispatch({
-            type: "DISPLAY_FLASH",
+            type: 'DISPLAY_FLASH',
             data: flash,
           });
         }

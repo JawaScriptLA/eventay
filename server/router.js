@@ -47,9 +47,7 @@ const conflictExists = (
 module.exports = passportObj => {
   router.use('/auth', authRouter(passportObj));
   router.use('/', checkAuth);
-  router.all('/test', (req, res) => {
-    res.send({ message: 'test' });
-  });
+  router.all('/test', (req, res) => res.send({ message: 'test' }));
 
   router.post('/friendReq', sendRequest);
   router.get('/friendReq/:user_id', pendingRequests);
