@@ -1,4 +1,5 @@
 export default {
   // add more states here.
-  event: []
+  event: [],
+  friendsList: [],
 };
