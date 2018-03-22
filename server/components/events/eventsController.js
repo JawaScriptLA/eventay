@@ -49,7 +49,7 @@ module.exports = {
     try {
       let fields = Object.entries(data)
         .map(([ key, value ]) => typeof value === 'string' ? `${key} = '${value}'` : `${key} = ${value}`)
-        .split(', ');
+        .join(', ');
       await db.queryAsync(`
         UPDATE events
         SET ${fields}

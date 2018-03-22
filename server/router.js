@@ -2,9 +2,11 @@ const router = require('express').Router();
 const authRouter = require('./auth/authRouter.js');
 const checkAuth = require('./auth/checkAuth.js');
 const { select } = require('./queries/select.js');
+const friendsRouter = require('./components/friends/friendsRouter.js');
 const eventsRouter = require('./components/event/eventsRouter.js');
 const attendantsRouter = require('./components/attendants/attendantsRouter.js');
-const { getAllAttending } = require('./components/attendants/attendantsController');
+const { getAllFriends } = require('./components/friends/friendsController.js');
+const { getAllAttending } = require('./components/attendants/attendantsController.js');
 
 const {
   sendRequest,
@@ -45,8 +47,17 @@ module.exports = passportObj => {
   router.use('/', checkAuth);
   router.all('/test', (req, res) => res.send({ message: 'test' }));
 
+  router.use('/friend', friendsRouter);
   router.use('/event', eventsRouter);
   router.use('/attendant', attendantsRouter);
+  router.get('/friends/:user_id', async (req, res) => {
+    try {
+      let data = await getAllFriends(req.query);
+      res.send(data);
+    } catch (err) {
+      res.sendStatus(500);
+    }
+  });
   router.get('/attendants/:user_id', async (req, res) => {
     try {
       let data = await getAllAttending(req.query);

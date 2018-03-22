@@ -1,34 +1,34 @@
 const router = require('express').Router();
-const controller = require('./friendsController.js');
+const controller = require('./postsController.js');
 
 router.route('/')
-  .post(async (req, res) => {
+  .post((req, res) => {
     try {
-      await controller.addFriend(req.body);
+      await controller.createPost(req.body);
       res.sendStatus(200);
     } catch (err) {
       res.sendStatus(500);
     }
   })
-  .get('/:user_id', async (req, res) => {
+  .get('/:event_id', (req, res) => {
     try {
-      let data = await controller.getPendingFriends(req.query);
+      let data = await controller.getEventPosts(req.query);
       res.send(data);
     } catch (err) {
       res.sendStatus(500);
     }
   })
-  .put(async (req, res) => {
+  .put((req, res) => {
     try {
-      await controller.updateFriend(req.body);
+      await controller.updatePost(req.body);
       res.sendStatus(200);
     } catch (err) {
       res.sendStatus(500);
     }
   })
-  .delete(async (req, res) => {
+  .delete((req, res) => {
     try {
-      await controller.removeFriend(req.body);
+      await controller.removePost(req.body);
       res.sendStatus(200);
     } catch (err) {
       res.sendStatus(500);

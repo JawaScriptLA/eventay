@@ -19,7 +19,7 @@ module.exports = {
         WHERE NOT EXISTS (
           SELECT * FROM attendants
           WHERE event_id=${event_id} AND invitor_id=${invitor_id}
-        ) RETURNING user_id, event_id, invitor_id
+        )
       `);
     } catch (err) {
       throw err;
@@ -48,13 +48,15 @@ module.exports = {
       res.sendStatus(500);
     }
   },
-  updateAttendant: async ({ status, user_id, event_id }) => {
+  updateAttendant: async (data) => {
     try {
+      let fields = Object.entries(data)
+        .map(([ key, value ]) => typeof value === 'string' ? `${key} = '${value}'` : `${key} = ${value}`)
+        .join(', ');
       await db.queryAsync(`
         UPDATE attendants
-        SET status='${status}'
-        WHERE user_id=${user_id} AND event_id=${event_id}
-        RETURNING access, status, user_id, event_id, invitor_id
+        SET ${fields}
+        WHERE user_id=${data.user_id} AND event_id=${data.event_id}
       `);
     } catch (err) {
       throw err;
