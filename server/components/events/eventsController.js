@@ -3,7 +3,6 @@ const db = require('../../db/db');
 module.exports = {
   createEvent: async ({ title, description, thumbnail, location, start_time, end_time, publicity, host_id }) => {
     try {
-      console.log('IN HEEEEERE, title: ', title);
       const data = await db.queryAsync(`
         INSERT INTO events (
           title,
@@ -25,7 +24,6 @@ module.exports = {
           '${host_id}'
         ) RETURNING id
       `);
-      console.log('DATAAAAAAAAA', data);
       await db.queryAsync(`
         INSERT INTO attendants (access, status, user_id, event_id, invitor_id)
         VALUES ('host', 'going', ${host_id}, ${data.rows[0].id}, null)
