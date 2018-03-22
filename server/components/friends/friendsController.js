@@ -28,11 +28,11 @@ module.exports = {
   },
   getAllFriends: async ({ user_id }) => {
     try {
+      const friendsUserInfo = [];
       const data = await db.queryAsync(`
         SELECT * FROM friends
         WHERE user_id=${user_id} OR target_id=${user_id}
       `);
-      const friendsUserInfo = [];
       for (let i = 0; i < data.rows.length; i++) {
         const id = +(data.rows[i].user_id) === user_id ? data.rows[i].target_id : data.rows[i].user_id;
         const userInfo = await db.queryAsync(`SELECT * FROM users WHERE id=${id}`);

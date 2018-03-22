@@ -5,10 +5,12 @@ cache:
     - node_modules
 services:
   - postgresql
+  - mongodb
 
 before_script: 
   - sudo apt-get -qq update
   - psql -c 'create database eventayRDB;' -U postgres
+  - mongod
 
 install:
   - npm install
