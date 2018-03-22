@@ -54,8 +54,10 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.11",
     "morgan": "^1.9.0",
     "nodemon": "^1.17.2",
+    "style-loader": "^0.20.3",
     "webpack": "^3.11.0"
   }
 }
