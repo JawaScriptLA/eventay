@@ -2,8 +2,9 @@ const router = require('express').Router();
 const authRouter = require('./auth/authRouter.js');
 const checkAuth = require('./auth/checkAuth.js');
 const { select } = require('./queries/select.js');
+const eventsRouter = require('./components/event/eventsRouter.js');
 const attendantsRouter = require('./components/attendants/attendantsRouter.js');
-const { attendantSeeTheirInvites } = require('./components/attendants/attendantsController');
+const { getAllAttending } = require('./components/attendants/attendantsController');
 
 const {
   sendRequest,
@@ -44,10 +45,11 @@ module.exports = passportObj => {
   router.use('/', checkAuth);
   router.all('/test', (req, res) => res.send({ message: 'test' }));
 
+  router.use('/event', eventsRouter);
   router.use('/attendant', attendantsRouter);
-  router.get('/attendants', async (req, res) => {
+  router.get('/attendants/:user_id', async (req, res) => {
     try {
-      let data = await attendantSeeTheirInvites(req.body);
+      let data = await getAllAttending(req.query);
       res.send(data);
     } catch (err) {
       res.sendStatus(500);

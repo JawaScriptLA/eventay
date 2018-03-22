@@ -1,18 +1,18 @@
 const router = require('express').Router();
-const controller = require('./attendantsController.js');
+const controller = require('./eventsController.js');
 
 router.route('/')
   .post(async (req, res) => {
     try {
-      await controller.addAttendant(req.body);
+      await controller.createEvent(req.body);
       res.sendStatus(200);
     } catch (err) {
       res.sendStatus(500);
     }
   })
-  .get('/:event_id', async (req, res) => {
+  .get('/:user_id', async (req, res) => {
     try {
-      let data = controller.getEventAttendants(req.query);
+      let data = await controller.getHostingEvents(req.query);
       res.send(data);
     } catch (err) {
       res.sendStatus(500);
@@ -20,7 +20,7 @@ router.route('/')
   })
   .put(async (req, res) => {
     try {
-      await controller.updateAttendant(req.body);
+      await controller.updateEvent(req.body);
       res.sendStatus(200);
     } catch (err) {
       res.sendStatus(500);
@@ -28,7 +28,7 @@ router.route('/')
   })
   .delete(async (req, res) => {
     try {
-      await controller.removeAttendant(req.body);
+      await controller.removeEvent(req.body);
       res.sendStatus(200);
     } catch (err) {
       res.sendStatus(500);

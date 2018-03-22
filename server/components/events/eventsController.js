@@ -34,7 +34,7 @@ module.exports = {
       throw err;
     }
   },
-  seeHostingEvents: async ({ user_id }) => {
+  getHostingEvents: async ({ user_id }) => {
     try {
       const data = await db.queryAsync(`
         SELECT * FROM events
@@ -45,7 +45,7 @@ module.exports = {
       throw err;
     }
   },
-  changeEventData: async (data) => {
+  updateEvent: async (data) => {
     try {
       let fields = Object.entries(data)
         .map(([ key, value ]) => typeof value === 'string' ? `${key} = '${value}'` : `${key} = ${value}`)

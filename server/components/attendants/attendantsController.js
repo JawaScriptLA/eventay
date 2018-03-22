@@ -1,7 +1,7 @@
 const db = require('../../db/db');
 
 module.exports = {
-  inviteTargetToEvent: async ({ access, status, user_id, event_id, invitor_id }) => {
+  addAttendant: async ({ access, status, user_id, event_id, invitor_id }) => {
     try {
       await db.queryAsync(`
         INSERT INTO attendants (
@@ -25,7 +25,7 @@ module.exports = {
       throw err;
     }
   },
-  seeAllEventAttendants: async ({ event_id }) => {
+  getEventAttendants: async ({ event_id }) => {
     try {
       const data = await db.queryAsync(`
         SELECT * FROM attendants
@@ -36,7 +36,7 @@ module.exports = {
       throw err;
     }
   },
-  attendantSeeTheirInvites: async ({ user_id }) => {
+  getAllAttending: async ({ user_id }) => {
     try {
       const data = await db.queryAsync(`
         SELECT * FROM attendants
@@ -48,7 +48,7 @@ module.exports = {
       res.sendStatus(500);
     }
   },
-  respondToEventInvite: async ({ status, user_id, event_id }) => {
+  updateAttendant: async ({ status, user_id, event_id }) => {
     try {
       await db.queryAsync(`
         UPDATE attendants
@@ -60,7 +60,7 @@ module.exports = {
       throw err;
     }
   },
-  declineEventInvite: async ({ user_id, event_id }) => {
+  removeAttendant: async ({ user_id, event_id }) => {
     try {
       await db.queryAsync(`
         DELETE FROM attendants
