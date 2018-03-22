@@ -1,30 +1,24 @@
-var LocalStrategy = require("passport-local").Strategy;
-var User = require("./models/user.js");
-var bCrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+var LocalStrategy = require('passport-local').Strategy;
+var User = require('./models/user.js');
+var bCrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-module.exports = passport => {
+module.exports = (passport) => {
   passport.use(
-    "signup",
+    'signup',
     new LocalStrategy(
-      {
-        session: false,
-        passReqToCallback: true
-      },
+      { session: false, passReqToCallback: true},
       (req, username, password, done) => {
         User.findOne({ username: username }, (err, user) => {
           if (err) {
-            console.log("Error in SignUp: " + err);
+            console.log('Error in SignUp: ' + err);
             return done(err);
           }
+
           // User already exists
           if (user) {
-            console.log("User already exists with username: " + username);
-            return done(
-              null,
-              false
-              // req.flash("message", "User Already Exists")
-            );
+            console.log('User already exists with username: ' + username);
+            return done(null, false /*req.flash('message', 'User Already Exists')*/);
           } else {
             // Create new user
             var newUser = new User();
@@ -32,19 +26,17 @@ module.exports = passport => {
             newUser.password = createHash(password);
 
             // Save the user
-            newUser.save(err => {
+            newUser.save((err) => {
               if (err) {
-                console.log("Error in Saving user:", err);
+                console.log('Error in Saving user:', err);
                 throw err;
               }
-              console.log("User Registration successful");
-              const payload = {
-                userId: newUser._id,
-                username: newUser.username
-              };
+
+              console.log('User Registration successful');
+              const payload = { userId: newUser._id, username: newUser.username };
 
               // create a token string
-              const token = jwt.sign(payload, "mySecret");
+              const token = jwt.sign(payload, 'mySecret');
               return done(null, newUser, token);
             });
           }
@@ -54,7 +46,5 @@ module.exports = passport => {
   );
 
   // Generates hash using bCrypt
-  var createHash = password => {
-    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
-  };
+  var createHash = password => bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 };

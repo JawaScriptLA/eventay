@@ -18,7 +18,8 @@ class FriendsList extends React.Component {
   }
 
   renderData(item) {
-    return <div key={item[0].id}>{item[0].username}</div>;
+    console.log('renderdata:', item);
+    return <div key={item.id}>{item.username}</div>;
   } 
 
   render() {

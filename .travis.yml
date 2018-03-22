@@ -1,10 +1,11 @@
 language: node_js
-node_js: "stable"
+node_js: 'stable'
 cache:
   directories:
     - node_modules
 services:
   - postgresql
+  - mongodb
 
 before_script: 
   - sudo apt-get -qq update

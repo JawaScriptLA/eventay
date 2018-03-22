@@ -1,21 +1,18 @@
-const mongoose = require("mongoose");
-const mongoUri = "mongodb://localhost/eventay";
+const mongoose = require('mongoose');
+const mongoUri = 'mongodb://localhost/eventay';
 mongoose.connect(mongoUri);
 const db = mongoose.connection;
 
-db.on("error", function() {
-  console.log("mongoose connection error");
+db.once('open', () => {
+  console.log('mongoose connected successfully');
 });
 
-db.once("open", function() {
-  console.log("mongoose connected successfully");
+db.on('error', () => {
+  console.log('mongoose connection error');
 });
 
-let userSchema = mongoose.Schema({
+module.exports = mongoose.model('User', mongoose.Schema({
   username: String,
   password: String,
   email: String
-});
-
-let User = mongoose.model("User", userSchema);
-module.exports = User;
+}));

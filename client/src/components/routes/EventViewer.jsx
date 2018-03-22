@@ -1,5 +1,7 @@
-import React from "react";
+import React from 'react';
 
-const EventViewer = () => <div>Event Viewer Page</div>;
-
-export default EventViewer;
+export default () => (
+  <div>
+    Event Viewer Page
+  </div>
+);

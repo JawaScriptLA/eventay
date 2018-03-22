@@ -29,8 +29,8 @@ class Test extends React.Component {
 }
 
 Test.propTypes = {
-  eventActions: PropTypes.object,
-  event: PropTypes.array
+  eventActions: propTypes.object,
+  event: propTypes.array
 };
 
 const mapStateToProps = state => {
