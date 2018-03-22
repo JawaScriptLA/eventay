@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as friendsActions from '../../actions/friendsActions';
+import * as userInfoActions from '../../actions/userInfoActions';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 class FriendsList extends React.Component {
   componentWillMount() {
-    this.props.friendsActions.fetchFriendsList();
+    this.props.friendsActions.fetchFriendsList(this.props.userInfo.id);
   }
 
   renderData(item) {
@@ -14,6 +15,7 @@ class FriendsList extends React.Component {
   } 
 
   render() {
+    console.log('friendsList.jsx: ', this.props);
     if (this.props.friendsList.length) {
       return this.props.friendsList.map(friend => this.renderData(friend));
     } else {
@@ -23,20 +25,21 @@ class FriendsList extends React.Component {
 }
 
 FriendsList.propTypes = {
-  userId: PropTypes.number, // TODO
   friendsActions: PropTypes.object,
   friendsList: PropTypes.array,
 };
 
 const mapStateToProps = (state) => {
   return {
-    friendsList: state.friendsList
+    friendsList: state.friendsList,
+    userInfo: state.userInfo,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    friendsActions: bindActionCreators(friendsActions, dispatch)
+    friendsActions: bindActionCreators(friendsActions, dispatch),
+    userInfoActions: bindActionCreators(userInfoActions, dispatch),
   };
 };
 
