@@ -28,15 +28,18 @@ module.exports = passportObj => {
   router.use('/attendant', attendantsRouter);
   router.get('/friends/:user_id', async (req, res) => {
     try {
-      let data = await getAllFriends(req.query);
+      console.log('trying');
+      let data = await getAllFriends(req.params);
+      console.log('sending');
       res.send(data);
     } catch (err) {
+      console.log('catching');
       res.sendStatus(500);
     }
   });
   router.get('/attendants/:user_id', async (req, res) => {
     try {
-      let data = await getAllAttending(req.query);
+      let data = await getAllAttending(req.params);
       res.send(data);
     } catch (err) {
       res.sendStatus(500);

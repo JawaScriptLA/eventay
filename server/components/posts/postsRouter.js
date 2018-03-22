@@ -3,7 +3,7 @@ const controller = require('./postsController.js');
 
 router.get('/:event_id', async (req, res) => {
   try {
-    let data = await controller.getEventPosts(req.query);
+    let data = await controller.getEventPosts(req.params);
     res.send(data);
   } catch (err) {
     res.sendStatus(500);

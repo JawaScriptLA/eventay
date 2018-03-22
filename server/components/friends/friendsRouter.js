@@ -3,7 +3,7 @@ const controller = require('./friendsController.js');
 
 router.get('/:user_id', async (req, res) => {
   try {
-    let data = await controller.getPendingFriends(req.query);
+    let data = await controller.getPendingFriends(req.params);
     res.send(data);
   } catch (err) {
     res.sendStatus(500);
