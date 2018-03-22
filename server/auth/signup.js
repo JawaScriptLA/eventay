@@ -20,6 +20,7 @@ module.exports = (passport) => {
             console.log('User already exists with username: ' + username);
             return done(null, false /*req.flash('message', 'User Already Exists')*/);
           } else {
+            console.log('case3');
             // Create new user
             var newUser = new User();
             newUser.username = username;
