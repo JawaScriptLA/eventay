@@ -27,6 +27,7 @@ const {
   deletePost
 } = require('./components/posts/postsController');
 const { select } = require('./queries/select.js');
+const { getUserProfile } = require('./components/user/userController');
 
 const conflictExists = (
   firstStartTime,
@@ -66,6 +67,7 @@ module.exports = passportObj => {
   router.post('/event/post', createPost);
   router.put('/event/post', editPost);
   router.delete('/event/post', deletePost);
+  router.get('/user/:user_id', getUserProfile);
 
   router.get('/schedule/showUserEvents/:user_id', showUserEvents);
   router.post('/schedule/showRecommendedTimes', (req, res) => {
