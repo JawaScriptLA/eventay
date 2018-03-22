@@ -1,5 +1,4 @@
 const router = require('express').Router();
-
 const authRouter = require('./auth/authRouter.js');
 const checkAuth = require('./auth/check-auth.js');
 
@@ -32,7 +31,9 @@ const { select } = require('./queries/select.js');
 module.exports = passportObj => {
   router.use('/auth', authRouter(passportObj));
   router.use('/', checkAuth);
-  router.all('/test', (req, res) => res.send({ message: 'test' }));
+  router.all('/test', (req, res) => {
+    res.send({ message: 'test' });
+  });
 
   router.post('/friendReq', sendRequest);
   router.get('/friendReq/:user_id', pendingRequests);
@@ -51,6 +52,33 @@ module.exports = passportObj => {
   router.delete('/event/post', deletePost);
 
   router.get('/schedule/showUserEvents/:user_id', showUserEvents);
+  router.post('/schedule/showRecommendedTimes', (req, res) => {
+    const { durationHrs, durationMins, possibleTimes, schedules } = req.body;
+    console.log('hours:', durationHrs);
+    console.log('minutes:', durationMins);
+    console.log('time ranges:', possibleTimes);
+    console.log('schedules:', schedules);
+    const durationAsMilliseconds = (durationHrs * 60 + durationMins) * 60000;
+    const halfHourAsMilliseconds = 1800000;
+    const availableTimes = [];
+    for (timeRange of possibleTimes) {
+      const currRangeEnd = Date.parse(timeRange[1]);
+      let currStart = Date.parse(timeRange[0]);
+      let currEnd = currStart + durationAsMilliseconds;
+      while (currEnd <= currRangeEnd) {
+        availableTimes.push([
+          new Date(currStart).toLocaleString(),
+          new Date(currEnd).toLocaleString()
+        ]);
+        currStart += halfHourAsMilliseconds;
+        currEnd += halfHourAsMilliseconds;
+      }
+    }
+
+    res.json(availableTimes.length);
+    // inputs: duration (number), possible time range(s) (array of tuples?), array of each user's events
+    // output: array of remaining recommended times
+  });
 
   router.get('/select/:table_name', async (req, res) => {
     res.send(await select(req.params.table_name));

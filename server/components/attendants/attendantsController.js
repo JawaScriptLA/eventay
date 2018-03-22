@@ -79,22 +79,21 @@ const attendantSeeTheirInvites = async (req, res) => {
 const showUserEvents = async (req, res) => {
   const { user_id } = req.params;
   try {
-    const queryForEventIds = `
+    const eventIdsQuery = `
       SELECT * FROM attendants
       WHERE user_id=${user_id}
     `;
-    const data = await db.queryAsync(queryForEventIds);
+    const data = await db.queryAsync(eventIdsQuery);
     const userEvents = [];
     data.rows.forEach(row => {
       userEvents.push(row.event_id);
     });
-    let queryForEvent;
-    let eventData;
+    let eventQuery;
     const eventList = [];
     for (let i = 0; i < userEvents.length; i++) {
-      queryForEvent = `SELECT * FROM events
-      WHERE id=${userEvents[i]}`;
-      eventData = await db.queryAsync(queryForEvent);
+      eventQuery = `SELECT * FROM events
+    WHERE id=${userEvents[i]}`;
+      eventData = await db.queryAsync(eventQuery);
       eventList.push(eventData.rows);
     }
     res.send(eventList);
