@@ -6,8 +6,11 @@ export const receiveFriendsList = (data) => {
 }
 
 export const fetchFriendsList = () => { // refactor so it takes in userId of client
+  const config = {
+    headers: { 'Authorization': 'bearer ' + localStorage.token}
+  }
   return (dispatch) => {
-    axios.get(`/api/friends/1`, { headers: { 'Authorization': 'bearer ' + localStorage.token}}) // TODO: change to userId of client
+    axios.get(`/api/friends/1`, config) // TODO: change to userId of client
       .then(response => {
         if (response.status === 200) {
           dispatch(receiveFriendsList(response.data));
