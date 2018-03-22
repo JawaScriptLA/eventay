@@ -69,12 +69,19 @@ const declineRequest = async (req, res) => {
 const seeMyFriends = async (req, res) => {
   const { user_id } = req.params;
   try {
-    const query = `
+    const friendQuery = `
       SELECT * FROM friends
       WHERE user_id=${user_id} OR target_id=${user_id}
     `;
-    const data = await db.queryAsync(query);
-    res.send(data.rows);
+    const data = await db.queryAsync(friendQuery);
+
+    const friendsUserInfo = [];
+    for (let i = 0; i < data.rows.length; i++) {
+      const id = Number(data.rows[i].user_id) === Number(user_id) ? data.rows[i].target_id : data.rows[i].user_id;
+      const userInfo = await db.queryAsync(`SELECT * FROM users WHERE id=${id}`);
+      friendsUserInfo.push(userInfo.rows);
+    }
+    res.send(friendsUserInfo);
   } catch (err) {
     console.log(`Error during friends GET request: ${err}`);
     res.end();

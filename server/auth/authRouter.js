@@ -25,11 +25,15 @@ module.exports = passportObj => {
         console.log(`Error during signup: ${err}`);
       }
 
-      req.login(user, err => {
+      req.login(user, async (err) => {
         if (err) {
           return res.status(401).end();
         } else {
-          return res.send(info);
+          const userPayload = {};
+          const userRecord = await db.queryAsync(`SELECT * FROM users WHERE username='${user.username}'`);
+          userPayload.userInfo = userRecord.rows[0];
+          userPayload.token = info;
+          return res.send(userPayload);
         }
       });
     })(req, res, next);
@@ -43,11 +47,17 @@ module.exports = passportObj => {
       if (!user) {
         return res.status(401).end();
       }
-      req.logIn(user, err => {
+      req.logIn(user, async (err) => {
+        console.log('user: ', user);
+        const userPayload = {};
+        const userRecord = await db.queryAsync(`SELECT * FROM users WHERE username='${user.username}'`);
+        userPayload.userInfo = userRecord.rows[0];
+        userPayload.token = info;
         if (err) {
           return res.status(401).end();
         }
-        res.send(info);
+        console.log('userPayload: ', userPayload);
+        res.send(userPayload);
       });
     })(req, res, next);
   });

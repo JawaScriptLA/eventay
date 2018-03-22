@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import FriendsList from "../misc/friendsList.jsx";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -21,6 +22,7 @@ export default class Home extends React.Component {
   render() {
     return (
       <div>
+        <FriendsList />
         <button onClick={this.handleLogoutClick}>Logout!</button>
       </div>
     );

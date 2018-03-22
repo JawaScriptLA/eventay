@@ -1,7 +1,12 @@
 import React from "react";
 import axios from "axios";
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as userInfoActions from '../../actions/userInfoActions';
+import PropTypes from 'prop-types';
 
-export default class Login extends React.Component {
+
+class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = { username: "", password: "" };
@@ -17,7 +22,15 @@ export default class Login extends React.Component {
         password: this.state.password
       })
       .then(res => {
-        localStorage.setItem("token", res.data);
+        // store res.data.userInfo into application state
+        this.props.userInfoActions.receiveUserInfo(res.data.userInfo);
+
+        // store res.data.token to local storage
+        localStorage.setItem("token", res.data.token);
+
+        // janky solution to persisting user info upon refresh. Find a better way
+        localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo));
+
         this.props.history.push("/");
       })
       .catch(error => {
@@ -70,3 +83,20 @@ export default class Login extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    userInfo: state.userInfo
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    userInfoActions: bindActionCreators(userInfoActions, dispatch)
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);
