@@ -1,12 +1,19 @@
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as friendsActions from '../../actions/friendsActions';
 import * as userInfoActions from '../../actions/userInfoActions';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 class FriendsList extends React.Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+    props.userInfoActions.receiveUserInfo(user);
+    this.getFriendsList();
+  }
+
+  getFriendsList() {
     this.props.friendsActions.fetchFriendsList(this.props.userInfo.id);
   }
 
@@ -15,10 +22,11 @@ class FriendsList extends React.Component {
   } 
 
   render() {
-    console.log('friendsList.jsx: ', this.props);
+    // this.getFriendsList();
     if (this.props.friendsList.length) {
       return this.props.friendsList.map(friend => this.renderData(friend));
     } else {
+      this.getFriendsList();
       return <div>Loading...</div>
     }
   }
@@ -26,7 +34,7 @@ class FriendsList extends React.Component {
 
 FriendsList.propTypes = {
   friendsActions: PropTypes.object,
-  friendsList: PropTypes.array,
+  friendsList: PropTypes.any,
 };
 
 const mapStateToProps = (state) => {

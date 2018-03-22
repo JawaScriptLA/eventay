@@ -23,6 +23,10 @@ class Signup extends React.Component {
         // store res.data.userInfo into application state
         this.props.userInfoActions.receiveUserInfo(res.data.userInfo);
         localStorage.setItem("token", res.data.token);
+
+        // janky solution to persisting user info upon refresh. Find a better way
+        localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo));
+
         this.props.history.push("/");
       })
       .catch(error => {
