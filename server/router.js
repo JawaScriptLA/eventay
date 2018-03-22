@@ -8,6 +8,7 @@ const postsRouter = require('./components/posts/postsRouter.js');
 const { getAllFriends } = require('./components/friends/friendsController.js');
 const { getAllAttending, showUserEvents } = require('./components/attendants/attendantsController.js');
 const { select } = require('./queries/select.js');
+const { getUserProfile } = require('./components/user/userController');
 
 const conflictExists = (firstStartTime, firstEndTime, secondStartTime, secondEndTime) => {
   let cond1 = firstStartTime < secondStartTime && secondStartTime < firstEndTime;
