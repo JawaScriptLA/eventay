@@ -14,21 +14,22 @@ class FriendsList extends React.Component {
   }
 
   getFriendsList() {
-    this.props.friendsActions.fetchFriendsList(this.props.userInfo.id);
+    if(this.props.userInfo.id) {
+      this.props.friendsActions.fetchFriendsList(this.props.userInfo.id);
+    } else {
+      const user = JSON.parse(localStorage.userInfo);
+      this.props.friendsActions.fetchFriendsList(user.id);
+    }
   }
 
   renderData(item) {
-    console.log('renderdata:', item);
     return <div key={item.id}>{item.username}</div>;
   } 
 
   render() {
-    // this.getFriendsList();
+    console.log(this.props.friendsList);
     if (this.props.friendsList.length) {
       return this.props.friendsList.map(friend => this.renderData(friend));
-    } else if (!Array.isArray(this.props.friendsList)){
-      this.getFriendsList();
-      return <div>Loading...</div>
     } else {
       return <div>No friends at the moment</div>
     }
