@@ -8,12 +8,16 @@ import propTypes from 'prop-types';
 class Profile extends React.Component {
   constructor(props) {
     super(props);
+
+    // persist user info to app state upon hard refresh
     const user = JSON.parse(localStorage.getItem('userInfo'));
     props.userInfoActions.receiveUserInfo(user);
+
   }
 
   render() {
-    return <div>Profile Page!</div>
+    console.log('profile page: ', this.props);
+    return <div>Hello, {this.props.userInfo.username}</div>
   }
 }
 
