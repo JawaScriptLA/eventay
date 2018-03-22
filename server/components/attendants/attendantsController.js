@@ -1,4 +1,4 @@
-const db = require('../../db/db');
+const db = require('../../db/db.js');
 
 module.exports = {
   addAttendant: async ({ access, status, user_id, event_id, invitor_id }) => {
@@ -48,6 +48,24 @@ module.exports = {
       res.sendStatus(500);
     }
   },
+  getUserEvents: async ({ user_id }) => {
+    try {
+      const userEvents = [];
+      const eventList = [];
+      let eventQuery;
+      const data = await db.queryAsync(`SELECT * FROM attendants WHERE user_id=${user_id}`);
+
+      data.rows.forEach((row) => userEvents.push(row.event_id));
+      for (let i = 0; i < userEvents.length; i++) {
+        eventQuery = `SELECT * FROM events WHERE id=${userEvents[i]}`;
+        eventData = await db.queryAsync(eventQuery);
+        eventList.push(eventData.rows);
+      }
+      return eventList;
+    } catch (err) {
+      throw err;
+    }
+  },
   updateAttendant: async (data) => {
     try {
       let fields = Object.entries(data)
@@ -71,32 +89,5 @@ module.exports = {
     } catch (err) {
       throw err;
     }
-  }
-};
-
-const showUserEvents = async (req, res) => {
-  const { user_id } = req.params;
-  try {
-    const eventIdsQuery = `
-      SELECT * FROM attendants
-      WHERE user_id=${user_id}
-    `;
-    const data = await db.queryAsync(eventIdsQuery);
-    const userEvents = [];
-    data.rows.forEach(row => {
-      userEvents.push(row.event_id);
-    });
-    let eventQuery;
-    const eventList = [];
-    for (let i = 0; i < userEvents.length; i++) {
-      eventQuery = `SELECT * FROM events
-    WHERE id=${userEvents[i]}`;
-      eventData = await db.queryAsync(eventQuery);
-      eventList.push(eventData.rows);
-    }
-    res.send(eventList);
-  } catch (err) {
-    console.log(`Error during attendants GET request: ${err}`);
-    res.end();
   }
 };
