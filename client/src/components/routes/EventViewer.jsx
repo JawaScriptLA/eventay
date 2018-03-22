@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default EventViewer = () => (
+export default () => (
   <div>
     Event Viewer Page
   </div>

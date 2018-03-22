@@ -1,19 +1,20 @@
 const router = require('express').Router();
 const controller = require('./attendantsController.js');
 
+router.get('/:event_id', async (req, res) => {
+  try {
+    let data = controller.getEventAttendants(req.query);
+    res.send(data);
+  } catch (err) {
+    res.sendStatus(500);
+  }
+});
+
 router.route('/')
   .post(async (req, res) => {
     try {
       await controller.addAttendant(req.body);
       res.sendStatus(200);
-    } catch (err) {
-      res.sendStatus(500);
-    }
-  })
-  .get('/:event_id', async (req, res) => {
-    try {
-      let data = controller.getEventAttendants(req.query);
-      res.send(data);
     } catch (err) {
       res.sendStatus(500);
     }
