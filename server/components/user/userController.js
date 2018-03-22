@@ -15,6 +15,10 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+const updateUserProfile = async (req, res) => {
+  res.send({ message: 'todo' });
+}
+
 module.exports = {
   getUserProfile,
 }

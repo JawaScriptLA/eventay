@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as friendsActions from '../../actions/friendsActions';
 import * as userInfoActions from '../../actions/userInfoActions';
-import PropTypes from 'prop-types';
+import propTypes from 'prop-types';
 
 class FriendsList extends React.Component {
   constructor(props) {
@@ -36,8 +36,8 @@ class FriendsList extends React.Component {
 }
 
 FriendsList.propTypes = {
-  friendsActions: PropTypes.object,
-  friendsList: PropTypes.any,
+  friendsActions: propTypes.object,
+  friendsList: propTypes.any,
 };
 
 const mapStateToProps = (state) => {
