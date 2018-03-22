@@ -1,16 +1,16 @@
-import React from "react";
-import jwt from "jsonwebtoken";
+import React from 'react';
+import jwt from 'jsonwebtoken';
 
 export default class Protected extends React.Component {
   componentDidMount() {
     try {
-      console.log("currently my token is:", localStorage.getItem("token"));
-      if (!localStorage.getItem("token")) {
-        this.props.history.push("/login");
+      console.log('currently my token is:', localStorage.getItem('token'));
+      if (!localStorage.getItem('token')) {
+        this.props.history.push('/login');
       }
     } catch (e) {
-      console.log("Error in Protected component", e);
-      this.props.history.push("/login");
+      console.log('Error in Protected component', e);
+      this.props.history.push('/login');
     }
   }
 

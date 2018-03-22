@@ -1,13 +1,7 @@
 const db = require('../../db/db');
 
 const inviteTargetToEvent = async (req, res) => {
-  let {
-    access,
-    status,
-    user_id,
-    event_id,
-    invitor_id,
-  } = req.body;
+  let { access, status, user_id, event_id, invitor_id } = req.body;
   try {
     const query = `
       INSERT INTO attendants (
@@ -62,7 +56,7 @@ const respondToEventInvite = async (req, res) => {
     const data = await db.queryAsync(query);
     res.send(data.rows);
   } catch (err) {
-    console.log(`Error during attendants PUT request: ${err}`)
+    console.log(`Error during attendants PUT request: ${err}`);
     res.end();
   }
 };
@@ -82,9 +76,37 @@ const attendantSeeTheirInvites = async (req, res) => {
   }
 };
 
+const showUserEvents = async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const eventIdsQuery = `
+      SELECT * FROM attendants
+      WHERE user_id=${user_id}
+    `;
+    const data = await db.queryAsync(eventIdsQuery);
+    const userEvents = [];
+    data.rows.forEach(row => {
+      userEvents.push(row.event_id);
+    });
+    let eventQuery;
+    const eventList = [];
+    for (let i = 0; i < userEvents.length; i++) {
+      eventQuery = `SELECT * FROM events
+    WHERE id=${userEvents[i]}`;
+      eventData = await db.queryAsync(eventQuery);
+      eventList.push(eventData.rows);
+    }
+    res.send(eventList);
+  } catch (err) {
+    console.log(`Error during attendants GET request: ${err}`);
+    res.end();
+  }
+};
+
 module.exports = {
   inviteTargetToEvent,
   seeAllEventAttendants,
   respondToEventInvite,
   attendantSeeTheirInvites,
+  showUserEvents
 };
