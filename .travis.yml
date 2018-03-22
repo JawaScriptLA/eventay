@@ -9,7 +9,7 @@ services:
 
 before_script: 
   - sudo apt-get -qq update
-  - psql -c 'create database eventayRDB;' -U root
+  - psql -c 'create database eventayRDB;' -U postgres
 
 install:
   - npm install
