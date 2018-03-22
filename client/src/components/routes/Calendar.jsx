@@ -17,27 +17,42 @@ let formats = {
     local.format(start, 'h:mm a', culture) + ' - ' + local.format(end, 'h:mm a', culture),
 };
 
+const config = {
+  headers: { 'Authorization': 'bearer ' + localStorage.token}
+};
+
+const userInfo = JSON.parse(localStorage.userInfo);
+
 export default class Calendar extends Component {
   constructor (props) {
     super (props);
+    this.state ={
+      events: [],
+    }
+  }
+  componentDidMount () {
+    axios.get(`/api/event/${userInfo.id}`, config)
+      .then(result => {
+        result = result.data.map(event => {
+          var obj = {};
+          obj.id = event.id;
+          obj.title = event.title;
+          obj.start = new Date(event.start_time);
+          obj.end = new Date(event.end_time);
+          obj.desc = event.description;
+          return obj;
+        });
+        this.setState({events: result})
+      })
   }
   render () {
-    const eventsList = [
-      {
-        id: 1,
-        title: 'Coding in the Rain',
-        start: new Date(2018, 2, 22, 9, 0, 0, 0),
-        end: new Date(2018, 2, 22, 20, 0, 0, 0),
-        desc: 'Getting work done.'
-      }
-    ];
     return (
       <div id="calendar">
         <BigCalendar
           {...this.props}
           culture='en'
           formats={formats}
-          events={eventsList}
+          events={this.state.events}
           views={['month', 'week']}
           startAccessor='start'
           endAccessor='end'
