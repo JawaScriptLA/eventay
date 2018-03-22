@@ -48,7 +48,7 @@ module.exports = {
       res.sendStatus(500);
     }
   },
-  getUserEvents: async ({ user_id }) => {
+  showUserEvents: async ({ user_id }) => {
     try {
       const userEvents = [];
       const eventList = [];
