@@ -7,7 +7,7 @@ export const receiveFriendsList = (data) => {
 
 export const fetchFriendsList = (id) => { // refactor so it takes in userId of client
   const config = {
-    headers: { 'Authorization': 'bearer ' + localStorage.token}
+    headers: { 'Authorization': 'bearer ' + localStorage.token }
   }
   return (dispatch) => {
     axios.get(`/api/friends/${id}`, config) // TODO: change to userId of client

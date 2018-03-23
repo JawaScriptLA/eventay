@@ -22,7 +22,6 @@ module.exports = passportObj => {
   router.use('/auth', authRouter(passportObj));
   router.use('/', checkAuth);
   router.all('/test', (req, res) => res.send({ message: 'test' }));
-
   router.use('/post', postsRouter);
   router.use('/friend', friendsRouter);
   router.use('/event', eventsRouter);
@@ -44,8 +43,8 @@ module.exports = passportObj => {
     }
   });
   router.get('/select/:table_name', async (req, res) => res.send(await select(req.params.table_name)));
-
   router.get('/schedule/showUserEvents/:user_id', showUserEvents);
+  router.get('/user/:username', getUserProfile);
   router.post('/schedule/showRecommendedTimes', (req, res) => {
     const { durationHrs, durationMins, possibleTimes, schedules } = req.body;
     const durationAsMilliseconds = (durationHrs * 60 + durationMins) * 60000;

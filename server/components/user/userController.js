@@ -1,11 +1,11 @@
 const db = require('../../db/db');
 
 const getUserProfile = async (req, res) => {
-  const { user_id } = req.params;
+  const { username } = req.params;
   try {
     const query = `
       SELECT * FROM users
-      WHERE id='${user_id}'
+      WHERE username='${username}'
     `;
     const data = await db.queryAsync(query);
     res.send(data.rows);
