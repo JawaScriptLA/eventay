@@ -4,6 +4,7 @@ import DatePicker from 'material-ui/DatePicker';
 import Toggle from 'material-ui/Toggle';
 import TimePicker from 'material-ui/TimePicker';
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 const optionsStyle = {
   maxWidth: 255,
@@ -14,8 +15,9 @@ export default class EventCreator extends React.Component {
     super(props);
     this.state = {
       selectedFriends: [],
-      durationMins: 0,
-      durationHrs: 0,
+      possibleTimes: [],
+      durationMins: '',
+      durationHrs: '',
       generatedTimes: false,
       startDate: null,
       endDate: null,
@@ -26,12 +28,61 @@ export default class EventCreator extends React.Component {
     this.handleInputChanges = this.handleInputChanges.bind(this);
     this.createEvent = this.createEvent.bind(this);
     this.handleTimeChanges = this.handleTimeChanges.bind(this);
+    this.calculateTotalTime = this.calculateTotalTime.bind(this);
+  }
+
+  calculateTotalTime(dateAsMilliseconds, hours, minutes) {
+    return new Date(dateAsMilliseconds + hours * 3600000 + minutes * 60000);
   }
 
   generateRecommendations() {
-    console.log('CURRENT STATE IS', this.state);
-    // issue axios request
-    this.setState({ generatedTimes: true });
+    // let startDate = this.statesetState({
+    //   possibleTimes: []
+    // });
+    // console.log(this.state.startDate);
+    // let startTime = new Date(this.state.startTime);
+    // let hours = this.state.startTime.getHours();
+    // let minutes = this.state.startTime.getMinutes();
+
+    // let dateAsMilliseconds = this.state.startDate.getTime();
+    // let hours = this.state.startTime.getHours();
+    // let minutes = this.state.startTime.getMinutes();
+    const start = this.calculateTotalTime(
+      this.state.startDate.getTime(),
+      this.state.startTime.getHours(),
+      this.state.startTime.getMinutes()
+    );
+    const end = this.calculateTotalTime(
+      this.state.endDate.getTime(),
+      this.state.endTime.getHours(),
+      this.state.endTime.getMinutes()
+    );
+
+    const tuple = [start, end];
+    this.setState({ possibleTimes: tuple }, () => {
+      axios
+        .post(
+          '/api/schedule/showRecommendedTimes',
+          {
+            selectedFriends: this.state.selectedFriends,
+            durationMins: Number(this.state.durationMins),
+            durationHrs: Number(this.state.durationHrs),
+            possibleTimes: this.state.possibleTimes
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        )
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      this.setState({ generatedTimes: true });
+    });
   }
 
   createEvent() {
@@ -64,6 +115,7 @@ export default class EventCreator extends React.Component {
           <DatePicker
             floatingLabelText="Date range (start)"
             firstDayOfWeek={0}
+            locale="en-US"
             autoOk={true}
             value={this.state.startDate}
             onChange={(empty, newTime) => {
@@ -81,6 +133,7 @@ export default class EventCreator extends React.Component {
         <DatePicker
           floatingLabelText="Date range (end)"
           firstDayOfWeek={0}
+          locale="en-US"
           autoOk={true}
           value={this.state.endDate}
           onChange={(empty, newTime) => {
@@ -97,25 +150,17 @@ export default class EventCreator extends React.Component {
 
         <h2>Add duration (hours and minutes)</h2>
         <div>
-          Enter # hours:
-          <input
-            type="number"
-            name="hours"
+          <TextField
+            hintText="Enter # of hours"
+            name="durationHrs"
             value={this.state.durationHrs}
             onChange={this.handleInputChanges}
-            min="0"
-            max="24"
           />
-        </div>
-        <div>
-          Enter # minutes:
-          <input
-            type="number"
-            name="minutes"
+          <TextField
+            hintText="Enter # of minutes"
+            name="durationMins"
             value={this.state.durationMins}
             onChange={this.handleInputChanges}
-            min="0"
-            max="59"
           />
         </div>
         <h2>Add invitees</h2>

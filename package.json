@@ -33,10 +33,7 @@
     "express-session": "^1.15.6",
     "history": "^4.7.2",
     "jsonwebtoken": "^8.2.0",
-<<<<<<< HEAD
-=======
     "material-ui": "^0.20.0",
->>>>>>> [ops] add styling and basic framework to event creation page
     "moment": "^2.21.0",
     "mongoose": "^5.0.10",
     "passport": "^0.4.0",

@@ -46,6 +46,8 @@ module.exports = passportObj => {
   router.get('/schedule/showUserEvents/:user_id', showUserEvents);
   router.get('/user/:username', getUserProfile);
   router.post('/schedule/showRecommendedTimes', (req, res) => {
+    console.log(req.body);
+    res.send('good job!');
     const { durationHrs, durationMins, possibleTimes, schedules } = req.body;
     const durationAsMilliseconds = (durationHrs * 60 + durationMins) * 60000;
     const halfHourAsMilliseconds = 1800000;
@@ -54,9 +56,11 @@ module.exports = passportObj => {
 
     // Generate initial list of possible times
     for (timeRange of possibleTimes) {
+      // milliseconds
       const currRangeEnd = Date.parse(timeRange[1]);
       let currStart = Date.parse(timeRange[0]);
       let currEnd = currStart + durationAsMilliseconds;
+
       while (currEnd <= currRangeEnd) {
         availableTimes[idx] = [
           new Date(currStart).toLocaleString(),
