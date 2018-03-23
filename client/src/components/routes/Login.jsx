@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux';
 import * as userInfoActions from '../../actions/userInfoActions';
 import PropTypes from 'prop-types';
 
-
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -13,6 +12,7 @@ class Login extends React.Component {
     this.handleSignupClick = this.handleSignupClick.bind(this);
     this.handleSubmitClick = this.handleSubmitClick.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    console.log('leaving login constructor');
   }
 
   handleSubmitClick() {
@@ -33,7 +33,7 @@ class Login extends React.Component {
 
         this.props.history.push('/');
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   }
@@ -48,35 +48,36 @@ class Login extends React.Component {
   }
 
   render() {
+    console.log('in the login.jsx render function');
     return (
       <div>
         Login page
         <div>
           <input
-            type='text'
-            name='username'
-            placeholder='Username'
+            type="text"
+            name="username"
+            placeholder="Username"
             onChange={this.handleInputChange}
           />
         </div>
         <div>
           <input
-            type='password'
-            name='password'
-            placeholder='Password'
+            type="password"
+            name="password"
+            placeholder="Password"
             onChange={this.handleInputChange}
           />
         </div>
         <div>
           <input
-            type='submit'
-            value='Submit'
+            type="submit"
+            value="Submit"
             onClick={this.handleSubmitClick}
           />
         </div>
         <input
-          type='submit'
-          value='Create new account'
+          type="submit"
+          value="Create new account"
           onClick={this.handleSignupClick}
         />
       </div>
@@ -84,19 +85,16 @@ class Login extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     userInfo: state.userInfo
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     userInfoActions: bindActionCreators(userInfoActions, dispatch)
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -2,7 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { bindActionCreators } from 'redux';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText, Avatar} from 'material-ui';
+import {
+  Card,
+  CardActions,
+  CardHeader,
+  CardMedia,
+  CardTitle,
+  CardText,
+  Avatar
+} from 'material-ui';
 import FlatButton from 'material-ui/FlatButton';
 import * as profileActions from '../../actions/profileActions';
 import * as userInfoActions from '../../actions/userInfoActions';
@@ -19,33 +27,38 @@ class Profile extends React.Component {
       profileInfo: {},
       invalidUser: false,
       isSelf: false,
-      isFriend: false,
-    }
+      isFriend: false
+    };
   }
 
   componentWillMount() {
     const user = JSON.parse(localStorage.getItem('userInfo'));
     const config = {
-      headers: { 'Authorization': 'bearer ' + localStorage.token }
-    }
-    axios.get(`/api/user/${this.props.match.params.username}`, config)
+      headers: { Authorization: 'bearer ' + localStorage.token }
+    };
+    axios
+      .get(`/api/user/${this.props.match.params.username}`, config)
       .then(response => {
         if (response.status === 200 && response.data.length) {
           this.setState({
-            profileInfo: response.data[0],
+            profileInfo: response.data[0]
           });
-          if (response.data[0].username === this.props.userInfo.username && response.data[0].id === this.props.userInfo.id) {
+          if (
+            response.data[0].username === this.props.userInfo.username &&
+            response.data[0].id === this.props.userInfo.id
+          ) {
             this.setState({
-              isSelf: true,
+              isSelf: true
             });
           }
-          axios.get(`/api/friend/check/${user.id}/${response.data[0].id}`, config)
+          axios
+            .get(`/api/friend/check/${user.id}/${response.data[0].id}`, config)
             .then(check => {
-              check.data.length ? this.setState({ isFriend: true }) : null
+              check.data.length ? this.setState({ isFriend: true }) : null;
             });
         } else {
           this.setState({
-            invalidUser: true,
+            invalidUser: true
           });
         }
       });
@@ -63,7 +76,8 @@ class Profile extends React.Component {
                 <Avatar
                   src={this.state.profileInfo.profile_picture}
                   size={200}
-                />}
+                />
+              }
             />
             <CardActions>
               <FlatButton label="Update Profile" />
@@ -71,7 +85,10 @@ class Profile extends React.Component {
               <FlatButton label="Create Event" />
             </CardActions>
 
-            <CardTitle title="Your events" subtitle="you will see your events here" />
+            <CardTitle
+              title="Your events"
+              subtitle="you will see your events here"
+            />
           </Card>
         );
       } else if (this.state.isFriend) {
@@ -81,10 +98,11 @@ class Profile extends React.Component {
               title={this.state.profileInfo.username}
               subtitle={this.state.profileInfo.bio}
               avatar={
-              <Avatar
-                src={this.state.profileInfo.profile_picture}
-                size={200}
-              />}
+                <Avatar
+                  src={this.state.profileInfo.profile_picture}
+                  size={200}
+                />
+              }
             />
             <CardActions>
               <FlatButton label="Remove Friend" />
@@ -92,7 +110,10 @@ class Profile extends React.Component {
               <FlatButton label="Invite" />
               <FlatButton label="Block" />
             </CardActions>
-            <CardTitle title={`${this.state.profileInfo.username}'s events`} subtitle="" />
+            <CardTitle
+              title={`${this.state.profileInfo.username}'s events`}
+              subtitle=""
+            />
           </Card>
         );
       } else {
@@ -102,10 +123,11 @@ class Profile extends React.Component {
               title={this.state.profileInfo.username}
               subtitle={this.state.profileInfo.bio}
               avatar={
-              <Avatar
-                src={this.state.profileInfo.profile_picture}
-                size={200}
-              />}
+                <Avatar
+                  src={this.state.profileInfo.profile_picture}
+                  size={200}
+                />
+              }
             />
             <CardActions>
               <FlatButton label="Add Friend" />
@@ -115,30 +137,29 @@ class Profile extends React.Component {
         );
       }
     } else {
-      return <div>The user does not exist or is blocking you from seeing this :(</div>
+      return (
+        <div>
+          The user does not exist or is blocking you from seeing this :(
+        </div>
+      );
     }
   }
 }
 
-Profile.propTypes = {
+Profile.propTypes = {};
 
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     userInfo: state.userInfo,
-    profileInfo: state.profileInfo,
+    profileInfo: state.profileInfo
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     profileActions: bindActionCreators(profileActions, dispatch),
-    userInfoActions: bindActionCreators(userInfoActions, dispatch),
+    userInfoActions: bindActionCreators(userInfoActions, dispatch)
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

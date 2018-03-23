@@ -15,28 +15,28 @@ export default class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route path='/test' exact component={Test}/>
-          <Route path='/signup' exact component={Signup} />
-          <Route path='/login' exact component={Login} />
+          <Route path="/test" exact component={Test} />
+          <Route path="/signup" exact component={Signup} />
+          <Route path="/login" exact component={Login} />
           <Route
-            path='/profile/:username'
-            component={(props) => <Protected component={Profile} {...props} />}
+            path="/profile/:username"
+            component={props => <Protected component={Profile} {...props} />}
           />
           <Route
-            path='/create'
-            component={(props) => (
+            path="/create"
+            component={props => (
               <Protected component={EventCreator} {...props} />
             )}
           />
           <Route
-            path='/event'
-            component={(props) => (
+            path="/event"
+            component={props => (
               <Protected component={EventViewer} {...props} />
             )}
           />
           <Route
-            path='/'
-            component={(props) => <Protected component={Home} {...props} />}
+            path="/"
+            component={props => <Protected component={Home} {...props} />}
           />
         </Switch>
       </Router>

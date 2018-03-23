@@ -8,7 +8,6 @@ module.exports = (passportObj) => {
       if (err) {
         return res.status(401).end();
       }
-      
       try {
         const { username } = req.body;
         const query = `
@@ -26,12 +25,14 @@ module.exports = (passportObj) => {
         res.sendStatus(401);
       }
 
-      req.login(user, async (err) => {
+      req.login(user, async err => {
         if (err) {
           return res.status(401).end();
         } else {
           const userPayload = {};
-          const userRecord = await db.queryAsync(`SELECT * FROM users WHERE username='${user.username}'`);
+          const userRecord = await db.queryAsync(
+            `SELECT * FROM users WHERE username='${user.username}'`
+          );
           userPayload.userInfo = userRecord.rows[0];
           userPayload.token = info;
           return res.send(userPayload);
@@ -45,10 +46,12 @@ module.exports = (passportObj) => {
       if (err || !user) {
         return res.status(401).end();
       }
-      req.logIn(user, async (err) => {
+      req.logIn(user, async err => {
         console.log('user: ', user);
         const userPayload = {};
-        const userRecord = await db.queryAsync(`SELECT * FROM users WHERE username='${user.username}'`);
+        const userRecord = await db.queryAsync(
+          `SELECT * FROM users WHERE username='${user.username}'`
+        );
         userPayload.userInfo = userRecord.rows[0];
         userPayload.token = info;
         if (err) {

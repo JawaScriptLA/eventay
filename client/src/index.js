@@ -6,7 +6,7 @@ import configureStore from './store/configureStore.js';
 import App from './App.jsx';
 const store = configureStore();
 
-render( 
+render(
   <Provider store={store}>
     <MuiThemeProvider>
       <App/>  
