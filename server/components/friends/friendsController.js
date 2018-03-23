@@ -15,6 +15,20 @@ module.exports = {
       throw err;
     }
   },
+
+  checkIfFriend: async ({ user_id, target_id} ) => {
+    try {
+      const data = await db.queryAsync(`
+      SELECT * FROM friends
+      WHERE ((user_id='${user_id}' AND target_id='${target_id}') OR (user_id='${target_id}' AND target_id='${user_id}'))
+      AND (status='accepted')
+      `);
+      return data.rows;
+    } catch (err) {
+      throw (err);
+    }
+  },
+
   getPendingFriends: async ({ user_id }) => {
     try {
       const data = await db.queryAsync(`

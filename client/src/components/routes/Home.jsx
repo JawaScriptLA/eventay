@@ -24,7 +24,7 @@ export default class Home extends React.Component {
   render() {
     return (
       <div>
-        <FriendsList />
+        <FriendsList history={this.props.history} />
         <button onClick={this.handleLogoutClick}>Logout!</button>
         <Calendar />
       </div>

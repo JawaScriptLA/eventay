@@ -10,6 +10,15 @@ router.get('/:user_id', async (req, res) => {
   }
 });
 
+router.get('/check/:user_id/:target_id', async (req, res) => {
+  try {
+    let data = await controller.checkIfFriend(req.params);
+    res.send(data);
+  } catch (err) {
+    res.sendStatus(500);
+  }
+});
+
 router.route('/')
   .post(async (req, res) => {
     try {

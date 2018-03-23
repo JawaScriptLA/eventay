@@ -19,7 +19,7 @@ export default class App extends Component {
           <Route path='/signup' exact component={Signup} />
           <Route path='/login' exact component={Login} />
           <Route
-            path='/profile'
+            path='/profile/:username'
             component={(props) => <Protected component={Profile} {...props} />}
           />
           <Route

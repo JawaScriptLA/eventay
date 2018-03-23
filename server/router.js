@@ -8,6 +8,7 @@ const postsRouter = require('./components/posts/postsRouter.js');
 const { getAllFriends } = require('./components/friends/friendsController.js');
 const { getAllAttending, showUserEvents } = require('./components/attendants/attendantsController.js');
 const { select } = require('./queries/select.js');
+const { getUserProfile } = require('./components/user/userController');
 
 const conflictExists = (firstStartTime, firstEndTime, secondStartTime, secondEndTime) => {
   let cond1 = firstStartTime < secondStartTime && secondStartTime < firstEndTime;
@@ -21,7 +22,6 @@ module.exports = passportObj => {
   router.use('/auth', authRouter(passportObj));
   router.use('/', checkAuth);
   router.all('/test', (req, res) => res.send({ message: 'test' }));
-
   router.use('/post', postsRouter);
   router.use('/friend', friendsRouter);
   router.use('/event', eventsRouter);
@@ -43,8 +43,8 @@ module.exports = passportObj => {
     }
   });
   router.get('/select/:table_name', async (req, res) => res.send(await select(req.params.table_name)));
-
   router.get('/schedule/showUserEvents/:user_id', showUserEvents);
+  router.get('/user/:username', getUserProfile);
   router.post('/schedule/showRecommendedTimes', (req, res) => {
     const { durationHrs, durationMins, possibleTimes, schedules } = req.body;
     const durationAsMilliseconds = (durationHrs * 60 + durationMins) * 60000;
