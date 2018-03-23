@@ -28,11 +28,13 @@ module.exports = {
   },
   getEventAttendants: async ({ event_id }) => {
     try {
-      const data = await db.queryAsync(`
-        SELECT * FROM attendants
-        WHERE event_id=${event_id}
-      `);
-      return data.rows;
+      const attendants = [];
+      const data = await db.queryAsync(`SELECT * FROM attendants WHERE event_id=${event_id}`);
+      for (let i = 0; i < data.rows.length; i++) {
+        const info = await db.queryAsync(`SELECT * FROM users WHERE id=${data.rows[i].user_id}`);
+        attendants.push(info.rows[0]);
+      }
+      return attendants;
     } catch (err) {
       throw err;
     }
@@ -61,10 +63,7 @@ module.exports = {
   },
   getAllAttending: async ({ user_id }) => {
     try {
-      const data = await db.queryAsync(`
-        SELECT * FROM attendants
-        WHERE user_id=${user_id}
-      `);
+      const data = await db.queryAsync(`SELECT * FROM attendants WHERE user_id=${user_id}`);
       res.send(data.rows);
     } catch (err) {
       console.log(`Error during attendants GET request: ${err}`);
@@ -112,10 +111,7 @@ module.exports = {
   },
   removeAttendant: async ({ user_id, event_id }) => {
     try {
-      await db.queryAsync(`
-        DELETE FROM attendants
-        WHERE user_id=${user_id} AND event_id=${event_id}
-      `);
+      await db.queryAsync(`DELETE FROM attendants WHERE user_id=${user_id} AND event_id=${event_id}`);
     } catch (err) {
       throw err;
     }
