@@ -58,7 +58,7 @@ export default class EventCreator extends React.Component {
       this.state.endTime.getMinutes()
     );
 
-    const tuple = [start, end];
+    const tuple = [[start, end]];
     this.setState({ possibleTimes: tuple }, () => {
       axios
         .post(

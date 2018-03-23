@@ -47,13 +47,12 @@ module.exports = passportObj => {
   router.get('/user/:username', getUserProfile);
   router.post('/schedule/showRecommendedTimes', (req, res) => {
     console.log(req.body);
-    res.send('good job!');
     const { durationHrs, durationMins, possibleTimes, schedules } = req.body;
     const durationAsMilliseconds = (durationHrs * 60 + durationMins) * 60000;
     const halfHourAsMilliseconds = 1800000;
     const availableTimes = {};
     let idx = 0;
-
+    console.log(possibleTimes);
     // Generate initial list of possible times
     for (timeRange of possibleTimes) {
       // milliseconds
@@ -72,27 +71,29 @@ module.exports = passportObj => {
       }
     }
 
-    // Eliminate conflicting times
-    for (timeChunk in availableTimes) {
-      for (schedule of schedules) {
-        for (event of schedule) {
-          let firstStartTime = Date.parse(availableTimes[timeChunk][0]);
-          let firstEndTime = Date.parse(availableTimes[timeChunk][1]);
-          let secondStartTime = Date.parse(event[0]);
-          let secondEndTime = Date.parse(event[1]);
-          if (
-            conflictExists(
-              firstStartTime,
-              firstEndTime,
-              secondStartTime,
-              secondEndTime
-            )
-          ) {
-            delete availableTimes[timeChunk];
-          }
-        }
-      }
-    }
+    console.log(availableTimes);
+
+    // // Eliminate conflicting times
+    // for (timeChunk in availableTimes) {
+    //   for (schedule of schedules) {
+    //     for (event of schedule) {
+    //       let firstStartTime = Date.parse(availableTimes[timeChunk][0]);
+    //       let firstEndTime = Date.parse(availableTimes[timeChunk][1]);
+    //       let secondStartTime = Date.parse(event[0]);
+    //       let secondEndTime = Date.parse(event[1]);
+    //       if (
+    //         conflictExists(
+    //           firstStartTime,
+    //           firstEndTime,
+    //           secondStartTime,
+    //           secondEndTime
+    //         )
+    //       ) {
+    //         delete availableTimes[timeChunk];
+    //       }
+    //     }
+    //   }
+    // }
     res.json(availableTimes);
   });
   
