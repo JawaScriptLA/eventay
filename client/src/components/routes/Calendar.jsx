@@ -20,9 +20,6 @@ let formats = {
 const config = {
   headers: { 'Authorization': 'bearer ' + localStorage.token}
 };
-
-const userInfo = JSON.parse(localStorage.userInfo);
-
 export default class Calendar extends Component {
   constructor (props) {
     super (props);
@@ -31,6 +28,8 @@ export default class Calendar extends Component {
     }
   }
   componentDidMount () {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    userInfo ?
     axios.get(`/api/event/${userInfo.id}`, config)
       .then(result => {
         result = result.data.map(event => {
@@ -44,6 +43,7 @@ export default class Calendar extends Component {
         });
         this.setState({events: result})
       })
+      : this.props.history.push('/login');
   }
   render () {
     return (

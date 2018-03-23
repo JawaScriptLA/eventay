@@ -22,11 +22,12 @@ export default class Home extends React.Component {
   }
 
   render() {
+    console.log('home render')
     return (
       <div>
         <FriendsList history={this.props.history} />
         <button onClick={this.handleLogoutClick}>Logout!</button>
-        <Calendar />
+        <Calendar history={this.props.history} />
       </div>
     );
   }

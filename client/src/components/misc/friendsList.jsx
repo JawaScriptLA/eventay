@@ -17,8 +17,8 @@ class FriendsList extends React.Component {
     if(this.props.userInfo.id) {
       this.props.friendsActions.fetchFriendsList(this.props.userInfo.id);
     } else {
-      const user = JSON.parse(localStorage.userInfo);
-      this.props.friendsActions.fetchFriendsList(user.id);
+      const user = JSON.parse(localStorage.getItem('userInfo'));
+      user ? this.props.friendsActions.fetchFriendsList(user.id) : this.props.history.push('/login');
     }
   }
 
