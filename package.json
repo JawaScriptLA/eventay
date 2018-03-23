@@ -32,12 +32,14 @@
     "express-session": "^1.15.6",
     "history": "^4.7.2",
     "jsonwebtoken": "^8.2.0",
+    "moment": "^2.21.0",
     "mongoose": "^5.0.10",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pg": "^7.4.1",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
+    "react-big-calendar": "^0.18.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
@@ -52,8 +54,10 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.11",
     "morgan": "^1.9.0",
     "nodemon": "^1.17.2",
+    "style-loader": "^0.20.3",
     "webpack": "^3.11.0"
   }
 }

@@ -9,19 +9,18 @@ module.exports = {
           description,
           thumbnail,
           location,
-          likes_count,
           start_time,
           end_time,
           publicity,
           host_id
         ) VALUES (
           '${title}',
-          ${description ? '' + description : null},
-          ${thumbnail ? '' + thumbnail : null},
-          ${location ? '' + location : null},
-          ${start_time ? start_time : null},
-          ${end_time ? end_time : null},
-          ${publicity ? publicity : false},
+          ${description ? `'${description}'` : null},
+          ${thumbnail ? `'${thumbnail}'` : null},
+          ${location ? `'${location}'` : null},
+          ${start_time ? `'${start_time}'` : null},
+          ${end_time ? `'${end_time}'` : null},
+          ${publicity ? `'${publicity}'` : false},
           '${host_id}'
         ) RETURNING id
       `);
@@ -31,6 +30,7 @@ module.exports = {
       `);
       return data.rows;
     } catch (err) {
+      console.log('ERROR IS: ', err);
       throw err;
     }
   },
@@ -63,7 +63,7 @@ module.exports = {
     try {
       await db.queryAsync(`
         DELETE FROM events
-        WHERE event_id=${event_id}
+        WHERE id=${event_id}
       `);
     } catch (err) {
       throw err;
