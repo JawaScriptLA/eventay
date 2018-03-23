@@ -15,7 +15,7 @@ module.exports = {
         '${status || 'pending'}',
         ${user_id},
         ${event_id},
-        ${invitor_id ? invitor_id : null}
+        ${invitor_id ? `'${invitor_id}'` : null}
         WHERE NOT EXISTS (
           SELECT * FROM attendants
           WHERE event_id=${event_id} AND invitor_id=${invitor_id}

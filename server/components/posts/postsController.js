@@ -5,7 +5,7 @@ module.exports = {
     try {
       await db.queryAsync(`
         INSERT INTO posts (body, user_id, event_id, parent_id)
-        SELECT '${body}', ${user_id}, ${event_id}, ${parent_id ? parent_id : null}
+        SELECT '${body}', ${user_id}, ${event_id}, ${parent_id ? `'${parent_id}'` : null}
         WHERE EXISTS (
           SELECT user_id FROM attendants
           WHERE user_id=${user_id} AND attendants_status=${'going'}
