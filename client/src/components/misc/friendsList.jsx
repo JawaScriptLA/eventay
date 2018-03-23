@@ -23,7 +23,11 @@ class FriendsList extends React.Component {
   }
 
   renderData(item) {
-    return <div key={item.id}>{item.username}</div>;
+    return( 
+    <div onClick={() => this.props.history.push(`/profile/${item.username}`)} key={item.id}>
+      {item.username}
+    </div>
+    );
   } 
 
   render() {
