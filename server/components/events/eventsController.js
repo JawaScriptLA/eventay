@@ -15,12 +15,12 @@ module.exports = {
           host_id
         ) VALUES (
           '${title}',
-          ${description ? '' + description : null},
-          ${thumbnail ? '' + thumbnail : null},
-          ${location ? '' + location : null},
-          ${start_time ? start_time : null},
-          ${end_time ? end_time : null},
-          ${publicity ? publicity : false},
+          ${description ? `'${description}'` : null},
+          ${thumbnail ? `'${thumbnail}'` : null},
+          ${location ? `'${location}'` : null},
+          ${start_time ? `'${start_time}'` : null},
+          ${end_time ? `'${end_time}'` : null},
+          ${publicity ? `'${publicity}'` : false},
           '${host_id}'
         ) RETURNING id
       `);
@@ -30,6 +30,7 @@ module.exports = {
       `);
       return data.rows;
     } catch (err) {
+      console.log('ERROR IS: ', err);
       throw err;
     }
   },
