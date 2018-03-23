@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { bindActionCreators } from 'redux';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText, Avatar} from 'material-ui';
+import FlatButton from 'material-ui/FlatButton';
 import * as profileActions from '../../actions/profileActions';
 import * as userInfoActions from '../../actions/userInfoActions';
 import propTypes from 'prop-types';
@@ -53,28 +55,63 @@ class Profile extends React.Component {
     if (!this.state.invalidUser) {
       if (this.state.isSelf) {
         return (
-          <div>
-            <h2>{this.state.profileInfo.username}'s profile page</h2>
-            <em>This is your personal profile.</em><br/>
-            <p>Your personal information will be shown here</p>
-          </div>
+          <Card>
+            <CardHeader
+              title={this.state.profileInfo.username}
+              subtitle={this.state.profileInfo.bio}
+              avatar={
+                <Avatar
+                  src={this.state.profileInfo.profile_picture}
+                  size={200}
+                />}
+            />
+            <CardActions>
+              <FlatButton label="Update Profile" />
+              <FlatButton label="Settings" />
+              <FlatButton label="Create Event" />
+            </CardActions>
+
+            <CardTitle title="Your events" subtitle="you will see your events here" />
+          </Card>
         );
       } else if (this.state.isFriend) {
         return (
-          <div>
-            <h2>{this.state.profileInfo.username}'s profile page</h2>
-            <em>This is your friend's profile.</em><br/>
-            <p>Your friend's information will be shown here</p>
-          </div>
+          <Card>
+            <CardHeader
+              title={this.state.profileInfo.username}
+              subtitle={this.state.profileInfo.bio}
+              avatar={
+              <Avatar
+                src={this.state.profileInfo.profile_picture}
+                size={200}
+              />}
+            />
+            <CardActions>
+              <FlatButton label="Remove Friend" />
+              <FlatButton label="Send Message" />
+              <FlatButton label="Invite" />
+              <FlatButton label="Block" />
+            </CardActions>
+            <CardTitle title={`${this.state.profileInfo.username}'s events`} subtitle="" />
+          </Card>
         );
       } else {
         return (
-          <div>
-            <h2>{this.state.profileInfo.username}'s profile page</h2>
-            <em>This is a stranger's profile.</em><br/>
-            <p>Their information will be shown here</p>
-            <button>Add friend</button>
-          </div>
+          <Card>
+            <CardHeader
+              title={this.state.profileInfo.username}
+              subtitle={this.state.profileInfo.bio}
+              avatar={
+              <Avatar
+                src={this.state.profileInfo.profile_picture}
+                size={200}
+              />}
+            />
+            <CardActions>
+              <FlatButton label="Add Friend" />
+              <FlatButton label="Block" />
+            </CardActions>
+          </Card>
         );
       }
     } else {
