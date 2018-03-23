@@ -33,7 +33,12 @@ class FriendsList extends React.Component {
   render() {
     console.log(this.props.friendsList);
     if (this.props.friendsList.length) {
-      return this.props.friendsList.map(friend => this.renderData(friend));
+      return (
+        <div>
+          <strong>Friends</strong>
+          {this.props.friendsList.map(friend => this.renderData(friend))}
+        </div>
+      );
     } else {
       return <div>No friends at the moment</div>
     }

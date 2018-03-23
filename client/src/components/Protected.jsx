@@ -16,6 +16,6 @@ export default class Protected extends React.Component {
 
   render() {
     const { component: Component } = this.props;
-    return <Component {...this.props} />;
+    return localStorage.getItem('token') ? <Component {...this.props} /> : <div></div>;
   }
 }

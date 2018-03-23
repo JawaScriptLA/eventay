@@ -16,10 +16,6 @@ let formats = {
   eventTimeRangeFormat: ({ start, end }, culture, local) =>
     local.format(start, 'h:mm a', culture) + ' - ' + local.format(end, 'h:mm a', culture),
 };
-
-const config = {
-  headers: { 'Authorization': 'bearer ' + localStorage.token}
-};
 export default class Calendar extends Component {
   constructor (props) {
     super (props);
@@ -28,6 +24,10 @@ export default class Calendar extends Component {
     }
   }
   componentDidMount () {
+    const config = {
+      headers: { 'Authorization': 'bearer ' + localStorage.token}
+    };
+    console.log('componentDidMount Calendar.jsx');
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     userInfo ?
     axios.get(`/api/event/${userInfo.id}`, config)
