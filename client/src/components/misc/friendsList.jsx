@@ -14,21 +14,26 @@ class FriendsList extends React.Component {
   }
 
   getFriendsList() {
-    if(this.props.userInfo.id) {
+    if (this.props.userInfo.id) {
       this.props.friendsActions.fetchFriendsList(this.props.userInfo.id);
     } else {
       const user = JSON.parse(localStorage.getItem('userInfo'));
-      user ? this.props.friendsActions.fetchFriendsList(user.id) : this.props.history.push('/login');
+      user
+        ? this.props.friendsActions.fetchFriendsList(user.id)
+        : this.props.history.push('/login');
     }
   }
 
   renderData(item) {
-    return( 
-    <div onClick={() => this.props.history.push(`/profile/${item.username}`)} key={item.id}>
-      {item.username}
-    </div>
+    return (
+      <div
+        onClick={() => this.props.history.push(`/profile/${item.username}`)}
+        key={item.id}
+      >
+        {item.username}
+      </div>
     );
-  } 
+  }
 
   render() {
     console.log(this.props.friendsList);
@@ -40,31 +45,28 @@ class FriendsList extends React.Component {
         </div>
       );
     } else {
-      return <div>No friends at the moment</div>
+      return <div>No friends at the moment</div>;
     }
   }
 }
 
 FriendsList.propTypes = {
   friendsActions: propTypes.object,
-  friendsList: propTypes.any,
+  friendsList: propTypes.any
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     friendsList: state.friendsList,
-    userInfo: state.userInfo,
+    userInfo: state.userInfo
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     friendsActions: bindActionCreators(friendsActions, dispatch),
-    userInfoActions: bindActionCreators(userInfoActions, dispatch),
+    userInfoActions: bindActionCreators(userInfoActions, dispatch)
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FriendsList);
+export default connect(mapStateToProps, mapDispatchToProps)(FriendsList);

@@ -5,6 +5,8 @@ import Toggle from 'material-ui/Toggle';
 import TimePicker from 'material-ui/TimePicker';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 const optionsStyle = {
   maxWidth: 255,
@@ -122,31 +124,89 @@ export default class EventCreator extends React.Component {
               this.handleTimeChanges(newTime, 'startDate');
             }}
           />
-          <TimePicker
-            hintText="Time range (start)"
-            value={this.state.startTime}
+          <SelectField
+            floatingLabelText="Hour"
+            value={this.state.value}
+            onChange={this.handleChange}
+            maxHeight={200}
+          >
+            <MenuItem value={1} primaryText="1" />
+            <MenuItem value={2} primaryText="2" />
+            <MenuItem value={3} primaryText="3" />
+            <MenuItem value={4} primaryText="4" />
+            <MenuItem value={5} primaryText="5" />
+            <MenuItem value={6} primaryText="6" />
+            <MenuItem value={7} primaryText="7" />
+            <MenuItem value={8} primaryText="8" />
+            <MenuItem value={9} primaryText="9" />
+            <MenuItem value={10} primaryText="10" />
+            <MenuItem value={11} primaryText="11" />
+            <MenuItem value={12} primaryText="12" />
+          </SelectField>
+          <SelectField
+            floatingLabelText="Minutes"
+            value={this.state.value}
+            onChange={this.handleChange}
+          >
+            <MenuItem value={1} primaryText="00" />
+            <MenuItem value={2} primaryText="30" />
+          </SelectField>
+          <SelectField
+            floatingLabelText="AM/PM"
+            value={this.state.value}
+            onChange={this.handleChange}
+          >
+            <MenuItem value={1} primaryText="AM" />
+            <MenuItem value={2} primaryText="PM" />
+          </SelectField>
+        </div>
+        <div>
+          <DatePicker
+            floatingLabelText="Date range (end)"
+            firstDayOfWeek={0}
+            locale="en-US"
+            autoOk={true}
+            value={this.state.endDate}
             onChange={(empty, newTime) => {
-              this.handleTimeChanges(newTime, 'startTime');
+              this.handleTimeChanges(newTime, 'endDate');
             }}
           />
+          <SelectField
+            floatingLabelText="Hour"
+            value={this.state.value}
+            onChange={this.handleChange}
+            maxHeight={200}
+          >
+            <MenuItem value={1} primaryText="1" />
+            <MenuItem value={2} primaryText="2" />
+            <MenuItem value={3} primaryText="3" />
+            <MenuItem value={4} primaryText="4" />
+            <MenuItem value={5} primaryText="5" />
+            <MenuItem value={6} primaryText="6" />
+            <MenuItem value={7} primaryText="7" />
+            <MenuItem value={8} primaryText="8" />
+            <MenuItem value={9} primaryText="9" />
+            <MenuItem value={10} primaryText="10" />
+            <MenuItem value={11} primaryText="11" />
+            <MenuItem value={12} primaryText="12" />
+          </SelectField>
+          <SelectField
+            floatingLabelText="Minutes"
+            value={this.state.value}
+            onChange={this.handleChange}
+          >
+            <MenuItem value={1} primaryText="00" />
+            <MenuItem value={2} primaryText="30" />
+          </SelectField>
+          <SelectField
+            floatingLabelText="AM/PM"
+            value={this.state.value}
+            onChange={this.handleChange}
+          >
+            <MenuItem value={1} primaryText="AM" />
+            <MenuItem value={2} primaryText="PM" />
+          </SelectField>
         </div>
-        <DatePicker
-          floatingLabelText="Date range (end)"
-          firstDayOfWeek={0}
-          locale="en-US"
-          autoOk={true}
-          value={this.state.endDate}
-          onChange={(empty, newTime) => {
-            this.handleTimeChanges(newTime, 'endDate');
-          }}
-        />
-        <TimePicker
-          hintText="Time range (end)"
-          value={this.state.endTime}
-          onChange={(empty, newTime) => {
-            this.handleTimeChanges(newTime, 'endTime');
-          }}
-        />
 
         <h2>Add duration (hours and minutes)</h2>
         <div>

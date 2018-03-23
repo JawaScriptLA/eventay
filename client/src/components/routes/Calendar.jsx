@@ -10,52 +10,54 @@ BigCalendar.momentLocalizer(moment);
 let formats = {
   dayFormat: 'ddd' + ' ' + 'DD',
   dayRangeHeaderFormat: ({ start, end }, culture, local) =>
-    local.format(start, 'MMM DD', culture) + ' - ' + local.format(end, 'MMM DD', culture),
-  dateFormat: (date, culture, local) =>
-    local.format(date, 'DD', culture),
+    local.format(start, 'MMM DD', culture) +
+    ' - ' +
+    local.format(end, 'MMM DD', culture),
+  dateFormat: (date, culture, local) => local.format(date, 'DD', culture),
   eventTimeRangeFormat: ({ start, end }, culture, local) =>
-    local.format(start, 'h:mm a', culture) + ' - ' + local.format(end, 'h:mm a', culture),
+    local.format(start, 'h:mm a', culture) +
+    ' - ' +
+    local.format(end, 'h:mm a', culture)
 };
 export default class Calendar extends Component {
-  constructor (props) {
-    super (props);
-    this.state ={
-      events: [],
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      events: []
+    };
   }
-  componentDidMount () {
+  componentDidMount() {
     const config = {
-      headers: { 'Authorization': 'bearer ' + localStorage.token}
+      headers: { Authorization: 'bearer ' + localStorage.token }
     };
     console.log('componentDidMount Calendar.jsx');
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    userInfo ?
-    axios.get(`/api/event/${userInfo.id}`, config)
-      .then(result => {
-        result = result.data.map(event => {
-          var obj = {};
-          obj.id = event.id;
-          obj.title = event.title;
-          obj.start = new Date(event.start_time);
-          obj.end = new Date(event.end_time);
-          obj.desc = event.description;
-          return obj;
-        });
-        this.setState({events: result})
-      })
+    userInfo
+      ? axios.get(`/api/event/${userInfo.id}`, config).then(result => {
+          result = result.data.map(event => {
+            var obj = {};
+            obj.id = event.id;
+            obj.title = event.title;
+            obj.start = new Date(event.start_time);
+            obj.end = new Date(event.end_time);
+            obj.desc = event.description;
+            return obj;
+          });
+          this.setState({ events: result });
+        })
       : this.props.history.push('/login');
   }
-  render () {
+  render() {
     return (
       <div id="calendar">
         <BigCalendar
           {...this.props}
-          culture='en'
+          culture="en"
           formats={formats}
           events={this.state.events}
           views={['month', 'week']}
-          startAccessor='start'
-          endAccessor='end'
+          startAccessor="start"
+          endAccessor="end"
           defaultDate={new Date(2018, 2, 22)}
           showMultiDayTimes
         />

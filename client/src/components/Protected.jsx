@@ -6,6 +6,7 @@ export default class Protected extends React.Component {
     try {
       console.log('currently my token is:', localStorage.getItem('token'));
       if (!localStorage.getItem('token')) {
+        console.log('i do not have a token');
         this.props.history.push('/login');
       }
     } catch (e) {
