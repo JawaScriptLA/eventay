@@ -62,7 +62,7 @@ module.exports = {
     try {
       await db.queryAsync(`
         DELETE FROM events
-        WHERE event_id=${event_id}
+        WHERE id=${event_id}
       `);
     } catch (err) {
       throw err;
