@@ -10,6 +10,15 @@ router.get('/:event_id', async (req, res) => {
   }
 });
 
+router.get('/pendingInvites/:user_id', async (req, res) => {
+  try {
+    let data = await controller.getPendingAttending(req.params);
+    res.send(data);
+  } catch (err) {
+    res.sendStatus(500);
+  }
+});
+
 router.route('/')
   .post(async (req, res) => {
     try {

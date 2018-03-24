@@ -12,3 +12,6 @@ bundle.js
 config.js
 
 ## ESLINT ##
+
+## YARN ##
+yarn.lock
