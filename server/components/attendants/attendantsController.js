@@ -11,7 +11,7 @@ module.exports = {
           event_id,
           invitor_id
         ) SELECT
-        ${access || 'member'},
+        '${access || 'member'}',
         '${status || 'pending'}',
         ${user_id},
         ${event_id},
@@ -22,6 +22,7 @@ module.exports = {
         )
       `);
     } catch (err) {
+      console.log('THE ERROR: ', err);
       throw err;
     }
   },
@@ -32,6 +33,25 @@ module.exports = {
         WHERE event_id=${event_id}
       `);
       return data.rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+  getPendingAttending: async ({ user_id }) => {
+    try {
+      const getMyPendingInvites = await db.queryAsync(`
+        SELECT * FROM attendants
+        WHERE user_id=${user_id} AND status='pending'
+      `);
+      let getMyPendingEvents = [];
+      getMyPendingInvites.rows.forEach(invite => {
+        getMyPendingEvents.push(db.queryAsync(`
+          SELECT * FROM events
+          WHERE id=${invite.event_id}
+        `));
+      });
+      return Promise.all(getMyPendingEvents)
+        .then(values => values.map(event => event.rows));
     } catch (err) {
       throw err;
     }
