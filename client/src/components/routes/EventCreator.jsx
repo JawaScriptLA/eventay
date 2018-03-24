@@ -8,16 +8,21 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn
+} from 'material-ui/Table';
 
-const optionsStyle = {
-  maxWidth: 255,
-  marginRight: 'auto'
-};
 export default class EventCreator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedFriends: [],
+      selectedFriendIds: [],
+      allFriends: [],
       durationMins: '',
       durationHrs: '',
       generatedTimes: false,
@@ -30,7 +35,7 @@ export default class EventCreator extends React.Component {
       endMinutes: null,
       endAMPM: null
     };
-    this.getFriends();
+    this.getAllFriends();
     this.calculateTotalTime = this.calculateTotalTime.bind(this);
     this.generateRecommendations = this.generateRecommendations.bind(this);
     this.createEvent = this.createEvent.bind(this);
@@ -39,7 +44,7 @@ export default class EventCreator extends React.Component {
     this.handleTextChanges = this.handleTextChanges.bind(this);
   }
 
-  getFriends() {
+  getAllFriends() {
     const ownId = JSON.parse(localStorage.getItem('userInfo')).id;
     axios
       .get(`/api/friends/${ownId}`, {
@@ -47,9 +52,12 @@ export default class EventCreator extends React.Component {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       })
-      // .get(`/api/friends/${id}`)
-      .then(response => {
-        console.log(response.data);
+      .then(res => {
+        const friendIds = [];
+        for (let idx in res.data) {
+          friendIds.push([res.data[idx].id, res.data[idx].username]);
+        }
+        this.setState({ allFriends: friendIds });
       })
       .catch(err => console.log(err));
   }
@@ -61,6 +69,10 @@ export default class EventCreator extends React.Component {
         minutes * 60000 +
         ampm * 43200000
     );
+  }
+
+  componentDidMount() {
+    setTimeout(() => console.log('component did mount', this.state), 1000);
   }
 
   generateRecommendations() {
@@ -86,7 +98,7 @@ export default class EventCreator extends React.Component {
       .post(
         '/api/schedule/showRecommendedTimes',
         {
-          selectedFriends: this.state.selectedFriends,
+          selectedFriendIds: this.state.selectedFriendIds,
           durationAsMilliseconds: durationAsMilliseconds,
           timeRange: timeRange
         },
@@ -118,16 +130,31 @@ export default class EventCreator extends React.Component {
     this.setState({ [stateKey]: value });
   }
 
-  handleTextChanges(e) {
-    this.setState({ [e.target.name]: e.target.value });
-    setTimeout(() => console.log(this.state), 1000);
+  handleSelectionChange(selectedRows) {
+    // handle case where all rows are selected
+    if (selectedRows === 'all') {
+      console.log('all rows selected');
+      // iterate through friends
+      let allSelected = [];
+      this.state.allFriends.forEach(friend => {
+        allSelected.push(friend[0]);
+      });
+      this.setState({ selectedFriendIds: allSelected });
+    } else if (selectedRows === 'none') {
+      console.log('all rows removed');
+      this.setState({ selectedFriendIds: [] });
+    } else {
+      this.setState({});
+      console.log('selection changed', selectedRows);
+    }
   }
 
-  addFriendToList() {
-    // update state to add friend to state (selectedFriends)
+  handleTextChanges(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
+    console.log('state is:', this.state);
     return (
       <div>
         <h1>This is the event creator page!</h1>
@@ -256,7 +283,29 @@ export default class EventCreator extends React.Component {
             onChange={this.handleTextChanges}
           />
         </div>
-        <h2>Add invitees</h2>
+        <h2>Invite Friends!</h2>
+
+        <Table
+          multiSelectable={true}
+          onRowSelection={selectedRows =>
+            this.handleSelectionChange(selectedRows)
+          }
+        >
+          <TableHeader>
+            <TableRow>
+              <TableHeaderColumn>Name</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody showRowHover={true}>
+            {this.state.allFriends &&
+              this.state.allFriends.map(friend => (
+                <TableRow key={friend[0]}>
+                  <TableRowColumn>{friend[1]}</TableRowColumn>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+
         <RaisedButton
           label="Generate recommended times"
           primary={true}
