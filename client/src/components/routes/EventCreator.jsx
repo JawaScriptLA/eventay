@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+
 import DatePicker from 'material-ui/DatePicker';
 import Toggle from 'material-ui/Toggle';
 import TimePicker from 'material-ui/TimePicker';
@@ -17,7 +18,6 @@ export default class EventCreator extends React.Component {
     super(props);
     this.state = {
       selectedFriends: [],
-      // possibleTimes: [],
       durationMins: '',
       durationHrs: '',
       generatedTimes: false,
@@ -30,12 +30,28 @@ export default class EventCreator extends React.Component {
       endMinutes: null,
       endAMPM: null
     };
+    this.getFriends();
     this.calculateTotalTime = this.calculateTotalTime.bind(this);
     this.generateRecommendations = this.generateRecommendations.bind(this);
     this.createEvent = this.createEvent.bind(this);
     this.handleDateChanges = this.handleDateChanges.bind(this);
     this.handleDropdownChanges = this.handleDropdownChanges.bind(this);
     this.handleTextChanges = this.handleTextChanges.bind(this);
+  }
+
+  getFriends() {
+    const ownId = JSON.parse(localStorage.getItem('userInfo')).id;
+    axios
+      .get(`/api/friends/${ownId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      // .get(`/api/friends/${id}`)
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(err => console.log(err));
   }
 
   calculateTotalTime(dateAsMilliseconds, hours, minutes, ampm) {
@@ -82,11 +98,9 @@ export default class EventCreator extends React.Component {
       )
       .then(res => {
         console.log(res.data);
-        return;
       })
       .catch(err => {
         console.log(err);
-        return;
       });
     this.setState({ generatedTimes: true });
   }

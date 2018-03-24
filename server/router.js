@@ -41,6 +41,7 @@ module.exports = passportObj => {
   router.use('/attendant', attendantsRouter);
   router.get('/friends/:user_id', async (req, res) => {
     try {
+      console.log('in the router!');
       let data = await getAllFriends(req.params);
       res.send(data);
     } catch (err) {
