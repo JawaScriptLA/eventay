@@ -2,19 +2,28 @@ import React from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { bindActionCreators } from 'redux';
-import {
+import { 
+  TextField,
+  Divider,
   Card,
   CardActions,
-  CardHeader,
   CardMedia,
+  CardHeader,
   CardTitle,
   CardText,
-  Avatar
-} from 'material-ui';
+  Avatar,
+  Paper,
+  RaisedButton,
+  Dialog,
+  Popover,
+  Menu,
+  MenuItem,
+ } from 'material-ui';
 import FlatButton from 'material-ui/FlatButton';
+import propTypes from 'prop-types';
 import * as profileActions from '../../actions/profileActions';
 import * as userInfoActions from '../../actions/userInfoActions';
-import propTypes from 'prop-types';
+import ProfileButtons from '../misc/ProfileButtons.jsx'
 
 class Profile extends React.Component {
   constructor(props) {
@@ -27,8 +36,24 @@ class Profile extends React.Component {
       profileInfo: {},
       invalidUser: false,
       isSelf: false,
-      isFriend: false
-    };
+      renderUpdateProfile: false,
+      renderProfilePicPopover: false,
+      popoverAnchorEl: null,
+      renderURLInput: false,
+      urlPopoverAnchorEl: null,
+      bioInputField: '',
+      bioDisplay: '',
+      profilePicURL: '',
+    }
+
+    this.handleProfileBioModalOpen = this.handleProfileBioModalOpen.bind(this);
+    this.handleProfileBioModalClose = this.handleProfileBioModalClose.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleUpdateBio = this.handleUpdateBio.bind(this);
+    this.handleUpdatePhoto = this.handleUpdatePhoto.bind(this);
+    this.handleProfilePhotoModalOpen = this.handleProfilePhotoModalOpen.bind(this);
+    this.handleProfilePhotoModalClose = this.handleProfilePhotoModalClose.bind(this);
+
   }
 
   componentWillMount() {
@@ -36,12 +61,13 @@ class Profile extends React.Component {
     const config = {
       headers: { Authorization: 'bearer ' + localStorage.token }
     };
-    axios
-      .get(`/api/user/${this.props.match.params.username}`, config)
+    axios.get(`/api/user/${this.props.match.params.username}`, config)
       .then(response => {
         if (response.status === 200 && response.data.length) {
           this.setState({
-            profileInfo: response.data[0]
+            profileInfo: response.data[0],
+            bioInputField: response.data[0].bio || '',
+            bioDisplay: response.data[0].bio || '',
           });
           if (
             response.data[0].username === this.props.userInfo.username &&
@@ -64,78 +90,138 @@ class Profile extends React.Component {
       });
   }
 
+  handleProfileBioModalOpen() {
+    this.setState({
+      bioInputField: this.state.profileInfo.bio,
+      renderUpdateProfile: true,
+    });
+  }
+
+  handleProfileBioModalClose() {
+    this.setState({
+      renderUpdateProfile: false,
+    });
+  }
+
+  handleProfilePhotoModalOpen() {
+    this.setState({
+      renderProfilePicPopover: true,
+    });
+  }
+
+  handleProfilePhotoModalClose() {
+    this.setState({
+      renderProfilePicPopover: false,
+    });
+  }
+
+  handleUpdatePhoto(e) {
+    if (e.key === 'Enter' && this.state.isSelf) {
+      const config = {
+        headers: { 'Authorization': 'bearer ' + localStorage.token }
+      }
+      // todo update bio info
+      axios.put(`/api/user/profilepic`, {
+        profile_pic: this.state.profilePicURL,
+        username: this.props.userInfo.username, // to prevent user from changing other people's bio
+      }, config)
+        .then(response => {
+          const user = Object.assign({}, this.state.profileInfo);
+          user.profile_picture = response.data[0].profile_picture;
+          this.setState({ profileInfo: user });
+          this.handleProfilePhotoModalClose();
+        });
+    }
+  }
+  
+  handleInputChange(e) {
+    this.setState({
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  handleUpdateBio(e) {
+    if (e.key === 'Enter' && this.state.isSelf) {
+      const config = {
+        headers: { 'Authorization': 'bearer ' + localStorage.token }
+      }
+      // todo update bio info
+      axios.put(`/api/user/bio`, {
+        bio: this.state.bioInputField,
+        username: this.props.userInfo.username, // to prevent user from changing other people's bio
+      }, config)
+        .then(response => {
+          this.setState({ bioDisplay: response.data[0].bio });
+          this.handleProfileBioModalClose();
+        });
+    }
+  }
+
   render() {
     if (!this.state.invalidUser) {
-      if (this.state.isSelf) {
-        return (
-          <Card>
-            <CardHeader
-              title={this.state.profileInfo.username}
-              subtitle={this.state.profileInfo.bio}
-              avatar={
-                <Avatar
-                  src={this.state.profileInfo.profile_picture}
-                  size={200}
-                />
-              }
+      return (
+        <Card
+          style={{
+            margin: 'auto',
+            width: '60%',
+          }}
+        >
+          <CardHeader
+            title={<h1>{this.state.profileInfo.username}</h1>}
+            subtitle={this.state.bioDisplay}
+            avatar={
+              <Avatar
+                onMouseEnter={() => console.log('here')}
+                src={this.state.profileInfo.profile_picture}
+                size={200}
+              />}
             />
-            <CardActions>
-              <FlatButton label="Update Profile" />
-              <FlatButton label="Settings" />
-              <FlatButton label="Create Event" />
-            </CardActions>
-
-            <CardTitle
-              title="Your events"
-              subtitle="you will see your events here"
-            />
-          </Card>
-        );
-      } else if (this.state.isFriend) {
-        return (
-          <Card>
-            <CardHeader
-              title={this.state.profileInfo.username}
-              subtitle={this.state.profileInfo.bio}
-              avatar={
-                <Avatar
-                  src={this.state.profileInfo.profile_picture}
-                  size={200}
-                />
-              }
-            />
-            <CardActions>
-              <FlatButton label="Remove Friend" />
-              <FlatButton label="Send Message" />
-              <FlatButton label="Invite" />
-              <FlatButton label="Block" />
-            </CardActions>
-            <CardTitle
-              title={`${this.state.profileInfo.username}'s events`}
-              subtitle=""
-            />
-          </Card>
-        );
-      } else {
-        return (
-          <Card>
-            <CardHeader
-              title={this.state.profileInfo.username}
-              subtitle={this.state.profileInfo.bio}
-              avatar={
-                <Avatar
-                  src={this.state.profileInfo.profile_picture}
-                  size={200}
-                />
-              }
-            />
-            <CardActions>
-              <FlatButton label="Add Friend" />
-              <FlatButton label="Block" />
-            </CardActions>
-          </Card>
-        );
-      }
+          <Dialog
+            title="Update your bio"
+            modal={false}
+            open={this.state.renderUpdateProfile}
+            onRequestClose={this.handleProfileBioModalClose}
+          >
+            <Paper zDepth={1}>
+              <TextField 
+                hintText="Bio"
+                name="bioInputField"
+                onChange={this.handleInputChange}
+                onKeyDown={this.handleUpdateBio}
+                value={this.state.bioInputField}
+                style={{ marginLeft: 20 }}
+                underlineShow={false}
+              />
+              <Divider />
+            </Paper>
+          </Dialog>
+          <Dialog
+            title="Update your photo"
+            modal={false}
+            open={this.state.renderProfilePicPopover}
+            onRequestClose={this.handleProfilePhotoModalClose}
+          >
+            <Paper zDepth={1}>
+              <TextField 
+                hintText="Image URL"
+                name="profilePicURL"
+                onChange={this.handleInputChange}
+                onKeyDown={this.handleUpdatePhoto}
+                value={this.state.profilePicURL}
+                style={{ marginLeft: 20 }}
+                underlineShow={false}
+              />
+              <Divider />
+            </Paper>
+          </Dialog>
+          <ProfileButtons
+            isFriend={this.state.isFriend}
+            isSelf={this.state.isSelf}
+            handleProfileBioModalOpen={this.handleProfileBioModalOpen}
+            handleProfilePhotoModalOpen={this.handleProfilePhotoModalOpen}
+          />
+        </Card>
+      );
     } else {
       return (
         <div>
