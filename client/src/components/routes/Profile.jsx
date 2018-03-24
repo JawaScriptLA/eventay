@@ -2,11 +2,25 @@ import React from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { bindActionCreators } from 'redux';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText, Avatar} from 'material-ui';
+import { 
+  Paper,
+  TextField,
+  Divider,
+  Card,
+  CardActions,
+  CardHeader,
+  CardMedia,
+  CardTitle,
+  CardText,
+  Avatar,
+  RaisedButton,
+  Dialog,
+ } from 'material-ui';
 import FlatButton from 'material-ui/FlatButton';
+import propTypes from 'prop-types';
 import * as profileActions from '../../actions/profileActions';
 import * as userInfoActions from '../../actions/userInfoActions';
-import propTypes from 'prop-types';
+import ProfileButtons from '../misc/ProfileButtons.jsx'
 
 class Profile extends React.Component {
   constructor(props) {
@@ -20,7 +34,16 @@ class Profile extends React.Component {
       invalidUser: false,
       isSelf: false,
       isFriend: false,
+      bioInputField: '',
+      bioDisplay: '',
+      profilePicInputField: '',
+      renderUpdateProfile: false,
     }
+
+    this.handleProfileModalOpen = this.handleProfileModalOpen.bind(this);
+    this.handleProfileModalClose = this.handleProfileModalClose.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleUpdateBio = this.handleUpdateBio.bind(this);
   }
 
   componentWillMount() {
@@ -33,6 +56,8 @@ class Profile extends React.Component {
         if (response.status === 200 && response.data.length) {
           this.setState({
             profileInfo: response.data[0],
+            bioInputField: response.data[0].bio || '',
+            bioDisplay: response.data[0].bio || '',
           });
           if (response.data[0].username === this.props.userInfo.username && response.data[0].id === this.props.userInfo.id) {
             this.setState({
@@ -51,69 +76,110 @@ class Profile extends React.Component {
       });
   }
 
+  handleProfileModalOpen() {
+    this.setState({
+      bioInputField: this.state.profileInfo.bio,
+      renderUpdateProfile: true,
+    });
+  }
+
+  handleProfileModalClose() {
+    this.setState({
+      renderUpdateProfile: false,
+    });
+  }
+  
+  handleInputChange(e) {
+    console.log(e.target.name, e.target.files);
+    this.setState({
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  handleUpdateBio(e) {
+    if (e.key === 'Enter' && this.state.isSelf) {
+      const config = {
+        headers: { 'Authorization': 'bearer ' + localStorage.token }
+      }
+      // todo update bio info
+      axios.put(`/api/user/bio`, {
+        bio: this.state.bioInputField,
+        username: this.props.userInfo.username, // to prevent user from changing other people's bio
+      }, config)
+        .then(response => {
+          this.setState({ bioDisplay: response.data[0].bio });
+          this.handleProfileModalClose();
+        });
+    }
+  }
+
   render() {
     if (!this.state.invalidUser) {
-      if (this.state.isSelf) {
-        return (
-          <Card>
-            <CardHeader
-              title={this.state.profileInfo.username}
-              subtitle={this.state.profileInfo.bio}
-              avatar={
-                <Avatar
-                  src={this.state.profileInfo.profile_picture}
-                  size={200}
-                />}
-            />
-            <CardActions>
-              <FlatButton label="Update Profile" />
-              <FlatButton label="Settings" />
-              <FlatButton label="Create Event" />
-            </CardActions>
-
-            <CardTitle title="Your events" subtitle="you will see your events here" />
-          </Card>
-        );
-      } else if (this.state.isFriend) {
-        return (
-          <Card>
-            <CardHeader
-              title={this.state.profileInfo.username}
-              subtitle={this.state.profileInfo.bio}
-              avatar={
+      return (
+        <Card
+          style={{
+            margin: 'auto',
+            width: '60%',
+          }}
+        >
+          <CardHeader
+            title={this.state.profileInfo.username}
+            subtitle={this.state.bioDisplay}
+            avatar={
               <Avatar
                 src={this.state.profileInfo.profile_picture}
                 size={200}
               />}
             />
-            <CardActions>
-              <FlatButton label="Remove Friend" />
-              <FlatButton label="Send Message" />
-              <FlatButton label="Invite" />
-              <FlatButton label="Block" />
-            </CardActions>
-            <CardTitle title={`${this.state.profileInfo.username}'s events`} subtitle="" />
-          </Card>
-        );
-      } else {
-        return (
-          <Card>
-            <CardHeader
-              title={this.state.profileInfo.username}
-              subtitle={this.state.profileInfo.bio}
-              avatar={
-              <Avatar
-                src={this.state.profileInfo.profile_picture}
-                size={200}
-              />}
-            />
-            <CardActions>
-              <FlatButton label="Add Friend" />
-              <FlatButton label="Block" />
-            </CardActions>
-          </Card>
-        );
-      }
+          <Dialog
+            title="Update your profile"
+            modal={false}
+            open={this.state.renderUpdateProfile}
+            onRequestClose={this.handleProfileModalClose}
+          >
+            <Paper zDepth={1}>
+              <TextField 
+                hintText="Bio"
+                name="bioInputField"
+                onChange={this.handleInputChange}
+                onKeyDown={this.handleUpdateBio}
+                value={this.state.bioInputField}
+                style={{ marginLeft: 20 }}
+                underlineShow={false}
+              />
+              <Divider />
+              <RaisedButton
+                label="Update Profile picture"
+                labelPosition="before"
+                style={{ margin: 12 }}
+                containerElement="label"
+              >
+                <input
+                  onChange={this.handleInputChange}
+                  type="file"
+                  style={{
+                    cursor: 'pointer',
+                    position: 'absolute',
+                    top: 0,
+                    bottom: 0,
+                    right: 0,
+                    left: 0,
+                    width: '100%',
+                    opacity: 0,
+                  }} 
+                  name='profilePicInputField'
+                />
+              </RaisedButton>
+              <Divider />
+            </Paper>
+          </Dialog>
+          <ProfileButtons
+            isFriend={this.state.isFriend}
+            isSelf={this.state.isSelf}
+            handleProfileModalOpen={this.handleProfileModalOpen}
+          />
+        </Card>
+      );
     } else {
       return <div>The user does not exist or is blocking you from seeing this :(</div>
     }
