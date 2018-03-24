@@ -7,14 +7,26 @@ const attendantsRouter = require('./components/attendants/attendantsRouter.js');
 const postsRouter = require('./components/posts/postsRouter.js');
 const userRouter = require('./components/user/userRouter.js')
 const { getAllFriends } = require('./components/friends/friendsController.js');
-const { getAllAttending, showUserEvents } = require('./components/attendants/attendantsController.js');
+const {
+  getAllAttending,
+  showUserEvents
+} = require('./components/attendants/attendantsController.js');
 const { select } = require('./queries/select.js');
 
-const conflictExists = (firstStartTime, firstEndTime, secondStartTime, secondEndTime) => {
-  let cond1 = firstStartTime < secondStartTime && secondStartTime < firstEndTime;
-  let cond2 = secondStartTime < firstStartTime && firstStartTime < secondEndTime;
-  let cond3 = secondStartTime <= firstStartTime && firstEndTime <= secondEndTime;
-  let cond4 = firstStartTime <= secondStartTime && secondEndTime <= firstEndTime;
+const conflictExists = (
+  firstStartTime,
+  firstEndTime,
+  secondStartTime,
+  secondEndTime
+) => {
+  let cond1 =
+    firstStartTime < secondStartTime && secondStartTime < firstEndTime;
+  let cond2 =
+    secondStartTime < firstStartTime && firstStartTime < secondEndTime;
+  let cond3 =
+    secondStartTime <= firstStartTime && firstEndTime <= secondEndTime;
+  let cond4 =
+    firstStartTime <= secondStartTime && secondEndTime <= firstEndTime;
   return cond1 || cond2 || cond3 || cond4;
 };
 
@@ -43,21 +55,22 @@ module.exports = passportObj => {
       res.sendStatus(500);
     }
   });
-  router.get('/select/:table_name', async (req, res) => res.send(await select(req.params.table_name)));
+  router.get('/select/:table_name', async (req, res) =>
+    res.send(await select(req.params.table_name))
+  );
   router.get('/schedule/showUserEvents/:user_id', showUserEvents);
   router.post('/schedule/showRecommendedTimes', (req, res) => {
-    console.log(req.body);
-    const { durationHrs, durationMins, possibleTimes, schedules } = req.body;
-    const durationAsMilliseconds = (durationHrs * 60 + durationMins) * 60000;
+    console.log('req.body is:', req.body);
+    const { durationAsMilliseconds, timeRange, selectedFriends } = req.body;
     const halfHourAsMilliseconds = 1800000;
     const availableTimes = {};
     let idx = 0;
-    console.log(possibleTimes);
+    console.log(timeRange);
     // Generate initial list of possible times
-    for (timeRange of possibleTimes) {
+    for (range of timeRange) {
       // milliseconds
-      const currRangeEnd = Date.parse(timeRange[1]);
-      let currStart = Date.parse(timeRange[0]);
+      const currRangeEnd = Date.parse(range[1]);
+      let currStart = Date.parse(range[0]);
       let currEnd = currStart + durationAsMilliseconds;
 
       while (currEnd <= currRangeEnd) {
@@ -96,6 +109,6 @@ module.exports = passportObj => {
     // }
     res.json(availableTimes);
   });
-  
+
   return router;
 };

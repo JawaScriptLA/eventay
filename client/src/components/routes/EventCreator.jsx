@@ -17,7 +17,7 @@ export default class EventCreator extends React.Component {
     super(props);
     this.state = {
       selectedFriends: [],
-      possibleTimes: [],
+      // possibleTimes: [],
       durationMins: '',
       durationHrs: '',
       generatedTimes: false,
@@ -58,32 +58,32 @@ export default class EventCreator extends React.Component {
       this.state.endAMPM
     );
 
-    const tuple = [[start, end]];
-    console.log(tuple);
-    this.setState({ possibleTimes: tuple }, () => {
-      axios
-        .post(
-          '/api/schedule/showRecommendedTimes',
-          {
-            selectedFriends: this.state.selectedFriends,
-            durationMins: Number(this.state.durationMins),
-            durationHrs: Number(this.state.durationHrs),
-            possibleTimes: this.state.possibleTimes
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
+    const timeRange = [[start, end]];
+    const durationAsMilliseconds =
+      (Number(this.state.durationHrs) * 60 + Number(this.state.durationMins)) *
+      60000;
+
+    axios
+      .post(
+        '/api/schedule/showRecommendedTimes',
+        {
+          selectedFriends: this.state.selectedFriends,
+          durationAsMilliseconds: durationAsMilliseconds,
+          timeRange: timeRange
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
           }
-        )
-        .then(res => {
-          console.log(res.data);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      this.setState({ generatedTimes: true });
-    });
+        }
+      )
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    this.setState({ generatedTimes: true });
   }
 
   createEvent() {
