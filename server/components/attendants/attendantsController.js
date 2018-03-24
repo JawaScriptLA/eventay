@@ -68,28 +68,35 @@ module.exports = {
       res.sendStatus(500);
     }
   },
-  showUserEvents: async ({ user_id }) => {
+  showUserEvents: async user_id => {
     try {
       const userEvents = [];
       const eventList = [];
       let eventQuery;
-      const data = await db.queryAsync(`SELECT * FROM attendants WHERE user_id=${user_id}`);
+      const data = await db.queryAsync(
+        `SELECT * FROM attendants WHERE user_id=${user_id}`
+      );
 
-      data.rows.forEach((row) => userEvents.push(row.event_id));
+      data.rows.forEach(row => userEvents.push(row.event_id));
       for (let i = 0; i < userEvents.length; i++) {
         eventQuery = `SELECT * FROM events WHERE id=${userEvents[i]}`;
         eventData = await db.queryAsync(eventQuery);
-        eventList.push(eventData.rows);
+        eventList.push(eventData.rows[0]);
       }
       return eventList;
     } catch (err) {
       throw err;
     }
   },
-  updateAttendant: async (data) => {
+  updateAttendant: async data => {
     try {
       let fields = Object.entries(data)
-        .map(([ key, value ]) => typeof value === 'string' ? `${key} = '${value}'` : `${key} = ${value}`)
+        .map(
+          ([key, value]) =>
+            typeof value === 'string'
+              ? `${key} = '${value}'`
+              : `${key} = ${value}`
+        )
         .join(', ');
       await db.queryAsync(`
         UPDATE attendants

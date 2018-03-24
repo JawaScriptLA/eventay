@@ -40,7 +40,10 @@ export default class EventCreator extends React.Component {
 
   calculateTotalTime(dateAsMilliseconds, hours, minutes, ampm) {
     return new Date(
-      dateAsMilliseconds + hours * 3600000 + minutes * 60000 + ampm * 43200000
+      dateAsMilliseconds +
+        (hours % 12) * 3600000 +
+        minutes * 60000 +
+        ampm * 43200000
     );
   }
 
@@ -79,9 +82,11 @@ export default class EventCreator extends React.Component {
       )
       .then(res => {
         console.log(res.data);
+        return;
       })
       .catch(err => {
         console.log(err);
+        return;
       });
     this.setState({ generatedTimes: true });
   }

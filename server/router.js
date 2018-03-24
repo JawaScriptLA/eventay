@@ -5,7 +5,7 @@ const friendsRouter = require('./components/friends/friendsRouter.js');
 const eventsRouter = require('./components/events/eventsRouter.js');
 const attendantsRouter = require('./components/attendants/attendantsRouter.js');
 const postsRouter = require('./components/posts/postsRouter.js');
-const userRouter = require('./components/user/userRouter.js')
+const userRouter = require('./components/user/userRouter.js');
 const { getAllFriends } = require('./components/friends/friendsController.js');
 const {
   getAllAttending,
@@ -59,16 +59,23 @@ module.exports = passportObj => {
     res.send(await select(req.params.table_name))
   );
   router.get('/schedule/showUserEvents/:user_id', showUserEvents);
-  router.post('/schedule/showRecommendedTimes', (req, res) => {
+  router.get('/user/:username', getUserProfile);
+  router.post('/schedule/showRecommendedTimes', async (req, res) => {
     console.log('req.body is:', req.body);
     const { durationAsMilliseconds, timeRange, selectedFriends } = req.body;
     const halfHourAsMilliseconds = 1800000;
     const availableTimes = {};
     let idx = 0;
-    console.log(timeRange);
+
+    // Given userIds, and users' schedules
+    let inviteeIds = [1];
+    let schedules = [];
+    for (let i = 0; i < inviteeIds.length; i++) {
+      schedules.push(await showUserEvents(inviteeIds[i]));
+    }
+
     // Generate initial list of possible times
     for (range of timeRange) {
-      // milliseconds
       const currRangeEnd = Date.parse(range[1]);
       let currStart = Date.parse(range[0]);
       let currEnd = currStart + durationAsMilliseconds;
@@ -84,29 +91,27 @@ module.exports = passportObj => {
       }
     }
 
-    console.log(availableTimes);
-
-    // // Eliminate conflicting times
-    // for (timeChunk in availableTimes) {
-    //   for (schedule of schedules) {
-    //     for (event of schedule) {
-    //       let firstStartTime = Date.parse(availableTimes[timeChunk][0]);
-    //       let firstEndTime = Date.parse(availableTimes[timeChunk][1]);
-    //       let secondStartTime = Date.parse(event[0]);
-    //       let secondEndTime = Date.parse(event[1]);
-    //       if (
-    //         conflictExists(
-    //           firstStartTime,
-    //           firstEndTime,
-    //           secondStartTime,
-    //           secondEndTime
-    //         )
-    //       ) {
-    //         delete availableTimes[timeChunk];
-    //       }
-    //     }
-    //   }
-    // }
+    // Eliminate conflicting times
+    for (timeChunk in availableTimes) {
+      let firstStartTime = Date.parse(availableTimes[timeChunk][0]);
+      let firstEndTime = Date.parse(availableTimes[timeChunk][1]);
+      for (schedule of schedules) {
+        for (event of schedule) {
+          let secondStartTime = Date.parse(event['start_time']);
+          let secondEndTime = Date.parse(event['end_time']);
+          if (
+            conflictExists(
+              firstStartTime,
+              firstEndTime,
+              secondStartTime,
+              secondEndTime
+            )
+          ) {
+            delete availableTimes[timeChunk];
+          }
+        }
+      }
+    }
     res.json(availableTimes);
   });
 
