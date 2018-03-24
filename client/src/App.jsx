@@ -14,7 +14,6 @@ import Test from './components/routes/Test.jsx';
 export default class App extends Component {
   render() {
     return (
-      <MuiThemeProvider>
       <Router>
         <Switch>
           <Route path="/test" exact component={Test} />
@@ -42,7 +41,6 @@ export default class App extends Component {
           />
         </Switch>
       </Router>
-      </MuiThemeProvider>
     );
   }
 }
