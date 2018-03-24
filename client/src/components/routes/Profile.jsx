@@ -9,12 +9,14 @@ import {
   Card,
   CardActions,
   CardHeader,
-  CardMedia,
   CardTitle,
   CardText,
   Avatar,
   RaisedButton,
   Dialog,
+  Popover,
+  Menu,
+  MenuItem,
  } from 'material-ui';
 import FlatButton from 'material-ui/FlatButton';
 import propTypes from 'prop-types';
@@ -38,12 +40,20 @@ class Profile extends React.Component {
       bioDisplay: '',
       profilePicInputField: '',
       renderUpdateProfile: false,
+      renderProfilePicPopover: false,
+      popoverAnchorEl: null,
+      renderURLInput: false,
+      urlPopoverAnchorEl: null,
     }
 
     this.handleProfileModalOpen = this.handleProfileModalOpen.bind(this);
     this.handleProfileModalClose = this.handleProfileModalClose.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleUpdateBio = this.handleUpdateBio.bind(this);
+    this.handleProfilePicPopoverOpen = this.handleProfilePicPopoverOpen.bind(this);
+    this.handleProfilePicPopoverClose = this.handleProfilePicPopoverClose.bind(this);
+    this.handleURLInputOpen = this.handleURLInputOpen.bind(this);
+    this.handleURLInputClose = this.handleURLInputClose.bind(this);
   }
 
   componentWillMount() {
@@ -88,12 +98,39 @@ class Profile extends React.Component {
       renderUpdateProfile: false,
     });
   }
+
+  handleProfilePicPopoverOpen(e) {
+    e.preventDefault();
+    this.setState({
+      popoverAnchorEl: e.currentTarget,
+      renderProfilePicPopover: true,
+    })
+  }
+
+  handleProfilePicPopoverClose() {
+    this.setState({
+      renderProfilePicPopover: false,
+    })
+  }
   
   handleInputChange(e) {
     console.log(e.target.name, e.target.files);
     this.setState({
       [e.target.name]: e.target.value,
     })
+  }
+
+  handleURLInputOpen(e) {
+    this.setState({
+      urlPopoverAnchorEl: e.currentTarget,
+      renderURLInput: true,
+    });
+  }
+
+  handleURLInputClose() {
+    this.setState({ 
+      renderURLInput: false,
+    });
   }
 
   handleUpdateBio(e) {
@@ -153,22 +190,20 @@ class Profile extends React.Component {
                 labelPosition="before"
                 style={{ margin: 12 }}
                 containerElement="label"
+                onClick={this.handleProfilePicPopoverOpen}
               >
-                <input
-                  onChange={this.handleInputChange}
-                  type="file"
-                  style={{
-                    cursor: 'pointer',
-                    position: 'absolute',
-                    top: 0,
-                    bottom: 0,
-                    right: 0,
-                    left: 0,
-                    width: '100%',
-                    opacity: 0,
-                  }} 
-                  name='profilePicInputField'
-                />
+                <Popover
+                  open={this.state.renderProfilePicPopover}
+                  anchorEl={this.state.popoverAnchorEl}
+                  anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                  targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                  onRequestClose={this.handleProfilePicPopoverClose}
+                >
+                  <Menu>
+                    <MenuItem primaryText="Provide URL" onClick={this.handleURLInputOpen} />
+                    <MenuItem primaryText="Choose from device" />
+                  </Menu>
+                </Popover>
               </RaisedButton>
               <Divider />
             </Paper>
