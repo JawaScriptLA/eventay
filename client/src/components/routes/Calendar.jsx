@@ -56,9 +56,9 @@ export default class Calendar extends Component {
           formats={formats}
           events={this.state.events}
           views={['month', 'week']}
-          startAccessor="start"
-          endAccessor="end"
-          defaultDate={new Date(2018, 2, 22)}
+          startAccessor='start'
+          endAccessor='end'
+          defaultDate={new Date()}
           showMultiDayTimes
         />
       </div>
