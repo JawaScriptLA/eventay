@@ -27,20 +27,24 @@ export default class Calendar extends Component {
   componentDidMount() {
     const config = { headers: { 'Authorization': 'bearer ' + localStorage.token} };
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    userInfo
-      ? axios.get(`/api/event/${userInfo.id}`, config).then(result => {
-          result = result.data.map(event => {
-            var obj = {};
-            obj.id = event.id;
-            obj.title = event.title;
-            obj.start = new Date(event.start_time);
-            obj.end = new Date(event.end_time);
-            obj.desc = event.description;
-            return obj;
+    if (userInfo) {
+      axios.get(`/api/event/${userInfo.id}`, config)
+        .then(({ data }) => {
+          data.forEach((event) => {
+            event.desc = event.description;
+            event.start = event.start_time;
+            event.end = event.end_time;
           });
-          this.setState({ events: result });
+          this.setState({ events: data });
         })
-      : this.props.history.push('/login');
+        .catch((err) => {
+          console.log('Error:', err);
+        });
+    }
+  }
+  
+  selectEvent(event) {
+    console.log('selected:', event);
   }
 
   render() {
@@ -51,6 +55,7 @@ export default class Calendar extends Component {
           culture="en"
           formats={formats}
           events={this.state.events}
+          onSelectEvent={this.selectEvent}
           views={['month', 'week']}
           startAccessor='start'
           endAccessor='end'
