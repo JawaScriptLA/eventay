@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Signup from './components/routes/Signup.jsx';
 import Home from './components/routes/Home.jsx';
@@ -13,6 +14,7 @@ import Test from './components/routes/Test.jsx';
 export default class App extends Component {
   render() {
     return (
+      <MuiThemeProvider>
       <Router>
         <Switch>
           <Route path="/test" exact component={Test} />
@@ -40,6 +42,7 @@ export default class App extends Component {
           />
         </Switch>
       </Router>
+      </MuiThemeProvider>
     );
   }
 }
