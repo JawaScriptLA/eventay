@@ -8,28 +8,32 @@ export default class EventViewer extends Component {
   }
   
   componentWillMount() {
-    const user = localStorage.getItem('userInfo');
-    const event = localStorage.getItem('eventInfo');
-
-    axios.get(`/api/friends/${user.id}`)
+    const config = { headers: { Authorization: 'bearer ' + localStorage.getItem('token') } };
+    const event = this.props.location.state.event;
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+    
+    axios.get(`/api/friends/${user.id}`, config)
       .then((friends) => {
-        this.setState({ friends: friends });
+        console.log('friends:', friends.data);
+        this.setState({ friends: friends.data });
       })
       .catch((err) => {
         console.log('Error friends:', err);
       });
     
-    axios.get(`/api/attendant/${event.id}`)
+    axios.get(`/api/attendant/${event.id}`, config)
       .then((attendants) => {
-        this.setState({ attendants: attendants });
+        console.log('attendants:', attendants.data);
+        this.setState({ attendants: attendants.data });
       })
       .catch((err) => {
         console.log('Error attendants:', err);
       });
     
-    axios.get(`/api/post/${event.id}`)
+    axios.get(`/api/post/${event.id}`, config)
       .then((posts) => {
-        this.setState({ posts: posts });
+        console.log('posts:', posts.data);
+        this.setState({ posts: posts.data });
       })
       .catch((err) => {
         console.log('Error posts:', err);

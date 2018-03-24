@@ -29,7 +29,7 @@ export default class App extends Component {
             )}
           />
           <Route
-            path="/event"
+            path="/event/:id"
             component={props => (
               <Protected component={EventViewer} {...props} />
             )}

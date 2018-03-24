@@ -44,7 +44,10 @@ export default class Calendar extends Component {
   }
   
   selectEvent(event) {
-    console.log('selected:', event);
+    this.props.history.push({
+      pathname: `/event/${event.id}`,
+      state: { event: event }
+    });
   }
 
   render() {
