@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import Paper from 'material-ui/Paper';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
+import { Menu, MenuItem } from 'material-ui/Menu';
 
 const style = {
   display: 'inline-block',
@@ -21,6 +20,7 @@ export default class NavMenu extends Component {
           <Menu>
             <MenuItem primaryText="Create Event" onClick={e => console.log(e.target.innerText)} />
             <MenuItem primaryText="Profile" onClick={e => console.log(e.target.innerText)} />
+            <Divider />
             <MenuItem primaryText="Log Out" onClick={e => console.log(e.target.innerText)} />
           </Menu>
       </div>
