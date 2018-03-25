@@ -25,14 +25,14 @@ export default class NavBar extends Component {
     this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
-  handleClick = (e) => {
+  handleClick (e) {
     e.preventDefault();
     this.setState( {open: true, anchorEl: e.currentTarget} );
   };
 
-  handleRequestClose = () => {
+  handleRequestClose () {
     this.setState( {open: false} );
-  };
+  }
 
   componentWillMount () {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
