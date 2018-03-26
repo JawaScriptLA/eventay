@@ -22,6 +22,7 @@ export default class NavBar extends Component {
       pendingFriends: [],
       pendingInvites: [],
       query: '',
+      userInfo: {},
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
@@ -34,8 +35,7 @@ export default class NavBar extends Component {
   }
 
   handleSearchRequest () {
-    console.log(this.state.query);
-    axios.get(`/api/search/${this.state.query}`, config)
+    axios.get(`/api/search/${this.state.userInfo.id}/${this.state.query}`, config)
       .then(result => {
         console.log(`HEY OUR SEARCH WAS SUCCESSFUL! ${JSON.stringify(result.data)}`);
       })
@@ -55,9 +55,12 @@ export default class NavBar extends Component {
 
   componentWillMount() {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    userInfo
-      ? (axios.get(`/api/friend/${userInfo.id}`, config).then(result => {
-          this.setState({ pendingFriends: result.data });
+    userInfo ?
+      (
+        this.setState( {userInfo: userInfo} ),
+        axios.get(`/api/friend/${userInfo.id}`, config)
+        .then(result => {
+          this.setState({pendingFriends: result.data});
         }),
         axios
           .get(`/api/attendant/pendingInvites/${userInfo.id}`, config)
