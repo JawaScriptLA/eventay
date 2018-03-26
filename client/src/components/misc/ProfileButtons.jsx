@@ -12,8 +12,8 @@ class ProfileButtons extends React.Component {
     if (this.props.isSelf) {
       return (
         <span>
-          <FlatButton label="Update Profile" onClick={this.props.handleProfileModalOpen} />
-          <FlatButton label="Settings" onClick={() => console.log('Settings clicked')} />
+          <FlatButton label="Update Bio" onClick={this.props.handleProfileBioModalOpen} />
+          <FlatButton label="Update Photo" onClick={this.props.handleProfilePhotoModalOpen} />
           <FlatButton label="Create Event" onClick={() => console.log('create event clicked')} />
         </span>
       );
