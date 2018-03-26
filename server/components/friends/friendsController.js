@@ -32,8 +32,11 @@ module.exports = {
   getPendingFriends: async ({ user_id }) => {
     try {
       const data = await db.queryAsync(`
-        SELECT * FROM friends
-        WHERE target_id=${user_id} AND status='pending'
+        SELECT username, profile_picture FROM users
+        WHERE id IN (
+          SELECT user_id FROM friends
+          WHERE target_id=${user_id} AND status='pending'
+        )
       `);
       return data.rows;
     } catch (err) {
