@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import AppBar from 'material-ui/AppBar';
 import Popover from 'material-ui/Popover';
 import NavMenu from './NavMenu.jsx';
-import SearchBar from 'material-ui-search-bar';
 import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
 import NotificationsIcon from 'material-ui/svg-icons/social/notifications';

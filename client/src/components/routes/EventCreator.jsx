@@ -24,6 +24,7 @@ export default class EventCreator extends React.Component {
       allFriends: [],
       selectedFriendIds: [],
       selectedRowIds: [],
+      recommendedTimes: [],
       durationMins: '',
       durationHrs: '',
       generatedTimes: false,
@@ -96,12 +97,13 @@ export default class EventCreator extends React.Component {
     const durationAsMilliseconds =
       (Number(this.state.durationHrs) * 60 + Number(this.state.durationMins)) *
       60000;
-
+    const ownId = JSON.parse(localStorage.getItem('userInfo')).id;
+    const invitees = [...this.state.selectedFriendIds, ownId];
     axios
       .post(
         '/api/schedule/showRecommendedTimes',
         {
-          selectedFriendIds: this.state.selectedFriendIds,
+          selectedFriendIds: invitees,
           durationAsMilliseconds: durationAsMilliseconds,
           timeRange: timeRange
         },
@@ -112,7 +114,12 @@ export default class EventCreator extends React.Component {
         }
       )
       .then(res => {
-        console.log(res.data);
+        console.log('res.data is:', res.data);
+        let recommendations = [];
+        for (let recommendationId in res.data) {
+          recommendations.push(res.data[recommendationId]);
+        }
+        this.setState({ recommendedTimes: recommendations });
       })
       .catch(err => {
         console.log(err);
@@ -122,7 +129,11 @@ export default class EventCreator extends React.Component {
 
   createEvent() {
     console.log('creating an event!');
-    // issue axios post request
+
+    // axios request to add new event
+
+    // redirect to home page
+    this.props.history.push('/');
   }
 
   handleDateChanges(newDate, stateKey) {
@@ -177,7 +188,8 @@ export default class EventCreator extends React.Component {
 
           <SelectField
             floatingLabelText="Hour"
-            value={this.state.startHours}
+            // value={this.state.startHours}
+            value={12}
             maxHeight={200}
             onChange={(e, key, value) => {
               this.handleDropdownChanges('startHours', value);
@@ -198,7 +210,8 @@ export default class EventCreator extends React.Component {
           </SelectField>
           <SelectField
             floatingLabelText="Minutes"
-            value={this.state.startMinutes}
+            // value={this.state.startMinutes}
+            value={0}
             onChange={(e, key, value) => {
               this.handleDropdownChanges('startMinutes', value);
             }}
@@ -208,7 +221,8 @@ export default class EventCreator extends React.Component {
           </SelectField>
           <SelectField
             floatingLabelText="AM/PM"
-            value={this.state.startAMPM}
+            // value={this.state.startAMPM}
+            value={0}
             onChange={(e, key, value) => {
               this.handleDropdownChanges('startAMPM', value);
             }}
@@ -231,7 +245,8 @@ export default class EventCreator extends React.Component {
           />
           <SelectField
             floatingLabelText="Hour"
-            value={this.state.endHours}
+            // value={this.state.endHours}
+            value={12}
             maxHeight={200}
             onChange={(e, key, value) => {
               this.handleDropdownChanges('endHours', value);
@@ -252,7 +267,8 @@ export default class EventCreator extends React.Component {
           </SelectField>
           <SelectField
             floatingLabelText="Minutes"
-            value={this.state.endMinutes}
+            // value={this.state.endMinutes}
+            value={0}
             onChange={(e, key, value) => {
               this.handleDropdownChanges('endMinutes', value);
             }}
@@ -262,7 +278,8 @@ export default class EventCreator extends React.Component {
           </SelectField>
           <SelectField
             floatingLabelText="AM/PM"
-            value={this.state.endAMPM}
+            // value={this.state.endAMPM}
+            value={0}
             onChange={(e, key, value) => {
               this.handleDropdownChanges('endAMPM', value);
             }}
@@ -315,6 +332,14 @@ export default class EventCreator extends React.Component {
           primary={true}
           onClick={this.generateRecommendations}
         />
+        <div>
+          {this.state.recommendedTimes &&
+            this.state.recommendedTimes.map((time, idx) => (
+              <div key={idx}>
+                {time[0]} - {time[1]}
+              </div>
+            ))}
+        </div>
         <div>
           {this.state.generatedTimes && (
             <RaisedButton

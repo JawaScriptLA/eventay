@@ -7,6 +7,7 @@ module.exports = (req, res, next) => {
     req.decoded = decoded;
     next();
   } catch (err) {
+    console.log('check auth!');
     return res.status(401).end();
   }
 };

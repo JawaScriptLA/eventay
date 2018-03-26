@@ -41,7 +41,6 @@ module.exports = passportObj => {
   router.use('/attendant', attendantsRouter);
   router.get('/friends/:user_id', async (req, res) => {
     try {
-      console.log('in the router!');
       let data = await getAllFriends(req.params);
       res.send(data);
     } catch (err) {
@@ -60,19 +59,18 @@ module.exports = passportObj => {
     res.send(await select(req.params.table_name))
   );
   router.get('/schedule/showUserEvents/:user_id', showUserEvents);
-  router.get('/user/:username', getUserProfile);
   router.post('/schedule/showRecommendedTimes', async (req, res) => {
     console.log('req.body is:', req.body);
-    const { durationAsMilliseconds, timeRange, selectedFriends } = req.body;
+    const { durationAsMilliseconds, timeRange, selectedFriendIds } = req.body;
     const halfHourAsMilliseconds = 1800000;
     const availableTimes = {};
     let idx = 0;
 
     // Given userIds, and users' schedules
-    let inviteeIds = [1];
+    // let inviteeIds = [1];
     let schedules = [];
-    for (let i = 0; i < inviteeIds.length; i++) {
-      schedules.push(await showUserEvents(inviteeIds[i]));
+    for (let i = 0; i < selectedFriendIds.length; i++) {
+      schedules.push(await showUserEvents(selectedFriendIds[i]));
     }
 
     // Generate initial list of possible times
