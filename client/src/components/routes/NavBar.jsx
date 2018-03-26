@@ -70,8 +70,12 @@ export default class NavBar extends Component {
             onChange={() => console.log('onChange')}
             onRequestSearch={() => console.log('onRequestSearch')}
             style={{
-              margin: '0 auto',
-              maxWidth: 800
+              float: 'none',
+              maxWidth: 800,
+              marginRight: 'auto',
+              marginLeft: 'auto',
+              marginTop: 'auto',
+              marginBottom: 'auto',
             }}
           />
           <div id="notifications">
