@@ -20,4 +20,14 @@ router.put('/bio', async (req, res) => {
   }
 });
 
+router.put('/profilepic', async (req, res) => {
+  console.log('here')
+  try {
+    const data = await controller.updateUserPhoto(req.body);
+    res.send(data);
+  } catch (err) {
+    res.sendStatus(500);
+  }
+});
+
 module.exports = router;
