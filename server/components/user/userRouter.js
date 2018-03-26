@@ -20,6 +20,7 @@ router.put('/bio', async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 router.put('/profilepic', async (req, res) => {
   console.log('here')
   try {
@@ -30,4 +31,6 @@ router.put('/profilepic', async (req, res) => {
   }
 });
 
+=======
+>>>>>>> 7a0d6edec2ebbc46ea3d7a41f930d14760df0126
 module.exports = router;
