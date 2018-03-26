@@ -26,7 +26,6 @@ module.exports = {
     } catch (err) {
       throw err;
     }
-<<<<<<< HEAD
   },
 
   updateUserPhoto: async ({ profile_pic, username }) => {
@@ -42,8 +41,6 @@ module.exports = {
     } catch (err) {
       throw err;
     }
-=======
->>>>>>> 7a0d6edec2ebbc46ea3d7a41f930d14760df0126
   }
 
 }
