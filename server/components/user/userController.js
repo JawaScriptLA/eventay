@@ -28,11 +28,11 @@ module.exports = {
     }
   },
 
-  updateUserPhoto: async ({ profile_pic, username }) => {
+  updateUserPhoto: async ({ profile_picture, username }) => {
     try {
       const data = await db.queryAsync(`
         UPDATE users
-        SET profile_picture='${profile_pic}'
+        SET profile_picture='${profile_picture}'
         WHERE username='${username}'
         RETURNING profile_picture
       `)
