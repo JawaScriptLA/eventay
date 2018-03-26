@@ -5,10 +5,10 @@ const friendsRouter = require('./components/friends/friendsRouter.js');
 const eventsRouter = require('./components/events/eventsRouter.js');
 const attendantsRouter = require('./components/attendants/attendantsRouter.js');
 const postsRouter = require('./components/posts/postsRouter.js');
+const userRouter = require('./components/user/userRouter.js')
 const { getAllFriends } = require('./components/friends/friendsController.js');
 const { getAllAttending, showUserEvents } = require('./components/attendants/attendantsController.js');
 const { select } = require('./queries/select.js');
-const { getUserProfile } = require('./components/user/userController');
 
 const conflictExists = (firstStartTime, firstEndTime, secondStartTime, secondEndTime) => {
   let cond1 = firstStartTime < secondStartTime && secondStartTime < firstEndTime;
@@ -24,6 +24,7 @@ module.exports = passportObj => {
   router.all('/test', (req, res) => res.send({ message: 'test' }));
   router.use('/post', postsRouter);
   router.use('/friend', friendsRouter);
+  router.use('/user', userRouter);
   router.use('/event', eventsRouter);
   router.use('/attendant', attendantsRouter);
   router.get('/friends/:user_id', async (req, res) => {
@@ -44,7 +45,6 @@ module.exports = passportObj => {
   });
   router.get('/select/:table_name', async (req, res) => res.send(await select(req.params.table_name)));
   router.get('/schedule/showUserEvents/:user_id', showUserEvents);
-  router.get('/user/:username', getUserProfile);
   router.post('/schedule/showRecommendedTimes', (req, res) => {
     console.log(req.body);
     const { durationHrs, durationMins, possibleTimes, schedules } = req.body;
