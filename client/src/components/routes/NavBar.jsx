@@ -8,6 +8,7 @@ import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
 import SearchBar from 'material-ui-search-bar'
 import axios from 'axios';
 
+import Popup from 'reactjs-popup';
 
 const config = {
   headers: { 'Authorization': 'bearer ' + localStorage.token}
@@ -78,6 +79,10 @@ export default class NavBar extends Component {
               marginBottom: 'auto',
             }}
           />
+
+          <Popup
+            modal
+            trigger={
           <div id="notifications">
             <Badge
               badgeContent={
@@ -91,6 +96,19 @@ export default class NavBar extends Component {
               </IconButton>
             </Badge>
           </div>
+            }
+            on='click'
+            closeOnDocumentClick
+          >
+            <div>
+              <ul>
+                {this.state.pendingFriends.map((notif, i) => (<li key={i}>{notif.username}</li>))}
+                {this.state.pendingInvites.map((notif, i) => (<li key={i}>{notif.title}</li>))}
+              </ul>
+            </div>
+          </Popup>
+
+
         </AppBar>
       </div>
     );
