@@ -36,7 +36,7 @@ module.exports = passportObj => {
   router.use('/auth', authRouter(passportObj));
   router.use('/', checkAuth);
   router.all('/test', (req, res) => res.send({ message: 'test' }));
-  router.get('/search/:query', search);
+  router.get('/search/:user_id/:query', search);
   router.use('/post', postsRouter);
   router.use('/friend', friendsRouter);
   router.use('/user', userRouter);
