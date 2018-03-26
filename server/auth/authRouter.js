@@ -2,7 +2,7 @@ const express = require('express');
 const authRouter = express.Router();
 const db = require('../db/db.js');
 
-module.exports = (passportObj) => {
+module.exports = passportObj => {
   authRouter.post('/signup', (req, res, next) => {
     passportObj.authenticate('signup', async (err, user, info) => {
       if (err) {
@@ -22,6 +22,7 @@ module.exports = (passportObj) => {
         const data = await db.queryAsync(query);
       } catch (err) {
         console.log(`Error during signup: ${err}`);
+
         res.sendStatus(401);
       }
 

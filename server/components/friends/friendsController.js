@@ -16,7 +16,7 @@ module.exports = {
     }
   },
 
-  checkIfFriend: async ({ user_id, target_id} ) => {
+  checkIfFriend: async ({ user_id, target_id }) => {
     try {
       const data = await db.queryAsync(`
       SELECT * FROM friends
@@ -25,7 +25,7 @@ module.exports = {
       `);
       return data.rows;
     } catch (err) {
-      throw (err);
+      throw err;
     }
   },
 
@@ -48,11 +48,16 @@ module.exports = {
       const friendsUserInfo = [];
       const data = await db.queryAsync(`
         SELECT * FROM friends
-        WHERE user_id=${user_id} OR target_id=${user_id} AND status='accepted'
+        WHERE (user_id=${user_id} OR target_id=${user_id}) AND status='accepted'
       `);
       for (let i = 0; i < data.rows.length; i++) {
-        const id = data.rows[i].user_id === +user_id ? data.rows[i].target_id : data.rows[i].user_id;
-        const userInfo = await db.queryAsync(`SELECT * FROM users WHERE id=${id}`);
+        const id =
+          data.rows[i].user_id === +user_id
+            ? data.rows[i].target_id
+            : data.rows[i].user_id;
+        const userInfo = await db.queryAsync(
+          `SELECT * FROM users WHERE id=${id}`
+        );
         friendsUserInfo.push(userInfo.rows[0]);
       }
       return friendsUserInfo;

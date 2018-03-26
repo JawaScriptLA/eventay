@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+
 import DatePicker from 'material-ui/DatePicker';
 import Toggle from 'material-ui/Toggle';
 import TimePicker from 'material-ui/TimePicker';
@@ -7,17 +8,23 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn
+} from 'material-ui/Table';
 
-const optionsStyle = {
-  maxWidth: 255,
-  marginRight: 'auto'
-};
 export default class EventCreator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedFriends: [],
-      possibleTimes: [],
+      allFriends: [],
+      selectedFriendIds: [],
+      selectedRowIds: [],
+      recommendedTimes: [],
       durationMins: '',
       durationHrs: '',
       generatedTimes: false,
@@ -30,6 +37,7 @@ export default class EventCreator extends React.Component {
       endMinutes: null,
       endAMPM: null
     };
+    this.getAllFriends();
     this.calculateTotalTime = this.calculateTotalTime.bind(this);
     this.generateRecommendations = this.generateRecommendations.bind(this);
     this.createEvent = this.createEvent.bind(this);
@@ -38,11 +46,38 @@ export default class EventCreator extends React.Component {
     this.handleTextChanges = this.handleTextChanges.bind(this);
   }
 
+  isSelected(index) {
+    return this.state.selectedRowIds.indexOf(index) !== -1;
+  }
+
+  getAllFriends() {
+    const ownId = JSON.parse(localStorage.getItem('userInfo')).id;
+    axios
+      .get(`/api/friends/${ownId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(res => {
+        const friendIds = [];
+        for (let idx in res.data) {
+          friendIds.push([res.data[idx].id, res.data[idx].username]);
+        }
+        this.setState({ allFriends: friendIds });
+      })
+      .catch(err => console.log(err));
+  }
+
   calculateTotalTime(dateAsMilliseconds, hours, minutes, ampm) {
     return new Date(
-      dateAsMilliseconds + hours * 3600000 + minutes * 60000 + ampm * 43200000
+      dateAsMilliseconds +
+        (hours % 12) * 3600000 +
+        minutes * 60000 +
+        ampm * 43200000
     );
   }
+
+  componentDidMount() {}
 
   generateRecommendations() {
     const start = this.calculateTotalTime(
@@ -58,37 +93,47 @@ export default class EventCreator extends React.Component {
       this.state.endAMPM
     );
 
-    const tuple = [[start, end]];
-    console.log(tuple);
-    this.setState({ possibleTimes: tuple }, () => {
-      axios
-        .post(
-          '/api/schedule/showRecommendedTimes',
-          {
-            selectedFriends: this.state.selectedFriends,
-            durationMins: Number(this.state.durationMins),
-            durationHrs: Number(this.state.durationHrs),
-            possibleTimes: this.state.possibleTimes
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
+    const timeRange = [[start, end]];
+    const durationAsMilliseconds =
+      (Number(this.state.durationHrs) * 60 + Number(this.state.durationMins)) *
+      60000;
+    const ownId = JSON.parse(localStorage.getItem('userInfo')).id;
+    const invitees = [...this.state.selectedFriendIds, ownId];
+    axios
+      .post(
+        '/api/schedule/showRecommendedTimes',
+        {
+          selectedFriendIds: invitees,
+          durationAsMilliseconds: durationAsMilliseconds,
+          timeRange: timeRange
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
           }
-        )
-        .then(res => {
-          console.log(res.data);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      this.setState({ generatedTimes: true });
-    });
+        }
+      )
+      .then(res => {
+        console.log('res.data is:', res.data);
+        let recommendations = [];
+        for (let recommendationId in res.data) {
+          recommendations.push(res.data[recommendationId]);
+        }
+        this.setState({ recommendedTimes: recommendations });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    this.setState({ generatedTimes: true });
   }
 
   createEvent() {
     console.log('creating an event!');
-    // issue axios post request
+
+    // axios request to add new event
+
+    // redirect to home page
+    this.props.history.push('/');
   }
 
   handleDateChanges(newDate, stateKey) {
@@ -99,16 +144,32 @@ export default class EventCreator extends React.Component {
     this.setState({ [stateKey]: value });
   }
 
-  handleTextChanges(e) {
-    this.setState({ [e.target.name]: e.target.value });
-    setTimeout(() => console.log(this.state), 1000);
+  handleSelectionChange(selectedRows) {
+    let updatedUserIds = [];
+    let updatedRowIds = [];
+    if (selectedRows === 'all') {
+      this.state.allFriends.forEach((friend, idx) => {
+        updatedUserIds.push(friend[0]);
+        updatedRowIds.push(idx);
+      });
+    } else if (selectedRows !== 'none') {
+      updatedRowIds = selectedRows;
+      selectedRows.forEach(row => {
+        updatedUserIds.push(this.state.allFriends[row][0]);
+      });
+    }
+    this.setState({
+      selectedFriendIds: updatedUserIds,
+      selectedRowIds: updatedRowIds
+    });
   }
 
-  addFriendToList() {
-    // update state to add friend to state (selectedFriends)
+  handleTextChanges(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
+    console.log('state is:', this.state);
     return (
       <div>
         <h1>This is the event creator page!</h1>
@@ -127,7 +188,8 @@ export default class EventCreator extends React.Component {
 
           <SelectField
             floatingLabelText="Hour"
-            value={this.state.startHours}
+            // value={this.state.startHours}
+            value={12}
             maxHeight={200}
             onChange={(e, key, value) => {
               this.handleDropdownChanges('startHours', value);
@@ -148,7 +210,8 @@ export default class EventCreator extends React.Component {
           </SelectField>
           <SelectField
             floatingLabelText="Minutes"
-            value={this.state.startMinutes}
+            // value={this.state.startMinutes}
+            value={0}
             onChange={(e, key, value) => {
               this.handleDropdownChanges('startMinutes', value);
             }}
@@ -158,7 +221,8 @@ export default class EventCreator extends React.Component {
           </SelectField>
           <SelectField
             floatingLabelText="AM/PM"
-            value={this.state.startAMPM}
+            // value={this.state.startAMPM}
+            value={0}
             onChange={(e, key, value) => {
               this.handleDropdownChanges('startAMPM', value);
             }}
@@ -181,7 +245,8 @@ export default class EventCreator extends React.Component {
           />
           <SelectField
             floatingLabelText="Hour"
-            value={this.state.endHours}
+            // value={this.state.endHours}
+            value={12}
             maxHeight={200}
             onChange={(e, key, value) => {
               this.handleDropdownChanges('endHours', value);
@@ -202,7 +267,8 @@ export default class EventCreator extends React.Component {
           </SelectField>
           <SelectField
             floatingLabelText="Minutes"
-            value={this.state.endMinutes}
+            // value={this.state.endMinutes}
+            value={0}
             onChange={(e, key, value) => {
               this.handleDropdownChanges('endMinutes', value);
             }}
@@ -212,7 +278,8 @@ export default class EventCreator extends React.Component {
           </SelectField>
           <SelectField
             floatingLabelText="AM/PM"
-            value={this.state.endAMPM}
+            // value={this.state.endAMPM}
+            value={0}
             onChange={(e, key, value) => {
               this.handleDropdownChanges('endAMPM', value);
             }}
@@ -237,12 +304,42 @@ export default class EventCreator extends React.Component {
             onChange={this.handleTextChanges}
           />
         </div>
-        <h2>Add invitees</h2>
+        <h2>Invite Friends!</h2>
+
+        <Table
+          multiSelectable={true}
+          onRowSelection={selectedRows => {
+            this.handleSelectionChange(selectedRows);
+          }}
+        >
+          <TableHeader>
+            <TableRow>
+              <TableHeaderColumn>Name</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody showRowHover={true} deselectOnClickaway={false}>
+            {this.state.allFriends &&
+              this.state.allFriends.map((friend, idx) => (
+                <TableRow selected={this.isSelected(idx)} key={friend[0]}>
+                  <TableRowColumn>{friend[1]}</TableRowColumn>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+
         <RaisedButton
           label="Generate recommended times"
           primary={true}
           onClick={this.generateRecommendations}
         />
+        <div>
+          {this.state.recommendedTimes &&
+            this.state.recommendedTimes.map((time, idx) => (
+              <div key={idx}>
+                {time[0]} - {time[1]}
+              </div>
+            ))}
+        </div>
         <div>
           {this.state.generatedTimes && (
             <RaisedButton
