@@ -12,6 +12,8 @@ const {
   showUserEvents
 } = require('./components/attendants/attendantsController.js');
 const { select } = require('./queries/select.js');
+const { getUserProfile } = require('./components/user/userController');
+const { search } = require('./components/search/searchController.js');
 
 const conflictExists = (
   firstStartTime,
@@ -34,6 +36,7 @@ module.exports = passportObj => {
   router.use('/auth', authRouter(passportObj));
   router.use('/', checkAuth);
   router.all('/test', (req, res) => res.send({ message: 'test' }));
+  router.get('/search/:query', search);
   router.use('/post', postsRouter);
   router.use('/friend', friendsRouter);
   router.use('/user', userRouter);
