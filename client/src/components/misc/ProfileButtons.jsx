@@ -14,7 +14,7 @@ class ProfileButtons extends React.Component {
         <span>
           <FlatButton label="Update Bio" onClick={this.props.handleProfileBioModalOpen} />
           <FlatButton label="Update Photo" onClick={this.props.handleProfilePhotoModalOpen} />
-          <FlatButton label="Create Event" onClick={() => console.log('create event clicked')} />
+          <FlatButton label="Create Event" onClick={() => this.props.history.push('/create')} />
         </span>
       );
     } else if (this.props.isFriend) {

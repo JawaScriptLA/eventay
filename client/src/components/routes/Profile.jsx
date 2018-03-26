@@ -28,7 +28,6 @@ import ProfileButtons from '../misc/ProfileButtons.jsx'
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-
     // persist user info to app state upon hard refresh
     const user = JSON.parse(localStorage.getItem('userInfo'));
     props.userInfoActions.receiveUserInfo(user);
@@ -171,7 +170,6 @@ class Profile extends React.Component {
             subtitle={this.state.bioDisplay}
             avatar={
               <Avatar
-                onMouseEnter={() => console.log('here')}
                 src={this.state.profileInfo.profile_picture}
                 size={200}
               />}
@@ -215,6 +213,7 @@ class Profile extends React.Component {
             </Paper>
           </Dialog>
           <ProfileButtons
+            history={this.props.history}
             isFriend={this.state.isFriend}
             isSelf={this.state.isSelf}
             handleProfileBioModalOpen={this.handleProfileBioModalOpen}
