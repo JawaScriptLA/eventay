@@ -117,7 +117,23 @@ class Profile extends React.Component {
   }
 
   handleUpdatePhoto(photo) {
-    console.log('hello!', photo.filesUploaded[0].url);
+    const url = photo.filesUploaded[0].url;
+    console.log('URL', url);
+    const config = {
+      headers: { 'Authorization': 'bearer ' + localStorage.token }
+    }
+    // todo update bio info
+    axios.put(`/api/user/profilepic`, {
+      profile_picture: url,
+      username: this.props.userInfo.username, // to prevent user from changing other people's bio
+    }, config)
+      .then(response => {
+        const user = Object.assign({}, this.state.profileInfo);
+        user.profile_picture = response.data[0].profile_picture;
+        this.setState({ profileInfo: user });
+        this.handleProfilePhotoModalClose();
+      });
+
   }
   
   handleInputChange(e) {
@@ -187,15 +203,13 @@ class Profile extends React.Component {
             open={this.state.renderProfilePicPopover}
             onRequestClose={this.handleProfilePhotoModalClose}
           >
-            <Paper zDepth={1}>
-            <ReactFilestack
-              apikey={filestack.API_KEY}
-              buttonText="Click me"
-              buttonClass="classname"
-              onSuccess={this.handleUpdatePhoto}
-            />
-              <Divider />
-            </Paper>
+          <ReactFilestack
+            apikey={filestack.API_KEY}
+            buttonText="Upload"
+            render={({ onPick }) => <FlatButton label="Upload" onClick={onPick} />}
+            onSuccess={this.handleUpdatePhoto}
+          />
+            <Divider />
           </Dialog>
           <ProfileButtons
             history={this.props.history}
