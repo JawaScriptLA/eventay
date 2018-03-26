@@ -10,9 +10,12 @@ router.get('/:user_id', async (req, res) => {
   }
 });
 
-router.route('/')
+router
+  .route('/')
   .post(async (req, res) => {
     try {
+      console.log('here i am');
+      console.log('req.body is', req.body);
       await controller.createEvent(req.body);
       res.sendStatus(200);
     } catch (err) {
