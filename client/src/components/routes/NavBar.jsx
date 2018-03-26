@@ -64,7 +64,7 @@ export default class NavBar extends Component {
             targetOrigin={ {horizontal: 'left', vertical: 'top'} }
             onRequestClose={this.handleRequestClose}
           >
-            <NavMenu />
+            <NavMenu history={this.props.history} />
           </Popover>
           <SearchBar
             onChange={() => console.log('onChange')}
