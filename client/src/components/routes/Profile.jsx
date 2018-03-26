@@ -19,11 +19,13 @@ import {
   Menu,
   MenuItem,
  } from 'material-ui';
+ import ReactFilestack, { client } from 'filestack-react';
 import FlatButton from 'material-ui/FlatButton';
 import propTypes from 'prop-types';
 import * as profileActions from '../../actions/profileActions';
 import * as userInfoActions from '../../actions/userInfoActions';
-import ProfileButtons from '../misc/ProfileButtons.jsx'
+import ProfileButtons from '../misc/ProfileButtons.jsx';
+import filestack from '../../../config.js';
 
 class Profile extends React.Component {
   constructor(props) {
@@ -114,23 +116,8 @@ class Profile extends React.Component {
     });
   }
 
-  handleUpdatePhoto(e) {
-    if (e.key === 'Enter' && this.state.isSelf) {
-      const config = {
-        headers: { 'Authorization': 'bearer ' + localStorage.token }
-      }
-      // todo update bio info
-      axios.put(`/api/user/profilepic`, {
-        profile_pic: this.state.profilePicURL,
-        username: this.props.userInfo.username, // to prevent user from changing other people's bio
-      }, config)
-        .then(response => {
-          const user = Object.assign({}, this.state.profileInfo);
-          user.profile_picture = response.data[0].profile_picture;
-          this.setState({ profileInfo: user });
-          this.handleProfilePhotoModalClose();
-        });
-    }
+  handleUpdatePhoto(photo) {
+    console.log('hello!', photo.filesUploaded[0].url);
   }
   
   handleInputChange(e) {
@@ -171,6 +158,7 @@ class Profile extends React.Component {
             avatar={
               <Avatar
                 src={this.state.profileInfo.profile_picture}
+                style={{ objectFit : 'cover '}}
                 size={200}
               />}
             />
@@ -200,15 +188,12 @@ class Profile extends React.Component {
             onRequestClose={this.handleProfilePhotoModalClose}
           >
             <Paper zDepth={1}>
-              <TextField 
-                hintText="Image URL"
-                name="profilePicURL"
-                onChange={this.handleInputChange}
-                onKeyDown={this.handleUpdatePhoto}
-                value={this.state.profilePicURL}
-                style={{ marginLeft: 20 }}
-                underlineShow={false}
-              />
+            <ReactFilestack
+              apikey={filestack.API_KEY}
+              buttonText="Click me"
+              buttonClass="classname"
+              onSuccess={this.handleUpdatePhoto}
+            />
               <Divider />
             </Paper>
           </Dialog>
