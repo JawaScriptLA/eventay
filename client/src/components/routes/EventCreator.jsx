@@ -134,25 +134,23 @@ export default class EventCreator extends React.Component {
   }
 
   handleSelectionChange(selectedRows) {
+    let updatedUserIds = [];
+    let updatedRowIds = [];
     if (selectedRows === 'all') {
-      let allSelected = [];
-      this.state.allFriends.forEach(friend => {
-        allSelected.push(friend[0]);
+      this.state.allFriends.forEach((friend, idx) => {
+        updatedUserIds.push(friend[0]);
+        updatedRowIds.push(idx);
       });
-      this.setState({ selectedFriendIds: allSelected });
-    } else if (selectedRows === 'none') {
-      this.setState({ selectedFriendIds: [] });
-    } else {
-      let updatedUserIds = [];
-      for (let i = 0; i < selectedRows.length; i++) {
-        let currentRow = selectedRows[i];
-        updatedUserIds.push(this.state.allFriends[currentRow][0]);
-      }
-      this.setState({
-        selectedFriendIds: updatedUserIds,
-        selectedRowIds: selectedRows
+    } else if (selectedRows !== 'none') {
+      updatedRowIds = selectedRows;
+      selectedRows.forEach(row => {
+        updatedUserIds.push(this.state.allFriends[row][0]);
       });
     }
+    this.setState({
+      selectedFriendIds: updatedUserIds,
+      selectedRowIds: updatedRowIds
+    });
   }
 
   handleTextChanges(e) {
