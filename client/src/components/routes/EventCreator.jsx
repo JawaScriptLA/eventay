@@ -21,8 +21,9 @@ export default class EventCreator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedFriendIds: [],
       allFriends: [],
+      selectedFriendIds: [],
+      selectedRowIds: [],
       durationMins: '',
       durationHrs: '',
       generatedTimes: false,
@@ -42,6 +43,10 @@ export default class EventCreator extends React.Component {
     this.handleDateChanges = this.handleDateChanges.bind(this);
     this.handleDropdownChanges = this.handleDropdownChanges.bind(this);
     this.handleTextChanges = this.handleTextChanges.bind(this);
+  }
+
+  isSelected(index) {
+    return this.state.selectedRowIds.indexOf(index) !== -1;
   }
 
   getAllFriends() {
@@ -71,9 +76,7 @@ export default class EventCreator extends React.Component {
     );
   }
 
-  componentDidMount() {
-    setTimeout(() => console.log('component did mount', this.state), 1000);
-  }
+  componentDidMount() {}
 
   generateRecommendations() {
     const start = this.calculateTotalTime(
@@ -131,21 +134,24 @@ export default class EventCreator extends React.Component {
   }
 
   handleSelectionChange(selectedRows) {
-    // handle case where all rows are selected
     if (selectedRows === 'all') {
-      console.log('all rows selected');
-      // iterate through friends
       let allSelected = [];
       this.state.allFriends.forEach(friend => {
         allSelected.push(friend[0]);
       });
       this.setState({ selectedFriendIds: allSelected });
     } else if (selectedRows === 'none') {
-      console.log('all rows removed');
       this.setState({ selectedFriendIds: [] });
     } else {
-      this.setState({});
-      console.log('selection changed', selectedRows);
+      let updatedUserIds = [];
+      for (let i = 0; i < selectedRows.length; i++) {
+        let currentRow = selectedRows[i];
+        updatedUserIds.push(this.state.allFriends[currentRow][0]);
+      }
+      this.setState({
+        selectedFriendIds: updatedUserIds,
+        selectedRowIds: selectedRows
+      });
     }
   }
 
@@ -287,19 +293,19 @@ export default class EventCreator extends React.Component {
 
         <Table
           multiSelectable={true}
-          onRowSelection={selectedRows =>
-            this.handleSelectionChange(selectedRows)
-          }
+          onRowSelection={selectedRows => {
+            this.handleSelectionChange(selectedRows);
+          }}
         >
           <TableHeader>
             <TableRow>
               <TableHeaderColumn>Name</TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody showRowHover={true}>
+          <TableBody showRowHover={true} deselectOnClickaway={false}>
             {this.state.allFriends &&
-              this.state.allFriends.map(friend => (
-                <TableRow key={friend[0]}>
+              this.state.allFriends.map((friend, idx) => (
+                <TableRow selected={this.isSelected(idx)} key={friend[0]}>
                   <TableRowColumn>{friend[1]}</TableRowColumn>
                 </TableRow>
               ))}
