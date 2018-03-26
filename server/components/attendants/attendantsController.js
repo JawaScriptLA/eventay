@@ -51,7 +51,7 @@ module.exports = {
         `));
       });
       return Promise.all(getMyPendingEvents)
-        .then(values => values.map(event => event.rows));
+        .then(values => values.map(event => event.rows[0]));
     } catch (err) {
       throw err;
     }
