@@ -20,17 +20,28 @@ class ProfileButtons extends React.Component {
     } else if (this.props.isFriend) {
       return (
         <span>
-          <FlatButton label="Remove Friend" onClick={() => console.log('Remove Friend clicked')} />
+          <FlatButton label="Remove Friend" onClick={this.props.handleRemoveFriend} />
           <FlatButton label="Send Message" onClick={() => console.log('Send Message clicked')} />
           <FlatButton label="Invite" onClick={() => console.log('Invite clicked')} />
-          <FlatButton label="Block" onClick={() => console.log('Block clicked')} />
+          <FlatButton label="Block" onClick={this.props.handleBlockUser} />
         </span>
       );
     } else {
       return (
         <span>
-          <FlatButton label="Add Friend" onClick={() => console.log('Add friend clicked')} />
-          <FlatButton label="Block" onClick={() => console.log('Block clicked')} />
+          <FlatButton
+            label={this.props.isFriendPending ?
+              (this.props.canAcceptFriendRequest ?
+              "Accept request" :
+              "Cancel request" ) :
+              "Add Friend"}
+            onClick={this.props.isFriendPending ?
+              (this.props.canAcceptFriendRequest ?
+                this.props.handleAcceptFriendReq :
+                this.props.handleRemoveFriend) :
+                this.props.handleAddFriend}
+          />
+          <FlatButton label="Block" onClick={this.props.handleBlockUser} />
         </span>
       )
     }
