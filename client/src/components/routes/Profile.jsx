@@ -61,7 +61,7 @@ class Profile extends React.Component {
 
   componentWillReceiveProps() {
     const user = JSON.parse(localStorage.getItem('userInfo'));
-
+    
     // get user info
     axios.get(`/api/user/${this.props.match.params.username}`, this.state.authHeader)
       .then(response => {
