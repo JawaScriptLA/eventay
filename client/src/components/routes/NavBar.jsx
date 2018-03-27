@@ -10,10 +10,6 @@ import axios from 'axios';
 
 import Popup from 'reactjs-popup';
 
-const config = {
-  headers: { Authorization: 'bearer ' + localStorage.token }
-};
-
 export default class NavBar extends Component {
   constructor(props) {
     super(props);
@@ -21,7 +17,7 @@ export default class NavBar extends Component {
       open: false,
       pendingFriends: [],
       pendingInvites: [],
-      userInfo: {},
+      userInfo: {}
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
@@ -37,13 +33,14 @@ export default class NavBar extends Component {
   }
 
   componentWillMount() {
+    const config = {
+      headers: { Authorization: 'bearer ' + localStorage.token }
+    };
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    userInfo ?
-      (
-        this.setState( {userInfo: userInfo} ),
-        axios.get(`/api/friend/${userInfo.id}`, config)
-        .then(result => {
-          this.setState({pendingFriends: result.data});
+    userInfo
+      ? (this.setState({ userInfo: userInfo }),
+        axios.get(`/api/friend/${userInfo.id}`, config).then(result => {
+          this.setState({ pendingFriends: result.data });
         }),
         axios
           .get(`/api/attendant/pendingInvites/${userInfo.id}`, config)
@@ -66,7 +63,7 @@ export default class NavBar extends Component {
           >
             <NavMenu history={this.props.history} />
           </Popover>
-          
+
           <Search userInfo={this.state.userInfo} />
 
           <Popup
