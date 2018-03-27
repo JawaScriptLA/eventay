@@ -3,6 +3,7 @@ const db = require('../../db/db.js');
 module.exports = {
   addAttendant: async ({ access, status, user_id, event_id, invitor_id }) => {
     try {
+      console.log('[attendantsController] userId/eventId', user_id, event_id);
       await db.queryAsync(`
         INSERT INTO attendants (
           access,
@@ -18,7 +19,7 @@ module.exports = {
         ${invitor_id ? `'${invitor_id}'` : null}
         WHERE NOT EXISTS (
           SELECT * FROM attendants
-          WHERE event_id=${event_id} AND invitor_id=${invitor_id}
+          WHERE event_id=${event_id} AND invitor_id=${invitor_id} AND user_id=${user_id}
         )
       `);
     } catch (err) {
@@ -45,13 +46,16 @@ module.exports = {
       `);
       let getMyPendingEvents = [];
       getMyPendingInvites.rows.forEach(invite => {
-        getMyPendingEvents.push(db.queryAsync(`
+        getMyPendingEvents.push(
+          db.queryAsync(`
           SELECT * FROM events
           WHERE id=${invite.event_id}
-        `));
+        `)
+        );
       });
-      return Promise.all(getMyPendingEvents)
-        .then(values => values.map(event => event.rows[0]));
+      return Promise.all(getMyPendingEvents).then(values =>
+        values.map(event => event.rows[0])
+      );
     } catch (err) {
       throw err;
     }

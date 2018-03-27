@@ -151,11 +151,49 @@ export default class EventCreator extends React.Component {
         }
       )
       .then(res => {
+        let newEventId = res.data[0].id;
+        for (let currId of this.state.selectedFriendIds) {
+          console.log('[axios] currId is:', currId);
+          axios.post(
+            '/api/attendant',
+            {
+              user_id: currId,
+              invitor_id: ownId,
+              event_id: newEventId
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+              }
+            }
+          );
+        }
+      })
+      .then(res => {
         this.props.history.push('/');
       })
       .catch(err => {
         console.log(err);
       });
+
+    // for (let currId of this.state.selectedFriendIds.length) {
+    //   axios
+    //     .post(
+    //       '/api/attendant',
+    //       {
+    //         user_id: currId,
+    //         invitor_id: ownId,
+    //         event_id: 1
+    //       },
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${localStorage.getItem('token')}`
+    //         }
+    //       }
+    //     )
+    //     .then()
+    //     .catch();
+    // }
   }
 
   handleDateChanges(newDate, stateKey) {

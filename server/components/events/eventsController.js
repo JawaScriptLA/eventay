@@ -12,7 +12,6 @@ module.exports = {
     host_id
   }) => {
     try {
-      console.log('case 1', host_id);
       const data = await db.queryAsync(`
         INSERT INTO events (
           title,
@@ -34,12 +33,10 @@ module.exports = {
           '${host_id}'
         ) RETURNING id
       `);
-      console.log('case2');
       await db.queryAsync(`
         INSERT INTO attendants (access, status, user_id, event_id, invitor_id)
         VALUES ('host', 'going', ${host_id}, ${data.rows[0].id}, null)
       `);
-      console.log('case3');
       return data.rows;
     } catch (err) {
       console.log('ERROR IS: ', err);

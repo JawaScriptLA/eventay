@@ -14,10 +14,8 @@ router
   .route('/')
   .post(async (req, res) => {
     try {
-      console.log('here i am');
-      console.log('req.body is', req.body);
-      await controller.createEvent(req.body);
-      res.sendStatus(200);
+      let eventId = await controller.createEvent(req.body);
+      res.json(eventId).sendStatus(200);
     } catch (err) {
       res.sendStatus(500);
     }
