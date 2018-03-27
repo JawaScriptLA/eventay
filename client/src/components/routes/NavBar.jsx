@@ -5,7 +5,7 @@ import NavMenu from './NavMenu.jsx';
 import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
 import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
-import SearchBar from 'material-ui-search-bar';
+import Search from './Search.jsx';
 import axios from 'axios';
 
 import Popup from 'reactjs-popup';
@@ -21,27 +21,10 @@ export default class NavBar extends Component {
       open: false,
       pendingFriends: [],
       pendingInvites: [],
-      query: '',
       userInfo: {},
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
-    this.handleSearchInput = this.handleSearchInput.bind(this);
-    this.handleSearchRequest = this.handleSearchRequest.bind(this);
-  }
-
-  handleSearchInput (e) {
-    this.setState( { query: e } );
-  }
-
-  handleSearchRequest () {
-    axios.get(`/api/search/${this.state.userInfo.id}/${this.state.query}`, config)
-      .then(result => {
-        console.log(`HEY OUR SEARCH WAS SUCCESSFUL! ${JSON.stringify(result.data)}`);
-      })
-      .catch(err => {
-        console.log(`OOPS LOOKS LIKE SEARCH FAILED: ${err}`);
-      });
   }
 
   handleClick(e) {
@@ -83,18 +66,8 @@ export default class NavBar extends Component {
           >
             <NavMenu history={this.props.history} />
           </Popover>
-          <SearchBar
-            onChange={e => this.handleSearchInput(e)}
-            onRequestSearch={this.handleSearchRequest}
-            style={{
-              float: 'none',
-              maxWidth: 800,
-              marginRight: 'auto',
-              marginLeft: 'auto',
-              marginTop: 'auto',
-              marginBottom: 'auto'
-            }}
-          />
+          
+          <Search userInfo={this.state.userInfo} />
 
           <Popup
             modal
