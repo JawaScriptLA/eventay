@@ -10,6 +10,7 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+import { join } from 'path';
 
 export default class EventCreator extends React.Component {
   constructor(props) {
@@ -18,6 +19,7 @@ export default class EventCreator extends React.Component {
       allFriends: [],
       selectedFriendIds: [],
       selectedRowIds: [],
+      selectedFriendNames: [],
       recommendedTimes: [],
       selectedTime: ['', ''],
       durationMins: '',
@@ -159,7 +161,7 @@ export default class EventCreator extends React.Component {
               <div>Description: {this.state.eventDescription}</div>
               <div>Location: {this.state.eventLocation}</div>
               <div>Time: {this.state.selectedTime}</div>
-              <div>InvitedFriends: #TODO</div>
+              <div>InvitedFriends: {this.state.selectedFriendNames}</div>
             </Dialog>
           </div>
         );
@@ -193,7 +195,6 @@ export default class EventCreator extends React.Component {
   }
 
   handleRecommendationClick(newTime) {
-    console.log('recommendation clicked!', newTime);
     this.setState({ selectedTime: newTime });
   }
 
@@ -328,21 +329,25 @@ export default class EventCreator extends React.Component {
 
   handleSelectionChange(selectedRows) {
     let updatedUserIds = [];
+    let updatedFriendNames = [];
     let updatedRowIds = [];
     if (selectedRows === 'all') {
       this.state.allFriends.forEach((friend, idx) => {
         updatedUserIds.push(friend[0]);
+        updatedFriendNames.push(friend[1]);
         updatedRowIds.push(idx);
       });
     } else if (selectedRows !== 'none') {
       updatedRowIds = selectedRows;
       selectedRows.forEach(row => {
         updatedUserIds.push(this.state.allFriends[row][0]);
+        updatedFriendNames.push(this.state.allFriends[row][1]);
       });
     }
     this.setState({
       selectedFriendIds: updatedUserIds,
-      selectedRowIds: updatedRowIds
+      selectedRowIds: updatedRowIds,
+      selectedFriendNames: updatedFriendNames
     });
   }
 
