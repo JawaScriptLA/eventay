@@ -3,34 +3,39 @@ import SearchBar from 'material-ui-search-bar';
 import axios from 'axios';
 
 const config = {
-  headers: { Authorization: 'bearer ' + localStorage.token }
+  headers: { Authorization: 'bearer ' }
 };
-
 export default class Search extends Component {
-  constructor (props) {
-    super (props);
+  constructor(props) {
+    super(props);
     this.state = {
-      query: '',
+      query: ''
     };
     this.handleSearchInput = this.handleSearchInput.bind(this);
     this.handleSearchRequest = this.handleSearchRequest.bind(this);
   }
 
-  handleSearchInput (e) {
-    this.setState( { query: e } );
+  handleSearchInput(e) {
+    this.setState({ query: e });
   }
-
-  handleSearchRequest () {
-    axios.get(`/api/search/${this.props.userInfo.id}/${this.state.query}`, config)
+  componentWillMount() {
+    config.headers.Authorization += localStorage.token;
+  }
+  handleSearchRequest() {
+    console.log('CONFIGGGGGGG', config);
+    axios
+      .get(`/api/search/${this.props.userInfo.id}/${this.state.query}`, config)
       .then(result => {
-        console.log(`HEY OUR SEARCH WAS SUCCESSFUL! ${JSON.stringify(result.data)}`);
+        console.log(
+          `HEY OUR SEARCH WAS SUCCESSFUL! ${JSON.stringify(result.data)}`
+        );
       })
       .catch(err => {
         console.log(`OOPS LOOKS LIKE SEARCH FAILED: ${err}`);
       });
   }
 
-  render () {
+  render() {
     return (
       <div
         style={{
@@ -43,9 +48,9 @@ export default class Search extends Component {
         }}
       >
         <SearchBar
-            onChange={e => this.handleSearchInput(e)}
-            onRequestSearch={this.handleSearchRequest}
-          />
+          onChange={e => this.handleSearchInput(e)}
+          onRequestSearch={this.handleSearchRequest}
+        />
       </div>
     );
   }

@@ -2,15 +2,16 @@ const db = require('../../db/db');
 
 module.exports = {
   search: async (req, res) => {
+    console.log('im in the searchh');
     const { user_id, query } = req.params;
     try {
       const makeQuery = (phrase, field) => {
         let str = ``;
-        phrase.split(' ')
-          .forEach((word, i) => {
-            str += i ? ` OR LOWER(${field}) LIKE LOWER('%${word}%')`
+        phrase.split(' ').forEach((word, i) => {
+          str += i
+            ? ` OR LOWER(${field}) LIKE LOWER('%${word}%')`
             : ` LOWER(${field}) LIKE LOWER('%${word}%')`;
-          });
+        });
         return str;
       };
       const dbQueryFriends = `
@@ -32,4 +33,4 @@ module.exports = {
       res.send(400);
     }
   }
-}
+};

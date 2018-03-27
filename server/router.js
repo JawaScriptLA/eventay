@@ -69,8 +69,6 @@ module.exports = passportObj => {
     const availableTimes = {};
     let idx = 0;
 
-    // Given userIds, and users' schedules
-    // let inviteeIds = [1];
     let schedules = [];
     for (let i = 0; i < selectedFriendIds.length; i++) {
       schedules.push(await showUserEvents(selectedFriendIds[i]));

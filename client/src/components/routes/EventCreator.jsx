@@ -25,6 +25,7 @@ export default class EventCreator extends React.Component {
       selectedFriendIds: [],
       selectedRowIds: [],
       recommendedTimes: [],
+      selectedTime: ['', ''],
       durationMins: '',
       durationHrs: '',
       generatedTimes: false,
@@ -44,6 +45,12 @@ export default class EventCreator extends React.Component {
     this.handleDateChanges = this.handleDateChanges.bind(this);
     this.handleDropdownChanges = this.handleDropdownChanges.bind(this);
     this.handleTextChanges = this.handleTextChanges.bind(this);
+    this.handleRecommendationClick = this.handleRecommendationClick.bind(this);
+  }
+
+  handleRecommendationClick(newTime) {
+    console.log('recommendation clicked!', newTime);
+    this.setState({ selectedTime: newTime });
   }
 
   isSelected(index) {
@@ -76,8 +83,6 @@ export default class EventCreator extends React.Component {
         ampm * 43200000
     );
   }
-
-  componentDidMount() {}
 
   generateRecommendations() {
     const start = this.calculateTotalTime(
@@ -128,12 +133,48 @@ export default class EventCreator extends React.Component {
   }
 
   createEvent() {
-    console.log('creating an event!');
-
-    // axios request to add new event
-
-    // redirect to home page
-    this.props.history.push('/');
+    const ownId = JSON.parse(localStorage.getItem('userInfo')).id;
+    axios
+      .post(
+        '/api/event',
+        {
+          // TODO: update to real event title
+          title: 'jasonEvent1',
+          start_time: this.state.selectedTime[0],
+          end_time: this.state.selectedTime[1],
+          host_id: ownId
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        }
+      )
+      .then(res => {
+        let newEventId = res.data[0].id;
+        for (let currId of this.state.selectedFriendIds) {
+          console.log('[axios] currId is:', currId);
+          axios.post(
+            '/api/attendant',
+            {
+              user_id: currId,
+              invitor_id: ownId,
+              event_id: newEventId
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+              }
+            }
+          );
+        }
+      })
+      .then(res => {
+        this.props.history.push('/');
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   handleDateChanges(newDate, stateKey) {
@@ -335,7 +376,12 @@ export default class EventCreator extends React.Component {
         <div>
           {this.state.recommendedTimes &&
             this.state.recommendedTimes.map((time, idx) => (
-              <div key={idx}>
+              <div
+                key={idx}
+                onClick={() =>
+                  this.handleRecommendationClick([time[0], time[1]])
+                }
+              >
                 {time[0]} - {time[1]}
               </div>
             ))}

@@ -10,11 +10,12 @@ router.get('/:user_id', async (req, res) => {
   }
 });
 
-router.route('/')
+router
+  .route('/')
   .post(async (req, res) => {
     try {
-      await controller.createEvent(req.body);
-      res.sendStatus(200);
+      let eventId = await controller.createEvent(req.body);
+      res.json(eventId).sendStatus(200);
     } catch (err) {
       res.sendStatus(500);
     }

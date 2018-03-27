@@ -19,7 +19,8 @@ router.get('/pendingInvites/:user_id', async (req, res) => {
   }
 });
 
-router.route('/')
+router
+  .route('/')
   .post(async (req, res) => {
     try {
       await controller.addAttendant(req.body);

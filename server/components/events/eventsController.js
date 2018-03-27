@@ -1,7 +1,16 @@
 const db = require('../../db/db');
 
 module.exports = {
-  createEvent: async ({ title, description, thumbnail, location, start_time, end_time, publicity, host_id }) => {
+  createEvent: async ({
+    title,
+    description,
+    thumbnail,
+    location,
+    start_time,
+    end_time,
+    publicity,
+    host_id
+  }) => {
     try {
       const data = await db.queryAsync(`
         INSERT INTO events (
@@ -45,10 +54,15 @@ module.exports = {
       throw err;
     }
   },
-  updateEvent: async (data) => {
+  updateEvent: async data => {
     try {
       let fields = Object.entries(data)
-        .map(([ key, value ]) => typeof value === 'string' ? `${key} = '${value}'` : `${key} = ${value}`)
+        .map(
+          ([key, value]) =>
+            typeof value === 'string'
+              ? `${key} = '${value}'`
+              : `${key} = ${value}`
+        )
         .join(', ');
       await db.queryAsync(`
         UPDATE events
