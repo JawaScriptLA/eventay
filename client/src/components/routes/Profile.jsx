@@ -6,18 +6,10 @@ import {
   TextField,
   Divider,
   Card,
-  CardActions,
-  CardMedia,
   CardHeader,
-  CardTitle,
-  CardText,
   Avatar,
   Paper,
-  RaisedButton,
   Dialog,
-  Popover,
-  Menu,
-  MenuItem,
  } from 'material-ui';
  import ReactFilestack, { client } from 'filestack-react';
 import FlatButton from 'material-ui/FlatButton';
@@ -26,6 +18,7 @@ import * as profileActions from '../../actions/profileActions';
 import * as userInfoActions from '../../actions/userInfoActions';
 import ProfileButtons from '../misc/ProfileButtons.jsx';
 import filestack from '../../../config.js';
+import NavBar from './NavBar.jsx';
 
 class Profile extends React.Component {
   constructor(props) {
@@ -64,7 +57,7 @@ class Profile extends React.Component {
 
   }
 
-  componentWillMount() {
+  componentWillReceiveProps() {
     const user = JSON.parse(localStorage.getItem('userInfo'));
 
     // get user info
@@ -116,6 +109,7 @@ class Profile extends React.Component {
           });
         }
       });
+    console.log('profile compwillrecvprops');
   }
 
   handleAddFriend() {
@@ -219,73 +213,77 @@ class Profile extends React.Component {
   render() {
     if (!this.state.invalidUser) {
       return (
-        <Card
-          style={{
-            margin: 'auto',
-            width: '60%',
-          }}
-        >
-          <CardHeader
-            title={<h1>{this.state.profileInfo.username}</h1>}
-            subtitle={this.state.bioDisplay}
-            avatar={
-              <Avatar
-                src={this.state.profileInfo.profile_picture}
-                style={{ objectFit : 'cover '}}
-                size={200}
-              />}
-            />
-          <Dialog
-            title="Update your bio"
-            modal={false}
-            open={this.state.renderUpdateProfile}
-            onRequestClose={this.handleProfileBioModalClose}
+        <div>
+          <NavBar />
+          <Card
+            style={{
+              margin: 'auto',
+              width: '60%',
+            }}
           >
-            <Paper zDepth={1}>
-              <TextField 
-                hintText="Bio"
-                name="bioInputField"
-                onChange={this.handleInputChange}
-                onKeyDown={this.handleUpdateBio}
-                value={this.state.bioInputField}
-                style={{ marginLeft: 20 }}
-                underlineShow={false}
+            <CardHeader
+              title={<h1>{this.state.profileInfo.username}</h1>}
+              subtitle={this.state.bioDisplay}
+              avatar={
+                <Avatar
+                  src={this.state.profileInfo.profile_picture}
+                  style={{ objectFit : 'cover '}}
+                  size={200}
+                />}
               />
+            <Dialog
+              title="Update your bio"
+              modal={false}
+              open={this.state.renderUpdateProfile}
+              onRequestClose={this.handleProfileBioModalClose}
+            >
+              <Paper zDepth={1}>
+                <TextField 
+                  hintText="Bio"
+                  name="bioInputField"
+                  onChange={this.handleInputChange}
+                  onKeyDown={this.handleUpdateBio}
+                  value={this.state.bioInputField}
+                  style={{ marginLeft: 20 }}
+                  underlineShow={false}
+                />
+                <Divider />
+              </Paper>
+            </Dialog>
+            <Dialog
+              title="Update your photo"
+              modal={false}
+              open={this.state.renderProfilePicPopover}
+              onRequestClose={this.handleProfilePhotoModalClose}
+            >
+            <ReactFilestack
+              apikey={filestack.API_KEY}
+              buttonText="Upload"
+              render={({ onPick }) => <FlatButton label="Upload" onClick={onPick} />}
+              onSuccess={this.handleUpdatePhoto}
+            />
               <Divider />
-            </Paper>
-          </Dialog>
-          <Dialog
-            title="Update your photo"
-            modal={false}
-            open={this.state.renderProfilePicPopover}
-            onRequestClose={this.handleProfilePhotoModalClose}
-          >
-          <ReactFilestack
-            apikey={filestack.API_KEY}
-            buttonText="Upload"
-            render={({ onPick }) => <FlatButton label="Upload" onClick={onPick} />}
-            onSuccess={this.handleUpdatePhoto}
-          />
-            <Divider />
-          </Dialog>
-          <ProfileButtons
-            history={this.props.history}
-            isFriendPending={this.state.isFriendPending}
-            isFriend={this.state.isFriend}
-            isSelf={this.state.isSelf}
-            canAcceptFriendRequest={this.state.canAcceptFriendRequest}
-            handleProfileBioModalOpen={this.handleProfileBioModalOpen}
-            handleProfilePhotoModalOpen={this.handleProfilePhotoModalOpen}
-            handleAddFriend={this.handleAddFriend}
-            handleBlockUser={this.handleBlockUser}
-            handleRemoveFriend={this.handleRemoveFriend}
-            handleAcceptFriendReq={this.handleAcceptFriendReq}
-          />
-        </Card>
+            </Dialog>
+            <ProfileButtons
+              history={this.props.history}
+              isFriendPending={this.state.isFriendPending}
+              isFriend={this.state.isFriend}
+              isSelf={this.state.isSelf}
+              canAcceptFriendRequest={this.state.canAcceptFriendRequest}
+              handleProfileBioModalOpen={this.handleProfileBioModalOpen}
+              handleProfilePhotoModalOpen={this.handleProfilePhotoModalOpen}
+              handleAddFriend={this.handleAddFriend}
+              handleBlockUser={this.handleBlockUser}
+              handleRemoveFriend={this.handleRemoveFriend}
+              handleAcceptFriendReq={this.handleAcceptFriendReq}
+            />
+          </Card>
+        </div>
       );
     } else {
       return (
         <div>
+          <NavBar history={this.props.history} />
           The user does not exist or is blocking you from seeing this :(
         </div>
       );

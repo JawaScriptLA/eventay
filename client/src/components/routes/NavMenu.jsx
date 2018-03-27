@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Divider from 'material-ui/Divider';
 import { Menu, MenuItem } from 'material-ui/Menu';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 const style = {
   display: 'inline-block',

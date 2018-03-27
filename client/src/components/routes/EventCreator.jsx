@@ -16,6 +16,7 @@ import {
   TableRow,
   TableRowColumn
 } from 'material-ui/Table';
+import NavBar from './NavBar.jsx';
 
 export default class EventCreator extends React.Component {
   constructor(props) {
@@ -213,6 +214,7 @@ export default class EventCreator extends React.Component {
     console.log('state is:', this.state);
     return (
       <div>
+        <NavBar history={this.props.history} />
         <h1>This is the event creator page!</h1>
         <h2>I'd like my event to occur some time between...</h2>
         <div>
