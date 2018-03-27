@@ -19,11 +19,13 @@ import {
   Menu,
   MenuItem,
  } from 'material-ui';
+ import ReactFilestack, { client } from 'filestack-react';
 import FlatButton from 'material-ui/FlatButton';
 import propTypes from 'prop-types';
 import * as profileActions from '../../actions/profileActions';
 import * as userInfoActions from '../../actions/userInfoActions';
-import ProfileButtons from '../misc/ProfileButtons.jsx'
+import ProfileButtons from '../misc/ProfileButtons.jsx';
+import filestack from '../../../config.js';
 
 class Profile extends React.Component {
   constructor(props) {
@@ -34,6 +36,8 @@ class Profile extends React.Component {
     this.state = {
       profileInfo: {},
       invalidUser: false,
+      isFriendPending: false,
+      canAcceptFriendRequest: false,
       isSelf: false,
       renderUpdateProfile: false,
       renderProfilePicPopover: false,
@@ -43,6 +47,7 @@ class Profile extends React.Component {
       bioInputField: '',
       bioDisplay: '',
       profilePicURL: '',
+      authHeader: { headers: { Authorization: 'bearer ' + localStorage.token } }
     }
 
     this.handleProfileBioModalOpen = this.handleProfileBioModalOpen.bind(this);
@@ -52,15 +57,18 @@ class Profile extends React.Component {
     this.handleUpdatePhoto = this.handleUpdatePhoto.bind(this);
     this.handleProfilePhotoModalOpen = this.handleProfilePhotoModalOpen.bind(this);
     this.handleProfilePhotoModalClose = this.handleProfilePhotoModalClose.bind(this);
+    this.handleAddFriend = this.handleAddFriend.bind(this);
+    this.handleRemoveFriend = this.handleRemoveFriend.bind(this);
+    this.handleBlockUser = this.handleBlockUser.bind(this);
+    this.handleAcceptFriendReq = this.handleAcceptFriendReq.bind(this);
 
   }
 
   componentWillMount() {
     const user = JSON.parse(localStorage.getItem('userInfo'));
-    const config = {
-      headers: { Authorization: 'bearer ' + localStorage.token }
-    };
-    axios.get(`/api/user/${this.props.match.params.username}`, config)
+
+    // get user info
+    axios.get(`/api/user/${this.props.match.params.username}`, this.state.authHeader)
       .then(response => {
         if (response.status === 200 && response.data.length) {
           this.setState({
@@ -76,10 +84,31 @@ class Profile extends React.Component {
               isSelf: true
             });
           }
-          axios
-            .get(`/api/friend/check/${user.id}/${response.data[0].id}`, config)
+          
+          // check if user is a friend
+          axios.get(`/api/friend/check/${user.id}/${response.data[0].id}`, this.state.authHeader)
             .then(check => {
-              check.data.length ? this.setState({ isFriend: true }) : null;
+              if (check.data.length) {
+                if (check.data[0].status === 'accepted') {
+                  this.setState({ isFriend: true, isFriendPending: false })
+                } else if (check.data[0].status === 'pending') {
+                  if (check.data[0].target_id === user.id) {
+                    this.setState({
+                      isFriend: false,
+                      isFriendPending: true,
+                      canAcceptFriendRequest: true,
+                    });
+                  } else {
+                    this.setState({
+                      isFriend: false,
+                      isFriendPending: true,
+                      canAcceptFriendRequest: false,
+                    });
+                  }
+                } else if (check.data[0].status === 'blocked') {
+                  this.setState({ invalidUser: true });
+                }
+              }
             });
         } else {
           this.setState({
@@ -87,6 +116,42 @@ class Profile extends React.Component {
           });
         }
       });
+  }
+
+  handleAddFriend() {
+    console.log('handleAddFriend');
+    axios.post('/api/friend', {
+      user_id: this.props.userInfo.id,
+      target_id: this.state.profileInfo.id,
+    }, this.state.authHeader)
+      .then(response => this.setState({ isFriendPending: true }));
+  }
+
+  handleRemoveFriend() {
+    console.log('handleRemoveFriend');
+    const payload = {
+      data: {
+        user_id: this.props.userInfo.id,
+        target_id: this.state.profileInfo.id,
+      },
+      headers: this.state.authHeader.headers,
+    }
+    axios.delete('/api/friend', payload)
+      .then(response => this.setState({ isFriendPending: false, isFriend: false, }));
+  }
+
+  handleAcceptFriendReq() {
+    console.log('handleAcceptFriendReq');
+    axios.put('/api/friend', {
+      user_id: this.props.userInfo.id,
+      target_id: this.state.profileInfo.id,
+      status: 'accepted',
+    }, this.state.authHeader)
+      .then(response => this.setState({ isFriendPending: false, isFriend: true, canAcceptFriendRequest: false }));
+  }
+
+  handleBlockUser() {
+    console.log('handleBlockUser');
   }
 
   handleProfileBioModalOpen() {
@@ -114,23 +179,21 @@ class Profile extends React.Component {
     });
   }
 
-  handleUpdatePhoto(e) {
-    if (e.key === 'Enter' && this.state.isSelf) {
-      const config = {
-        headers: { 'Authorization': 'bearer ' + localStorage.token }
-      }
-      // todo update bio info
-      axios.put(`/api/user/profilepic`, {
-        profile_pic: this.state.profilePicURL,
-        username: this.props.userInfo.username, // to prevent user from changing other people's bio
-      }, config)
-        .then(response => {
-          const user = Object.assign({}, this.state.profileInfo);
-          user.profile_picture = response.data[0].profile_picture;
-          this.setState({ profileInfo: user });
-          this.handleProfilePhotoModalClose();
-        });
-    }
+  handleUpdatePhoto(photo) {
+    const url = photo.filesUploaded[0].url;
+    console.log('URL', url);
+    // todo update bio info
+    axios.put(`/api/user/profilepic`, {
+      profile_picture: url,
+      username: this.props.userInfo.username, // to prevent user from changing other people's bio
+    }, this.state.authHeader)
+      .then(response => {
+        const user = Object.assign({}, this.state.profileInfo);
+        user.profile_picture = response.data[0].profile_picture;
+        this.setState({ profileInfo: user });
+        this.handleProfilePhotoModalClose();
+      });
+
   }
   
   handleInputChange(e) {
@@ -141,14 +204,11 @@ class Profile extends React.Component {
 
   handleUpdateBio(e) {
     if (e.key === 'Enter' && this.state.isSelf) {
-      const config = {
-        headers: { 'Authorization': 'bearer ' + localStorage.token }
-      }
       // todo update bio info
       axios.put(`/api/user/bio`, {
         bio: this.state.bioInputField,
         username: this.props.userInfo.username, // to prevent user from changing other people's bio
-      }, config)
+      }, this.state.authHeader)
         .then(response => {
           this.setState({ bioDisplay: response.data[0].bio });
           this.handleProfileBioModalClose();
@@ -171,6 +231,7 @@ class Profile extends React.Component {
             avatar={
               <Avatar
                 src={this.state.profileInfo.profile_picture}
+                style={{ objectFit : 'cover '}}
                 size={200}
               />}
             />
@@ -199,25 +260,26 @@ class Profile extends React.Component {
             open={this.state.renderProfilePicPopover}
             onRequestClose={this.handleProfilePhotoModalClose}
           >
-            <Paper zDepth={1}>
-              <TextField 
-                hintText="Image URL"
-                name="profilePicURL"
-                onChange={this.handleInputChange}
-                onKeyDown={this.handleUpdatePhoto}
-                value={this.state.profilePicURL}
-                style={{ marginLeft: 20 }}
-                underlineShow={false}
-              />
-              <Divider />
-            </Paper>
+          <ReactFilestack
+            apikey={filestack.API_KEY}
+            buttonText="Upload"
+            render={({ onPick }) => <FlatButton label="Upload" onClick={onPick} />}
+            onSuccess={this.handleUpdatePhoto}
+          />
+            <Divider />
           </Dialog>
           <ProfileButtons
             history={this.props.history}
+            isFriendPending={this.state.isFriendPending}
             isFriend={this.state.isFriend}
             isSelf={this.state.isSelf}
+            canAcceptFriendRequest={this.state.canAcceptFriendRequest}
             handleProfileBioModalOpen={this.handleProfileBioModalOpen}
             handleProfilePhotoModalOpen={this.handleProfilePhotoModalOpen}
+            handleAddFriend={this.handleAddFriend}
+            handleBlockUser={this.handleBlockUser}
+            handleRemoveFriend={this.handleRemoveFriend}
+            handleAcceptFriendReq={this.handleAcceptFriendReq}
           />
         </Card>
       );
