@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import Signup from './components/routes/Signup.jsx';
 import Home from './components/routes/Home.jsx';
 import Login from './components/routes/Login.jsx';
-import EventCreator from './components/routes/EventCreator.jsx';
+import EventCreator from './components/routes/EventCreator/EventCreator.jsx';
 import EventViewer from './components/routes/EventViewer.jsx';
 import Profile from './components/routes/Profile.jsx';
 import Protected from './components/Protected.jsx';

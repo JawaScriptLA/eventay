@@ -9,6 +9,8 @@ const store = configureStore();
 render(
   <Provider store={store}>
     <MuiThemeProvider>
-      <App/>  
+      <App />
     </MuiThemeProvider>
-  </Provider>, document.getElementById('app'));
+  </Provider>,
+  document.getElementById('app')
+);
