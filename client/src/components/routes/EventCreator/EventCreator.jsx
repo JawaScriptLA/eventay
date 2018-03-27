@@ -6,9 +6,10 @@ import NavBar from '../NavBar.jsx';
 import TimeRanges from './TimeRanges.jsx';
 
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
+import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
 
 export default class EventCreator extends React.Component {
   constructor(props) {
@@ -33,7 +34,8 @@ export default class EventCreator extends React.Component {
       eventTitle: '',
       eventDescription: '',
       eventLocation: '',
-      stepIndex: 0
+      stepIndex: 0,
+      dialogOpen: false
     };
     this.getAllFriends();
     this.calculateTotalTime = this.calculateTotalTime.bind(this);
@@ -47,6 +49,8 @@ export default class EventCreator extends React.Component {
     this.handleSelectionChange = this.handleSelectionChange.bind(this);
     this.isSelected = this.isSelected.bind(this);
     this.handleRecommendationClick = this.handleRecommendationClick.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
   getStepContent(stepIndex) {
     switch (stepIndex) {
@@ -121,6 +125,19 @@ export default class EventCreator extends React.Component {
         );
       case 3:
         // TODO: reformat times in a readable/clearn format
+        // const actions = [
+        //   <FlatButton
+        //     label="Cancel"
+        //     primary={true}
+        //     onClick={this.handleClose}
+        //   />,
+        //   <FlatButton
+        //     label="Submit"
+        //     primary={true}
+        //     // keyboardFocused={true}
+        //     onClick={this.handleClose}
+        //   />
+        // ];
         return (
           <div>
             {this.state.recommendedTimes &&
@@ -134,21 +151,38 @@ export default class EventCreator extends React.Component {
                   {time[0]} - {time[1]}
                 </div>
               ))}
+            <Dialog
+              title="Dialog With Actions"
+              // TODO: update actions
+              // actions={actions}
+              open={this.state.dialogOpen}
+              onRequestClose={this.handleClose}
+            >
+              The actions in this window were passed in as an array of React
+              objects.
+            </Dialog>
           </div>
         );
-      case 4:
-        return 'Confirm details here!';
       default:
         return;
     }
   }
 
+  handleOpen() {
+    this.setState({ dialogOpen: true });
+  }
+
+  handleClose() {
+    this.setState({ dialogOpen: false });
+  }
+
   handleNext() {
     const { stepIndex } = this.state;
-    this.setState({
-      stepIndex: stepIndex + 1,
-      finished: stepIndex >= 4
-    });
+    if (stepIndex < 3) {
+      this.setState({
+        stepIndex: stepIndex + 1
+      });
+    }
   }
 
   handlePrev() {
@@ -341,9 +375,6 @@ export default class EventCreator extends React.Component {
             <Step>
               <StepLabel>Select time</StepLabel>
             </Step>
-            <Step>
-              <StepLabel>Confirm</StepLabel>
-            </Step>
           </Stepper>
           <div>
             <div>{this.getStepContent(this.state.stepIndex)}</div>
@@ -355,12 +386,17 @@ export default class EventCreator extends React.Component {
                 style={{ marginRight: 12 }}
               />
               <RaisedButton
-                label={this.state.stepIndex === 4 ? 'Finish' : 'Next'}
+                label={this.state.stepIndex === 3 ? 'Finish' : 'Next'}
                 primary={true}
                 onClick={() => {
+                  if (this.state.stepIndex === 2) {
+                    this.generateRecommendations();
+                  }
+                  // this.createEvent();
+                  if (this.state.stepIndex === 3) {
+                    this.handleOpen();
+                  }
                   this.handleNext();
-                  this.generateRecommendations();
-                  this.createEvent();
                 }}
               />
             </div>
