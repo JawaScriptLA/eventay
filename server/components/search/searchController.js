@@ -15,7 +15,7 @@ module.exports = {
         return str;
       };
       const dbQueryFriends = `
-        SELECT id, username FROM users
+        SELECT id, username, profile_picture FROM users
         WHERE ${makeQuery(query, 'username')}
       `;
       const dbQueryEvents = `
