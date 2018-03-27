@@ -57,7 +57,7 @@ class Profile extends React.Component {
 
   }
 
-  componentWillMount() {
+  componentWillReceiveProps() {
     const user = JSON.parse(localStorage.getItem('userInfo'));
 
     // get user info
@@ -109,6 +109,7 @@ class Profile extends React.Component {
           });
         }
       });
+    console.log('profile compwillrecvprops');
   }
 
   handleAddFriend() {
