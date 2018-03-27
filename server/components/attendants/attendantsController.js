@@ -3,7 +3,6 @@ const db = require('../../db/db.js');
 module.exports = {
   addAttendant: async ({ access, status, user_id, event_id, invitor_id }) => {
     try {
-      console.log('[attendantsController] userId/eventId', user_id, event_id);
       await db.queryAsync(`
         INSERT INTO attendants (
           access,
