@@ -5,7 +5,7 @@ import NavMenu from './NavMenu.jsx';
 import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
 import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
-import SearchBar from 'material-ui-search-bar';
+import Search from './Search.jsx';
 import axios from 'axios';
 
 import Popup from 'reactjs-popup';
@@ -20,7 +20,8 @@ export default class NavBar extends Component {
     this.state = {
       open: false,
       pendingFriends: [],
-      pendingInvites: []
+      pendingInvites: [],
+      userInfo: {},
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
@@ -37,9 +38,12 @@ export default class NavBar extends Component {
 
   componentWillMount() {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    userInfo
-      ? (axios.get(`/api/friend/${userInfo.id}`, config).then(result => {
-          this.setState({ pendingFriends: result.data });
+    userInfo ?
+      (
+        this.setState( {userInfo: userInfo} ),
+        axios.get(`/api/friend/${userInfo.id}`, config)
+        .then(result => {
+          this.setState({pendingFriends: result.data});
         }),
         axios
           .get(`/api/attendant/pendingInvites/${userInfo.id}`, config)
@@ -62,18 +66,8 @@ export default class NavBar extends Component {
           >
             <NavMenu history={this.props.history} />
           </Popover>
-          <SearchBar
-            onChange={() => console.log('onChange')}
-            onRequestSearch={() => console.log('onRequestSearch')}
-            style={{
-              float: 'none',
-              maxWidth: 800,
-              marginRight: 'auto',
-              marginLeft: 'auto',
-              marginTop: 'auto',
-              marginBottom: 'auto'
-            }}
-          />
+          
+          <Search userInfo={this.state.userInfo} />
 
           <Popup
             modal
