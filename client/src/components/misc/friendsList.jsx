@@ -36,7 +36,6 @@ class FriendsList extends React.Component {
   }
 
   render() {
-    console.log(this.props.friendsList);
     if (this.props.friendsList.length) {
       return (
         <div>

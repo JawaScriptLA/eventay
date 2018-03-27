@@ -5,41 +5,29 @@ const friendsRouter = require('./components/friends/friendsRouter.js');
 const eventsRouter = require('./components/events/eventsRouter.js');
 const attendantsRouter = require('./components/attendants/attendantsRouter.js');
 const postsRouter = require('./components/posts/postsRouter.js');
-const userRouter = require('./components/user/userRouter.js');
+const usersRouter = require('./components/users/usersRouter.js');
 const { getAllFriends } = require('./components/friends/friendsController.js');
-const {
-  getAllAttending,
-  showUserEvents
-} = require('./components/attendants/attendantsController.js');
-const { select } = require('./queries/select.js');
-const { getUserProfile } = require('./components/user/userController');
+const { getAllAttending, showUserEvents } = require('./components/attendants/attendantsController.js');
+const { getUserProfile } = require('./components/users/usersController');
 const { search } = require('./components/search/searchController.js');
+const { select } = require('./queries/select.js');
 
-const conflictExists = (
-  firstStartTime,
-  firstEndTime,
-  secondStartTime,
-  secondEndTime
-) => {
-  let cond1 =
-    firstStartTime < secondStartTime && secondStartTime < firstEndTime;
-  let cond2 =
-    secondStartTime < firstStartTime && firstStartTime < secondEndTime;
-  let cond3 =
-    secondStartTime <= firstStartTime && firstEndTime <= secondEndTime;
-  let cond4 =
-    firstStartTime <= secondStartTime && secondEndTime <= firstEndTime;
+const conflictExists = (firstStartTime, firstEndTime, secondStartTime, secondEndTime) => {
+  let cond1 = firstStartTime < secondStartTime && secondStartTime < firstEndTime;
+  let cond2 = secondStartTime < firstStartTime && firstStartTime < secondEndTime;
+  let cond3 = secondStartTime <= firstStartTime && firstEndTime <= secondEndTime;
+  let cond4 = firstStartTime <= secondStartTime && secondEndTime <= firstEndTime;
   return cond1 || cond2 || cond3 || cond4;
 };
 
-module.exports = passportObj => {
+module.exports = (passportObj) => {
   router.use('/auth', authRouter(passportObj));
   router.use('/', checkAuth);
   router.all('/test', (req, res) => res.send({ message: 'test' }));
   router.get('/search/:user_id/:query', search);
   router.use('/post', postsRouter);
   router.use('/friend', friendsRouter);
-  router.use('/user', userRouter);
+  router.use('/user', usersRouter);
   router.use('/event', eventsRouter);
   router.use('/attendant', attendantsRouter);
   router.get('/friends/:user_id', async (req, res) => {

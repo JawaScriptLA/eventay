@@ -45,30 +45,23 @@ module.exports = {
   },
   getHostingEvents: async ({ user_id }) => {
     try {
-      const data = await db.queryAsync(`
-        SELECT * FROM events
-        WHERE host_id='${user_id}'
-      `);
+      const data = await db.queryAsync(`SELECT * FROM events WHERE host_id='${user_id}'`);
       return data.rows;
     } catch (err) {
       throw err;
     }
   },
-  updateEvent: async data => {
+  updateEvent: async (data) => {
     try {
       let fields = Object.entries(data)
-        .map(
-          ([key, value]) =>
-            typeof value === 'string'
-              ? `${key} = '${value}'`
-              : `${key} = ${value}`
+        .map(([ key, value ]) =>
+          typeof value === 'string' ?
+            `${key} = '${value}'`
+          :
+            `${key} = ${value}`
         )
         .join(', ');
-      await db.queryAsync(`
-        UPDATE events
-        SET ${fields}
-        WHERE user_id=${data.user_id}
-      `);
+      await db.queryAsync(`UPDATE events SET ${fields} WHERE user_id=${data.user_id}`);
     } catch (err) {
       throw err;
     }

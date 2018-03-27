@@ -11,7 +11,6 @@ export const fetchFriendsList = id => {
     headers: { Authorization: 'bearer ' + localStorage.token }
   };
   return dispatch => {
-    console.log('[friendsActions.js] config is;', config);
     axios
       .get(`/api/friends/${id}`, config) // TODO: change to userId of client
       .then(response => {
@@ -31,7 +30,7 @@ export const fetchFriendsList = id => {
         }
       })
       .catch(err => {
-        console.log('EROROROROOR', err);
+        console.log('Error:', err);
       });
   };
 };
