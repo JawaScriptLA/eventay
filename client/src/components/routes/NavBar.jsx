@@ -20,10 +20,28 @@ export default class NavBar extends Component {
     this.state = {
       open: false,
       pendingFriends: [],
-      pendingInvites: []
+      pendingInvites: [],
+      query: '',
+      userInfo: {},
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
+    this.handleSearchInput = this.handleSearchInput.bind(this);
+    this.handleSearchRequest = this.handleSearchRequest.bind(this);
+  }
+
+  handleSearchInput (e) {
+    this.setState( { query: e } );
+  }
+
+  handleSearchRequest () {
+    axios.get(`/api/search/${this.state.userInfo.id}/${this.state.query}`, config)
+      .then(result => {
+        console.log(`HEY OUR SEARCH WAS SUCCESSFUL! ${JSON.stringify(result.data)}`);
+      })
+      .catch(err => {
+        console.log(`OOPS LOOKS LIKE SEARCH FAILED: ${err}`);
+      });
   }
 
   handleClick(e) {
@@ -37,9 +55,12 @@ export default class NavBar extends Component {
 
   componentWillMount() {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    userInfo
-      ? (axios.get(`/api/friend/${userInfo.id}`, config).then(result => {
-          this.setState({ pendingFriends: result.data });
+    userInfo ?
+      (
+        this.setState( {userInfo: userInfo} ),
+        axios.get(`/api/friend/${userInfo.id}`, config)
+        .then(result => {
+          this.setState({pendingFriends: result.data});
         }),
         axios
           .get(`/api/attendant/pendingInvites/${userInfo.id}`, config)
@@ -63,8 +84,8 @@ export default class NavBar extends Component {
             <NavMenu history={this.props.history} />
           </Popover>
           <SearchBar
-            onChange={() => console.log('onChange')}
-            onRequestSearch={() => console.log('onRequestSearch')}
+            onChange={e => this.handleSearchInput(e)}
+            onRequestSearch={this.handleSearchRequest}
             style={{
               float: 'none',
               maxWidth: 800,
