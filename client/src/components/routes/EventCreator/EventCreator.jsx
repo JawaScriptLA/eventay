@@ -8,6 +8,7 @@ import TimeRanges from './TimeRanges.jsx';
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 export default class EventCreator extends React.Component {
   constructor(props) {
@@ -29,6 +30,9 @@ export default class EventCreator extends React.Component {
       endHours: null,
       endMinutes: null,
       endAMPM: null,
+      eventTitle: '',
+      eventDescription: '',
+      eventLocation: '',
       stepIndex: 0
     };
     this.getAllFriends();
@@ -47,8 +51,42 @@ export default class EventCreator extends React.Component {
   getStepContent(stepIndex) {
     switch (stepIndex) {
       case 0:
-        return 'Whats the occasion?';
-      // TODO: add fields to enter event details
+        return (
+          <div style={{ width: '50%', margin: 'auto' }}>
+            <div>
+              <TextField
+                floatingLabelText="Enter title here..."
+                name="eventTitle"
+                value={this.state.eventTitle}
+                fullWidth={true}
+                onChange={this.handleTextChanges}
+              />
+            </div>
+            <div>
+              <TextField
+                floatingLabelText="Enter description here..."
+                name="eventDescription"
+                value={this.state.eventDescription}
+                multiLine={true}
+                fullWidth={true}
+                onChange={this.handleTextChanges}
+              />
+            </div>
+            <div>
+              <TextField
+                floatingLabelText="Enter location here..."
+                name="eventLocation"
+                value={this.state.eventLocation}
+                fullWidth={true}
+                onChange={this.handleTextChanges}
+              />
+            </div>
+
+            <div>ADD THUMBNAIL HERE</div>
+          </div>
+        );
+
+      // TODO: use filestack to upload thumbnail
       case 1:
         return (
           <div>
@@ -213,8 +251,7 @@ export default class EventCreator extends React.Component {
         .post(
           '/api/event',
           {
-            // TODO: update to real event title
-            title: 'jasonEvent1',
+            title: this.state.eventTitle,
             start_time: this.state.selectedTime[0],
             end_time: this.state.selectedTime[1],
             host_id: ownId
@@ -289,7 +326,7 @@ export default class EventCreator extends React.Component {
     return (
       <div>
         <NavBar history={this.props.history} />
-        <h1>This is the event creator page!</h1>
+        <h1>Create new event!</h1>
         <div style={{ width: '100%', maxWidth: 1000, margin: 'auto' }}>
           <Stepper activeStep={this.state.stepIndex}>
             <Step>
@@ -309,25 +346,23 @@ export default class EventCreator extends React.Component {
             </Step>
           </Stepper>
           <div>
-            <div>
-              <div>{this.getStepContent(this.state.stepIndex)}</div>
-              <div style={{ marginTop: 12 }}>
-                <FlatButton
-                  label="Back"
-                  disabled={this.state.stepIndex === 0}
-                  onClick={this.handlePrev}
-                  style={{ marginRight: 12 }}
-                />
-                <RaisedButton
-                  label={this.state.stepIndex === 4 ? 'Finish' : 'Next'}
-                  primary={true}
-                  onClick={() => {
-                    this.handleNext();
-                    this.generateRecommendations();
-                    this.createEvent();
-                  }}
-                />
-              </div>
+            <div>{this.getStepContent(this.state.stepIndex)}</div>
+            <div style={{ margin: '3% 20% 5% 0', float: 'right' }}>
+              <FlatButton
+                label="Back"
+                disabled={this.state.stepIndex === 0}
+                onClick={this.handlePrev}
+                style={{ marginRight: 12 }}
+              />
+              <RaisedButton
+                label={this.state.stepIndex === 4 ? 'Finish' : 'Next'}
+                primary={true}
+                onClick={() => {
+                  this.handleNext();
+                  this.generateRecommendations();
+                  this.createEvent();
+                }}
+              />
             </div>
           </div>
         </div>

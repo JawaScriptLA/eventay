@@ -9,6 +9,7 @@ import {
 } from 'material-ui/Table';
 
 const FriendsTable = props => {
+  // TODO: add avatar pictures, pulling from user profiles
   return (
     <div>
       <h2>Invite Friends!</h2>

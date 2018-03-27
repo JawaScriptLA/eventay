@@ -6,13 +6,13 @@ const DurationFields = props => {
     <div>
       <h2>Add duration (hours and minutes)</h2>
       <TextField
-        hintText="Enter # of hours"
+        floatingLabelText="Enter # of hours..."
         name="durationHrs"
         value={props.durationHrs}
         onChange={props.handleTextChanges}
       />
       <TextField
-        hintText="Enter # of minutes"
+        floatingLabelText="Enter # of minutes..."
         name="durationMins"
         value={props.durationMins}
         onChange={props.handleTextChanges}

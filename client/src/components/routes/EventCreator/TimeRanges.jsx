@@ -6,6 +6,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
 const TimeRanges = props => {
+  // TODO: update hardcoded component values
   return (
     <div>
       <h2>I'd like my event to occur some time between...</h2>
