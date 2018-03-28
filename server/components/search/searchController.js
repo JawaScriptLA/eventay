@@ -19,7 +19,7 @@ module.exports = {
         WHERE ${makeQuery(query, 'username')}
       `;
       const dbQueryEvents = `
-        SELECT title, host_id FROM events
+        SELECT title, host_id, thumbnail FROM events
         WHERE (host_id=${user_id} AND (${makeQuery(query, 'title')}))
         OR (publicity=TRUE AND (${makeQuery(query, 'title')}))
       `;
