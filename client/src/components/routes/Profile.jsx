@@ -12,7 +12,7 @@ import {
   Dialog,
 } from 'material-ui';
 import ReactFilestack, { client } from 'filestack-react';
-import RaisedButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import propTypes from 'prop-types';
 import * as profileActions from '../../actions/profileActions';
 import * as userInfoActions from '../../actions/userInfoActions';
@@ -267,7 +267,6 @@ class Profile extends React.Component {
               render={({ onPick }) => <RaisedButton label="Upload" onClick={onPick} />}
               onSuccess={this.handleUpdatePhoto}
             />
-              <Divider />
             </Dialog>
             <ProfileButtons
               history={this.props.history}
