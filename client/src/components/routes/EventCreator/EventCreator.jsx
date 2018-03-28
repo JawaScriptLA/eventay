@@ -44,7 +44,7 @@ export default class EventCreator extends React.Component {
       eventName: '',
       eventDescription: '',
       eventLocation: '',
-      stepIndex: 1,
+      stepIndex: 0,
       dialogOpen: false
     };
     this.getAllFriends();
@@ -357,11 +357,7 @@ export default class EventCreator extends React.Component {
               <TableBody showRowHover={true} deselectOnClickaway={false}>
                 {this.state.recommendedTimes &&
                   this.state.recommendedTimes.map((time, idx) => (
-                    <TableRow
-                      // TODO: on check, update in UI and update state
-                      selected={this.isSelected2(idx)}
-                      key={idx}
-                    >
+                    <TableRow selected={this.isSelected2(idx)} key={idx}>
                       <TableRowColumn>
                         {this.convertTime(time[0])}
                       </TableRowColumn>
@@ -381,14 +377,13 @@ export default class EventCreator extends React.Component {
               <div>Event name: {this.state.eventName}</div>
               <div>Description: {this.state.eventDescription}</div>
               <div>Location: {this.state.eventLocation}</div>
-              {/* TODO: reformat */}
               <div>
                 Start time: {this.convertTime(this.state.selectedTime[0])}
               </div>
               <div>
                 End time: {this.convertTime(this.state.selectedTime[1])}
               </div>
-              {/* TODO: reformat */}
+              {/* TODO: update reformat */}
               <div>Invited Friends: {this.state.selectedFriendNames}</div>
             </Dialog>
           </div>
