@@ -84,12 +84,13 @@ class Profile extends React.Component {
           // check if user is a friend
           axios.get(`/api/friend/check/${user.id}/${response.data.id}`, this.state.authHeader)
             .then(check => {
+              console.log('here!!!', check);
               if (check.data.length) {
                 if (check.data[0].status === 'accepted') {
-                  this.getEvents(response.data[0].id);
+                  this.getEvents(response.data.id);
                   this.setState({ isFriend: true, isFriendPending: false })
                 } else if (check.data[0].status === 'pending') {
-                  if (check.data[0].target_id === user.id) {
+                  if (check.data.target_id === user.id) {
                     this.setState({
                       isFriend: false,
                       isFriendPending: true,
@@ -174,7 +175,7 @@ class Profile extends React.Component {
   }
 
   handleUpdatePhoto(photo) {
-    const url = photo.filesUploaded[0].url;
+    const url = photo.filesUploaded.url;
     // todo update bio info
     axios.put(`/api/user`, {
       profile_picture: url,
@@ -216,6 +217,7 @@ class Profile extends React.Component {
   }
 
   render() {
+    // console.log(this.state);
     if (!this.state.invalidUser) {
       return (
         <div>
