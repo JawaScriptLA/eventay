@@ -4,7 +4,7 @@ module.exports = {
   getUserInfo: async ({ username }) => {
     try {
       const data = await db.queryAsync(`SELECT * FROM users WHERE username='${username}'`);
-      return data.rows;
+      return data.rows[0];
     } catch (err) {
       throw err;
     }
@@ -19,8 +19,10 @@ module.exports = {
             `${key} = ${value}`
         )
         .join(', ');
-      await db.queryAsync(`UPDATE users SET ${fields} WHERE username=${data.username}`);
+      let user = await db.queryAsync(`UPDATE users SET ${fields} WHERE username='${data.username}' RETURNING profile_picture, bio, likes_count`);
+      return user.rows[0];
     } catch (err) {
+      console.log('throwing', err);
       throw err;
     }
   }

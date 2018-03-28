@@ -56,7 +56,7 @@ export default class EventViewer extends Component {
         <h2>{this.state.event.title}</h2>
         <img src={this.state.event.thumbnail}/>
         <p>{this.state.event.desc}</p>
-        {this.state.event.start.split('T').join(' ').substring(0, this.state.event.start.length - 5)} - {this.state.event.end.split('T').join(' ').substring(0, this.state.event.end.length - 5)}
+        {this.state.event.start.replace('T', ' ').substring(0, this.state.event.start.length - 5)} - {this.state.event.end.replace('T', ' ').substring(0, this.state.event.end.length - 5)}
       </div>
     );
   }

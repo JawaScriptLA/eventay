@@ -11,10 +11,10 @@ router.get('/:username', async (req, res) => {
 });
 
 router.route('/')
-  .put((req, res) => {
+  .put(async (req, res) => {
     try {
-      await controller.updateUser(req.body);
-      res.sendStatus(200);
+      let data = await controller.updateUser(req.body);
+      res.send(data);
     } catch (err) {
       res.sendStatus(500);
     }
