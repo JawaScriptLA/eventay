@@ -89,7 +89,9 @@ class Profile extends React.Component {
                   this.getEvents(response.data.id);
                   this.setState({ isFriend: true, isFriendPending: false })
                 } else if (check.data[0].status === 'pending') {
-                  if (check.data.target_id === user.id) {
+                  console.log('friendship pending');
+                  if (check.data[0].target_id === user.id) {
+                    console.log('canAcceptRequest');
                     this.setState({
                       isFriend: false,
                       isFriendPending: true,
