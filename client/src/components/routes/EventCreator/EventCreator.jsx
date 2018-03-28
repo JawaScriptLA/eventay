@@ -52,6 +52,7 @@ export default class EventCreator extends React.Component {
     this.handleRecommendationClick = this.handleRecommendationClick.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.convertTime = this.convertTime.bind(this);
   }
   getStepContent(stepIndex) {
     switch (stepIndex) {
@@ -119,7 +120,7 @@ export default class EventCreator extends React.Component {
                     this.handleRecommendationClick([time[0], time[1]])
                   }
                 >
-                  {time[0]} - {time[1]}
+                  {this.convertTime(time[0])} - {this.convertTime(time[1])}
                 </div>
               ))}
             <Dialog
@@ -131,14 +132,36 @@ export default class EventCreator extends React.Component {
               <div>Event name: {this.state.eventName}</div>
               <div>Description: {this.state.eventDescription}</div>
               <div>Location: {this.state.eventLocation}</div>
-              <div>Time: {this.state.selectedTime}</div>
-              <div>InvitedFriends: {this.state.selectedFriendNames}</div>
+              {/* TODO: reformat */}
+              <div>Start time: {this.state.selectedTime[0]}</div>
+              <div>End time: {this.state.selectedTime[1]}</div>
+              {/* TODO: reformat */}
+              <div>Invited Friends: {this.state.selectedFriendNames}</div>
             </Dialog>
           </div>
         );
       default:
         return;
     }
+  }
+
+  convertTime(input) {
+    let newDate = new Date(input);
+    let splitDate = newDate.toString().split(' ');
+    let day = splitDate[0];
+    let month = splitDate[1];
+    let date = splitDate[2];
+    let year = splitDate[3];
+    let dateStr = day + ' ' + month + ' ' + date + ', ' + year + ' ';
+
+    let hours = newDate.getHours();
+    let minutes = newDate.getMinutes();
+    let ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    let timeStr = hours + ':' + minutes + ' ' + ampm;
+    return dateStr + timeStr;
   }
 
   handleNext() {
@@ -235,7 +258,6 @@ export default class EventCreator extends React.Component {
         }
       )
       .then(res => {
-        console.log('res.data is:', res.data);
         let recommendations = [];
         for (let recommendationId in res.data) {
           recommendations.push(res.data[recommendationId]);
