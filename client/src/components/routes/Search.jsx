@@ -56,10 +56,27 @@ export default class Search extends Component {
     }
     if (this.state.searchEvents.length) {
       content.push(<h3 key='events'>Events</h3>);
-      this.state.searchEvents.forEach( (data, i) => {
-        counter++;
-        content.push(<li key={counter}>{data.title}</li>);
-      });
+      content.push(
+        <List key='events-list'>
+          {
+            this.state.searchEvents.map( (data, i) => {
+              counter++;
+              return (
+                <ListItem
+                  key={counter}
+                  disabled={true}
+                  leftAvatar={
+                    <Avatar src={data.thumbnail} />
+                  }
+                >
+                  {data.title}
+                </ListItem>
+              );
+            })
+          }
+        </List>
+      )
+
     }
     if (this.state.searchFriends.length) {
       content.push(<h3 key='friends'>Friends</h3>);
