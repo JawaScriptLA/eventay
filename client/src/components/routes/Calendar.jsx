@@ -15,38 +15,41 @@ let formats = {
     local.format(end, 'MMM DD', culture),
   dateFormat: (date, culture, local) => local.format(date, 'DD', culture),
   eventTimeRangeFormat: ({ start, end }, culture, local) =>
-    local.format(start, 'h:mm a', culture) +
-    ' - ' +
-    local.format(end, 'h:mm a', culture)
+    local.format(start, 'h:mm a', culture) + ' - ' + local.format(end, 'h:mm a', culture),
 };
+
 export default class Calendar extends Component {
   constructor(props) {
-    super(props);
-    this.state = {
-      events: []
-    };
+    super (props);
+    this.state = { events: [] };
   }
+  
   componentDidMount() {
-    const config = {
-      headers: { Authorization: 'bearer ' + localStorage.token }
-    };
-    console.log('componentDidMount Calendar.jsx');
+    const config = { headers: { 'Authorization': 'bearer ' + localStorage.token} };
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    userInfo
-      ? axios.get(`/api/event/${userInfo.id}`, config).then(result => {
-          result = result.data.map(event => {
-            var obj = {};
-            obj.id = event.id;
-            obj.title = event.title;
-            obj.start = new Date(event.start_time);
-            obj.end = new Date(event.end_time);
-            obj.desc = event.description;
-            return obj;
+    if (userInfo) {
+      axios.get(`/api/event/${userInfo.id}`, config)
+        .then(({ data }) => {
+          data.forEach((event) => {
+            event.desc = event.description;
+            event.start = event.start_time;
+            event.end = event.end_time;
           });
-          this.setState({ events: result });
+          this.setState({ events: data });
         })
-      : this.props.history.push('/login');
+        .catch((err) => {
+          console.log('Error:', err);
+        });
+    }
   }
+  
+  selectEvent(event) {
+    this.props.history.push({
+      pathname: `/event/${event.id}`,
+      state: { event: event }
+    });
+  }
+
   render() {
     return (
       <div id="calendar">
@@ -55,6 +58,7 @@ export default class Calendar extends Component {
           culture="en"
           formats={formats}
           events={this.state.events}
+          onSelectEvent={this.selectEvent}
           views={['month', 'week']}
           startAccessor='start'
           endAccessor='end'

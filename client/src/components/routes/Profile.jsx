@@ -61,19 +61,19 @@ class Profile extends React.Component {
 
   componentWillReceiveProps() {
     const user = JSON.parse(localStorage.getItem('userInfo'));
-
+    
     // get user info
     axios.get(`/api/user/${this.props.match.params.username}`, this.state.authHeader)
       .then(response => {
-        if (response.status === 200 && response.data.length) {
+        if (response.status === 200 && response.data) {
           this.setState({
-            profileInfo: response.data[0],
-            bioInputField: response.data[0].bio || '',
-            bioDisplay: response.data[0].bio || '',
+            profileInfo: response.data,
+            bioInputField: response.data.bio || '',
+            bioDisplay: response.data.bio || '',
           });
           if (
-            response.data[0].username === this.props.userInfo.username &&
-            response.data[0].id === this.props.userInfo.id
+            response.data.username === this.props.userInfo.username &&
+            response.data.id === this.props.userInfo.id
           ) {
             this.getEvents(this.props.userInfo.id);
             this.setState({
@@ -82,7 +82,7 @@ class Profile extends React.Component {
           }
           
           // check if user is a friend
-          axios.get(`/api/friend/check/${user.id}/${response.data[0].id}`, this.state.authHeader)
+          axios.get(`/api/friend/check/${user.id}/${response.data.id}`, this.state.authHeader)
             .then(check => {
               if (check.data.length) {
                 if (check.data[0].status === 'accepted') {
@@ -176,13 +176,13 @@ class Profile extends React.Component {
   handleUpdatePhoto(photo) {
     const url = photo.filesUploaded[0].url;
     // todo update bio info
-    axios.put(`/api/user/profilepic`, {
+    axios.put(`/api/user`, {
       profile_picture: url,
       username: this.props.userInfo.username, // to prevent user from changing other people's bio
     }, this.state.authHeader)
       .then(response => {
         const user = Object.assign({}, this.state.profileInfo);
-        user.profile_picture = response.data[0].profile_picture;
+        user.profile_picture = response.data.profile_picture;
         this.setState({ profileInfo: user });
         this.handleProfilePhotoModalClose();
       });
@@ -198,12 +198,12 @@ class Profile extends React.Component {
   handleUpdateBio(e) {
     if (e.key === 'Enter' && this.state.isSelf) {
       // todo update bio info
-      axios.put(`/api/user/bio`, {
+      axios.put(`/api/user`, {
         bio: this.state.bioInputField,
         username: this.props.userInfo.username, // to prevent user from changing other people's bio
       }, this.state.authHeader)
         .then(response => {
-          this.setState({ bioDisplay: response.data[0].bio });
+          this.setState({ bioDisplay: response.data.bio });
           this.handleProfileBioModalClose();
         });
     }
