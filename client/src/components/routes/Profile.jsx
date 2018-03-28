@@ -10,12 +10,13 @@ import {
   Avatar,
   Paper,
   Dialog,
- } from 'material-ui';
- import ReactFilestack, { client } from 'filestack-react';
+} from 'material-ui';
+import ReactFilestack, { client } from 'filestack-react';
 import FlatButton from 'material-ui/FlatButton';
 import propTypes from 'prop-types';
 import * as profileActions from '../../actions/profileActions';
 import * as userInfoActions from '../../actions/userInfoActions';
+import EventList from '../misc/eventList.jsx'
 import ProfileButtons from '../misc/ProfileButtons.jsx';
 import filestack from '../../../config.js';
 import NavBar from './NavBar.jsx';
@@ -30,6 +31,7 @@ class Profile extends React.Component {
       profileInfo: {},
       invalidUser: false,
       isFriendPending: false,
+      isFriend: false,
       canAcceptFriendRequest: false,
       isSelf: false,
       renderUpdateProfile: false,
@@ -40,6 +42,7 @@ class Profile extends React.Component {
       bioInputField: '',
       bioDisplay: '',
       profilePicURL: '',
+      events: [],
       authHeader: { headers: { Authorization: 'bearer ' + localStorage.token } }
     }
 
@@ -54,7 +57,6 @@ class Profile extends React.Component {
     this.handleRemoveFriend = this.handleRemoveFriend.bind(this);
     this.handleBlockUser = this.handleBlockUser.bind(this);
     this.handleAcceptFriendReq = this.handleAcceptFriendReq.bind(this);
-
   }
 
   componentWillReceiveProps() {
@@ -73,6 +75,7 @@ class Profile extends React.Component {
             response.data[0].username === this.props.userInfo.username &&
             response.data[0].id === this.props.userInfo.id
           ) {
+            this.getEvents(this.props.userInfo.id);
             this.setState({
               isSelf: true
             });
@@ -109,11 +112,9 @@ class Profile extends React.Component {
           });
         }
       });
-    console.log('profile compwillrecvprops');
   }
 
   handleAddFriend() {
-    console.log('handleAddFriend');
     axios.post('/api/friend', {
       user_id: this.props.userInfo.id,
       target_id: this.state.profileInfo.id,
@@ -122,7 +123,6 @@ class Profile extends React.Component {
   }
 
   handleRemoveFriend() {
-    console.log('handleRemoveFriend');
     const payload = {
       data: {
         user_id: this.props.userInfo.id,
@@ -135,7 +135,6 @@ class Profile extends React.Component {
   }
 
   handleAcceptFriendReq() {
-    console.log('handleAcceptFriendReq');
     axios.put('/api/friend', {
       user_id: this.props.userInfo.id,
       target_id: this.state.profileInfo.id,
@@ -175,7 +174,6 @@ class Profile extends React.Component {
 
   handleUpdatePhoto(photo) {
     const url = photo.filesUploaded[0].url;
-    console.log('URL', url);
     // todo update bio info
     axios.put(`/api/user/profilepic`, {
       profile_picture: url,
@@ -210,11 +208,17 @@ class Profile extends React.Component {
     }
   }
 
+  getEvents(userId) {
+    console.log('userId', userId)
+    axios.get(`/api/event/${userId}`, this.state.authHeader)
+      .then(response => this.setState({ events: response.data }));
+  }
+
   render() {
     if (!this.state.invalidUser) {
       return (
         <div>
-          <NavBar />
+          <NavBar history={this.props.history} />
           <Card
             style={{
               margin: 'auto',
@@ -277,6 +281,13 @@ class Profile extends React.Component {
               handleRemoveFriend={this.handleRemoveFriend}
               handleAcceptFriendReq={this.handleAcceptFriendReq}
             />
+            {this.state.isSelf || this.state.isFriend ?
+              <EventList
+                isSelf={this.state.isSelf}
+                isFriend={this.state.isFriend}
+                events={this.state.events}
+                history={this.props.history}
+              /> : null}
           </Card>
         </div>
       );
