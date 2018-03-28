@@ -9,6 +9,7 @@ export default class EventViewer extends Component {
   }
   
   componentWillMount() {
+    console.log(this.props);
     const config = { headers: { Authorization: 'bearer ' + localStorage.getItem('token') } };
     const event = this.props.location.state.event;
     const user = JSON.parse(localStorage.getItem('userInfo'));
@@ -55,8 +56,8 @@ export default class EventViewer extends Component {
         <NavBar history={this.props.history} />
         <h2>{this.state.event.title}</h2>
         <img src={this.state.event.thumbnail}/>
-        <p>{this.state.event.desc}</p>
-        {this.state.event.start.replace('T', ' ').substring(0, this.state.event.start.length - 5)} - {this.state.event.end.replace('T', ' ').substring(0, this.state.event.end.length - 5)}
+        <p>{this.state.event.description}</p>
+        {this.state.event.start_time.replace('T', ' ').substring(0, this.state.event.start_time.length - 5)} - {this.state.event.end_time.replace('T', ' ').substring(0, this.state.event.end_time.length - 5)}
       </div>
     );
   }

@@ -84,7 +84,6 @@ class Profile extends React.Component {
           // check if user is a friend
           axios.get(`/api/friend/check/${user.id}/${response.data.id}`, this.state.authHeader)
             .then(check => {
-              console.log('here!!!', check);
               if (check.data.length) {
                 if (check.data[0].status === 'accepted') {
                   this.getEvents(response.data.id);
@@ -211,7 +210,7 @@ class Profile extends React.Component {
   }
 
   getEvents(userId) {
-    console.log('userId', userId)
+    // console.log('userId', userId)
     axios.get(`/api/event/${userId}`, this.state.authHeader)
       .then(response => this.setState({ events: response.data }));
   }

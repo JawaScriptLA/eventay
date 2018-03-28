@@ -18,7 +18,10 @@ class EventList extends React.Component{
              <em>{event.start_time}</em>
            </p>}
            rightIcon={<ActionPermContactCalendar />}
-           onClick={() => this.props.history.push(`/event/${event.id}`)}
+           onClick={() => this.props.history.push({
+            pathname: `/event/${event.id}`,
+            state: { event: event }
+          })}
          /> 
        )
     )
