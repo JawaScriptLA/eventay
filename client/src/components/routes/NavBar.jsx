@@ -139,26 +139,6 @@ export default class NavBar extends Component {
           </Popover>
 
           <Search userInfo={this.state.userInfo} />
-
-          {/* <Popup
-            modal
-            trigger={
-              
-            }
-            on="click"
-            closeOnDocumentClick
-          >
-            <div>
-              <ul>
-                {this.state.pendingFriends.map((notif, i) => (
-                  <li key={i}>{notif.username}</li>
-                ))}
-                {this.state.pendingInvites.map((notif, i) => (
-                  <li key={i}>{notif.title}</li>
-                ))}
-              </ul>
-            </div>
-          </Popup> */}
           <div
             id="notifications"
             onClick={this.handleNotifsOpen}
