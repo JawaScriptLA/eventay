@@ -3,6 +3,10 @@ import SearchBar from 'material-ui-search-bar';
 import axios from 'axios';
 import Dialog from 'material-ui/Dialog';
 
+import List from 'material-ui/List/List';
+import ListItem from 'material-ui/List/ListItem';
+import Avatar from 'material-ui/Avatar';
+
 const config = {
   headers: { Authorization: 'bearer ' }
 };
@@ -59,10 +63,26 @@ export default class Search extends Component {
     }
     if (this.state.searchFriends.length) {
       content.push(<h3 key='friends'>Friends</h3>);
-      this.state.searchFriends.forEach( (data, i) => {
-        counter++;
-        content.push(<li key={counter}>{data.username}</li>);
-      });
+      content.push(
+        <List key='friends-list'>
+          {
+            this.state.searchFriends.map( (data, i) => {
+              counter++;
+              return (
+                <ListItem
+                  key={counter}
+                  disabled={true}
+                  leftAvatar={
+                    <Avatar src={data.profile_picture} />
+                  }
+                >
+                  {data.username}
+                </ListItem>
+              )
+            })
+          }
+        </List>
+      )
     }
     return content;
   }
