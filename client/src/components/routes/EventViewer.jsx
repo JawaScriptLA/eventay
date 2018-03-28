@@ -57,6 +57,23 @@ export default class EventViewer extends Component {
         .catch((err) => {
           console.log('Error posts:', err);
         });
+      
+        axios.get(`/api/post/${event.id}`, config)
+        .then((posts) => {
+          console.log('posts:', posts.data);
+          this.setState({ posts: posts.data });
+        })
+        .catch((err) => {
+          console.log('Error posts:', err);
+        });
+      
+      axios.get(`/api/user/id/${event.host_id}`, config)
+        .then((host) => {
+          console.log('host:', host.data);
+        })
+        .catch((err) => {
+          console.log('Error users:', err);
+        });
     }
   }
 
