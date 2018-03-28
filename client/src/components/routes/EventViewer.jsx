@@ -18,6 +18,22 @@ export default class EventViewer extends Component {
   
   componentWillMount() {
     this.setState({ user: JSON.parse(localStorage.getItem('userInfo')) });
+    console.log(this.props);
+    const config = { headers: { Authorization: 'bearer ' + localStorage.getItem('token') } };
+    const event = this.props.location.state.event;
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+    console.log('event:', event);
+    console.log('user:', user);
+    this.setState({ event: event });
+    
+    axios.get(`/api/friends/${user.id}`, config)
+      .then((friends) => {
+        console.log('friends:', friends.data);
+        this.setState({ friends: friends.data });
+      })
+      .catch((err) => {
+        console.log('Error friends:', err);
+      });
     
     this.props.location.state ? this.setState({ event: this.props.location.state.event }) : 
       axios.get(`/api/event/eventinfo/${this.props.match.params.id}`, this.state.config)
@@ -70,6 +86,15 @@ export default class EventViewer extends Component {
       axios.get(`/api/user/id/${event.host_id}`, config)
         .then((host) => {
           console.log('host:', host.data);
+        })
+        .catch((err) => {
+          console.log('Error users:', err);
+        });
+      
+        axios.get(`/api/user/id/${event.host_id}`, config)
+        .then((host) => {
+          console.log('host:', host.data);
+          this.setState({ host: host.data });
         })
         .catch((err) => {
           console.log('Error users:', err);
