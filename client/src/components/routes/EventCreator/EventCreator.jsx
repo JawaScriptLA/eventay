@@ -10,6 +10,14 @@ import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn
+} from 'material-ui/Table';
 
 export default class EventCreator extends React.Component {
   constructor(props) {
@@ -112,7 +120,38 @@ export default class EventCreator extends React.Component {
         ];
         return (
           <div>
-            {this.state.recommendedTimes &&
+            <Table
+              onRowSelection={selectedRows => {
+                this.handleSelectionChange(selectedRows);
+              }}
+            >
+              <TableHeader>
+                <TableRow>
+                  <TableHeaderColumn>Start time</TableHeaderColumn>
+                  <TableHeaderColumn>End time</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody showRowHover={true} deselectOnClickaway={false}>
+                {this.state.recommendedTimes &&
+                  this.state.recommendedTimes.map((time, idx) => (
+                    <TableRow
+                      selected={this.isSelected(idx)}
+                      onClick={() =>
+                        this.handleRecommendationClick([time[0], time[1]])
+                      }
+                      key={idx}
+                    >
+                      <TableRowColumn>
+                        {this.convertTime(time[0])}
+                      </TableRowColumn>
+                      <TableRowColumn>
+                        {this.convertTime(time[1])}
+                      </TableRowColumn>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+            {/* {this.state.recommendedTimes &&
               this.state.recommendedTimes.map((time, idx) => (
                 <div
                   key={idx}
@@ -122,7 +161,7 @@ export default class EventCreator extends React.Component {
                 >
                   {this.convertTime(time[0])} - {this.convertTime(time[1])}
                 </div>
-              ))}
+              ))} */}
             <Dialog
               title="Review details"
               actions={actions}
