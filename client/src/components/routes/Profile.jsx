@@ -12,7 +12,7 @@ import {
   Dialog,
 } from 'material-ui';
 import ReactFilestack, { client } from 'filestack-react';
-import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/FlatButton';
 import propTypes from 'prop-types';
 import * as profileActions from '../../actions/profileActions';
 import * as userInfoActions from '../../actions/userInfoActions';
@@ -86,6 +86,7 @@ class Profile extends React.Component {
             .then(check => {
               if (check.data.length) {
                 if (check.data[0].status === 'accepted') {
+                  this.getEvents(response.data[0].id);
                   this.setState({ isFriend: true, isFriendPending: false })
                 } else if (check.data[0].status === 'pending') {
                   if (check.data[0].target_id === user.id) {
@@ -263,7 +264,7 @@ class Profile extends React.Component {
             <ReactFilestack
               apikey={filestack.API_KEY}
               buttonText="Upload"
-              render={({ onPick }) => <FlatButton label="Upload" onClick={onPick} />}
+              render={({ onPick }) => <RaisedButton label="Upload" onClick={onPick} />}
               onSuccess={this.handleUpdatePhoto}
             />
               <Divider />
