@@ -1,6 +1,7 @@
 import React from 'react';
 
 import TextField from 'material-ui/TextField';
+import Toggle from 'material-ui/Toggle';
 
 const BasicEventInfo = props => {
   return (
@@ -35,6 +36,12 @@ const BasicEventInfo = props => {
       </div>
       <div>ADD THUMBNAIL HERE</div>
       {/* // TODO: use filestack to upload thumbnail */}
+      <Toggle
+        label="Mark event as private:"
+        style={{ marginTop: '5%' }}
+        name="eventIsPrivate"
+        onToggle={(e, isToggled) => props.handleToggleChanges(e, isToggled)}
+      />
     </div>
   );
 };
