@@ -4,13 +4,12 @@ import DurationFields from './DurationFields.jsx';
 import FriendsTable from './FriendsTable.jsx';
 import NavBar from '../NavBar.jsx';
 import TimeRanges from './TimeRanges.jsx';
+import BasicEventInfo from './BasicEventInfo.jsx';
 
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
-import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { join } from 'path';
 
 export default class EventCreator extends React.Component {
   constructor(props) {
@@ -58,41 +57,13 @@ export default class EventCreator extends React.Component {
     switch (stepIndex) {
       case 0:
         return (
-          <div style={{ width: '50%', margin: 'auto' }}>
-            <div>
-              <TextField
-                floatingLabelText="Enter event name here..."
-                name="eventName"
-                value={this.state.eventName}
-                fullWidth={true}
-                onChange={this.handleTextChanges}
-              />
-            </div>
-            <div>
-              <TextField
-                floatingLabelText="Enter description here..."
-                name="eventDescription"
-                value={this.state.eventDescription}
-                multiLine={true}
-                fullWidth={true}
-                onChange={this.handleTextChanges}
-              />
-            </div>
-            <div>
-              <TextField
-                floatingLabelText="Enter location here..."
-                name="eventLocation"
-                value={this.state.eventLocation}
-                fullWidth={true}
-                onChange={this.handleTextChanges}
-              />
-            </div>
-
-            <div>ADD THUMBNAIL HERE</div>
-          </div>
+          <BasicEventInfo
+            eventName={this.state.eventName}
+            eventDescription={this.state.eventDescription}
+            eventLocation={this.state.eventLocation}
+            handleTextChanges={this.handleTextChanges}
+          />
         );
-
-      // TODO: use filestack to upload thumbnail
       case 1:
         return (
           <div>
@@ -170,14 +141,6 @@ export default class EventCreator extends React.Component {
     }
   }
 
-  handleOpen() {
-    this.setState({ dialogOpen: true });
-  }
-
-  handleClose() {
-    this.setState({ dialogOpen: false });
-  }
-
   handleNext() {
     const { stepIndex } = this.state;
     if (stepIndex < 3) {
@@ -192,6 +155,14 @@ export default class EventCreator extends React.Component {
     if (stepIndex > 0) {
       this.setState({ stepIndex: stepIndex - 1 });
     }
+  }
+
+  handleOpen() {
+    this.setState({ dialogOpen: true });
+  }
+
+  handleClose() {
+    this.setState({ dialogOpen: false });
   }
 
   handleRecommendationClick(newTime) {
