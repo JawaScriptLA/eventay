@@ -382,8 +382,12 @@ export default class EventCreator extends React.Component {
               <div>Description: {this.state.eventDescription}</div>
               <div>Location: {this.state.eventLocation}</div>
               {/* TODO: reformat */}
-              <div>Start time: {this.state.selectedTime[0]}</div>
-              <div>End time: {this.state.selectedTime[1]}</div>
+              <div>
+                Start time: {this.convertTime(this.state.selectedTime[0])}
+              </div>
+              <div>
+                End time: {this.convertTime(this.state.selectedTime[1])}
+              </div>
               {/* TODO: reformat */}
               <div>Invited Friends: {this.state.selectedFriendNames}</div>
             </Dialog>
