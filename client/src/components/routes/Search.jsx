@@ -120,7 +120,7 @@ export default class Search extends Component {
           onRequestSearch={this.handleSearchRequest}
         />
         <Dialog
-          title="Results"
+          title='Results'
           modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}
