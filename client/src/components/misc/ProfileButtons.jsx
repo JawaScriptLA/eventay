@@ -1,5 +1,5 @@
 import React from 'react' 
-import { CardActions, FlatButton } from 'material-ui';
+import { CardActions, FlatButton, Toggle } from 'material-ui';
 
 class ProfileButtons extends React.Component {
   constructor(props) {
@@ -53,7 +53,6 @@ class ProfileButtons extends React.Component {
         {this.renderButtons()}
       </CardActions>
     )
-
   }
 }
 
