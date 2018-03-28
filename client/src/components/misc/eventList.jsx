@@ -30,7 +30,11 @@ class EventList extends React.Component{
   render() {
     console.log(this.props.events);
     return (
-      <List>
+      <List
+        style={{
+          height: '20em',
+          overflow: 'scroll',}}
+      >
         <Subheader>Events</Subheader>
         {this.renderEvents(this.props.events)}
       </List>
