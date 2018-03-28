@@ -28,6 +28,7 @@ export default class EventCreator extends React.Component {
       selectedRowIds: [],
       selectedFriendNames: [],
       recommendedTimes: [],
+      selectedTimeRowId: [],
       selectedTime: ['', ''],
       durationMins: '',
       durationHrs: '',
@@ -43,7 +44,7 @@ export default class EventCreator extends React.Component {
       eventName: '',
       eventDescription: '',
       eventLocation: '',
-      stepIndex: 0,
+      stepIndex: 1,
       dialogOpen: false
     };
     this.getAllFriends();
@@ -56,132 +57,13 @@ export default class EventCreator extends React.Component {
     this.handleDropdownChanges = this.handleDropdownChanges.bind(this);
     this.handleTextChanges = this.handleTextChanges.bind(this);
     this.handleSelectionChange = this.handleSelectionChange.bind(this);
+    this.handleSelectionChange2 = this.handleSelectionChange2.bind(this);
     this.isSelected = this.isSelected.bind(this);
+    this.isSelected2 = this.isSelected2.bind(this);
     this.handleRecommendationClick = this.handleRecommendationClick.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.convertTime = this.convertTime.bind(this);
-  }
-  getStepContent(stepIndex) {
-    switch (stepIndex) {
-      case 0:
-        return (
-          <BasicEventInfo
-            eventName={this.state.eventName}
-            eventDescription={this.state.eventDescription}
-            eventLocation={this.state.eventLocation}
-            handleTextChanges={this.handleTextChanges}
-          />
-        );
-      case 1:
-        return (
-          <div>
-            <TimeRanges
-              handleDateChanges={this.handleDateChanges}
-              handleDropdownChanges={this.handleDropdownChanges}
-              startDate={this.state.startDate}
-              startHours={this.state.startHours}
-              startMinutes={this.state.startMinutes}
-              startAMPM={this.state.startAMPM}
-              endDate={this.state.endDate}
-              endHours={this.state.endHours}
-              endMinutes={this.state.endMinutes}
-              endAMPM={this.state.endAMPM}
-            />
-            <DurationFields
-              durationHrs={this.state.durationHrs}
-              durationMins={this.state.durationMins}
-              handleTextChanges={this.handleTextChanges}
-            />
-          </div>
-        );
-      case 2:
-        return (
-          <div>
-            <FriendsTable
-              allFriends={this.state.allFriends}
-              handleSelectionChange={this.handleSelectionChange}
-              isSelected={this.isSelected}
-            />
-          </div>
-        );
-      case 3:
-        // TODO: reformat times in a readable/clearn format
-        const actions = [
-          <FlatButton label="Edit" primary={true} onClick={this.handleClose} />,
-          <RaisedButton
-            label="Create event!"
-            primary={true}
-            onClick={() => {
-              this.handleClose();
-              this.createEvent();
-            }}
-          />
-        ];
-        return (
-          <div>
-            <Table
-              onRowSelection={selectedRows => {
-                this.handleSelectionChange(selectedRows);
-              }}
-            >
-              <TableHeader>
-                <TableRow>
-                  <TableHeaderColumn>Start time</TableHeaderColumn>
-                  <TableHeaderColumn>End time</TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody showRowHover={true} deselectOnClickaway={false}>
-                {this.state.recommendedTimes &&
-                  this.state.recommendedTimes.map((time, idx) => (
-                    <TableRow
-                      selected={this.isSelected(idx)}
-                      onClick={() =>
-                        this.handleRecommendationClick([time[0], time[1]])
-                      }
-                      key={idx}
-                    >
-                      <TableRowColumn>
-                        {this.convertTime(time[0])}
-                      </TableRowColumn>
-                      <TableRowColumn>
-                        {this.convertTime(time[1])}
-                      </TableRowColumn>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-            {/* {this.state.recommendedTimes &&
-              this.state.recommendedTimes.map((time, idx) => (
-                <div
-                  key={idx}
-                  onClick={() =>
-                    this.handleRecommendationClick([time[0], time[1]])
-                  }
-                >
-                  {this.convertTime(time[0])} - {this.convertTime(time[1])}
-                </div>
-              ))} */}
-            <Dialog
-              title="Review details"
-              actions={actions}
-              open={this.state.dialogOpen}
-              onRequestClose={this.handleClose}
-            >
-              <div>Event name: {this.state.eventName}</div>
-              <div>Description: {this.state.eventDescription}</div>
-              <div>Location: {this.state.eventLocation}</div>
-              {/* TODO: reformat */}
-              <div>Start time: {this.state.selectedTime[0]}</div>
-              <div>End time: {this.state.selectedTime[1]}</div>
-              {/* TODO: reformat */}
-              <div>Invited Friends: {this.state.selectedFriendNames}</div>
-            </Dialog>
-          </div>
-        );
-      default:
-        return;
-    }
   }
 
   convertTime(input) {
@@ -233,6 +115,10 @@ export default class EventCreator extends React.Component {
 
   isSelected(index) {
     return this.state.selectedRowIds.indexOf(index) !== -1;
+  }
+
+  isSelected2(index) {
+    return this.state.selectedTimeRowId.indexOf(index) !== -1;
   }
 
   getAllFriends() {
@@ -383,8 +269,129 @@ export default class EventCreator extends React.Component {
     });
   }
 
+  handleSelectionChange2(selectedRow, startTime, endTime) {
+    let newTime = [startTime, endTime];
+    this.setState({
+      selectedTimeRowId: selectedRow,
+      selectedTime: newTime
+    });
+  }
+
   handleTextChanges(e) {
     this.setState({ [e.target.name]: e.target.value });
+  }
+
+  getStepContent(stepIndex) {
+    switch (stepIndex) {
+      case 0:
+        return (
+          <BasicEventInfo
+            eventName={this.state.eventName}
+            eventDescription={this.state.eventDescription}
+            eventLocation={this.state.eventLocation}
+            handleTextChanges={this.handleTextChanges}
+          />
+        );
+      case 1:
+        return (
+          <div>
+            <TimeRanges
+              handleDateChanges={this.handleDateChanges}
+              handleDropdownChanges={this.handleDropdownChanges}
+              startDate={this.state.startDate}
+              startHours={this.state.startHours}
+              startMinutes={this.state.startMinutes}
+              startAMPM={this.state.startAMPM}
+              endDate={this.state.endDate}
+              endHours={this.state.endHours}
+              endMinutes={this.state.endMinutes}
+              endAMPM={this.state.endAMPM}
+            />
+            <DurationFields
+              durationHrs={this.state.durationHrs}
+              durationMins={this.state.durationMins}
+              handleTextChanges={this.handleTextChanges}
+            />
+          </div>
+        );
+      case 2:
+        return (
+          <div>
+            <FriendsTable
+              allFriends={this.state.allFriends}
+              handleSelectionChange={this.handleSelectionChange}
+              isSelected={this.isSelected}
+            />
+          </div>
+        );
+      case 3:
+        const actions = [
+          <FlatButton label="Edit" primary={true} onClick={this.handleClose} />,
+          <RaisedButton
+            label="Create event!"
+            primary={true}
+            onClick={() => {
+              this.handleClose();
+              this.createEvent();
+            }}
+          />
+        ];
+        return (
+          <div>
+            <Table
+              height="500px"
+              onRowSelection={rowIds => {
+                this.handleSelectionChange2(
+                  rowIds,
+                  this.state.recommendedTimes[rowIds][0],
+                  this.state.recommendedTimes[rowIds][1]
+                );
+              }}
+            >
+              <TableHeader displaySelectAll={false}>
+                <TableRow>
+                  <TableHeaderColumn>Start time</TableHeaderColumn>
+                  <TableHeaderColumn>End time</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody showRowHover={true} deselectOnClickaway={false}>
+                {this.state.recommendedTimes &&
+                  this.state.recommendedTimes.map((time, idx) => (
+                    <TableRow
+                      // TODO: on check, update in UI and update state
+                      selected={this.isSelected2(idx)}
+                      key={idx}
+                    >
+                      <TableRowColumn>
+                        {this.convertTime(time[0])}
+                      </TableRowColumn>
+                      <TableRowColumn>
+                        {this.convertTime(time[1])}
+                      </TableRowColumn>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+            <Dialog
+              title="Review details"
+              actions={actions}
+              open={this.state.dialogOpen}
+              onRequestClose={this.handleClose}
+            >
+              <div>Event name: {this.state.eventName}</div>
+              <div>Description: {this.state.eventDescription}</div>
+              <div>Location: {this.state.eventLocation}</div>
+              {/* TODO: reformat */}
+              <div>Start time: {this.state.selectedTime[0]}</div>
+              <div>End time: {this.state.selectedTime[1]}</div>
+              {/* TODO: reformat */}
+              <div>Invited Friends: {this.state.selectedFriendNames}</div>
+            </Dialog>
+          </div>
+        );
+      default:
+        return;
+    }
   }
 
   render() {
