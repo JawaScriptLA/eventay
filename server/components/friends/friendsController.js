@@ -65,14 +65,26 @@ module.exports = {
     }
   },
   updateFriend: async ({ user_id, target_id, status }) => {
-    try {
-      await db.queryAsync(`
-        UPDATE friends
-        SET status='${status}'
-        WHERE user_id=${target_id} AND target_id=${user_id}
-      `);
-    } catch (err) {
-      throw err;
+    if (status === 'blocked') {
+      try {
+        await db.queryAsync(`
+          UPDATE friends
+          SET status='${status}'
+          WHERE (user_id=${target_id} AND target_id=${user_id}) OR (user_id=${user_id} AND target_id=${target_id})
+        `);
+      } catch (err) {
+        throw err;
+      }
+    } else {
+      try {
+        await db.queryAsync(`
+          UPDATE friends
+          SET status='${status}'
+          WHERE (user_id=${target_id} AND target_id=${user_id})
+        `);
+      } catch (err) {
+        throw err;
+      }
     }
   },
   removeFriend: async ({ user_id, target_id }) => {
