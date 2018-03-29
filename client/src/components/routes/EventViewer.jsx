@@ -9,7 +9,6 @@ export default class EventViewer extends Component {
   }
   
   componentWillMount() {
-    console.log(this.props);
     const config = { headers: { Authorization: 'bearer ' + localStorage.getItem('token') } };
     const event = this.props.location.state.event;
     const user = JSON.parse(localStorage.getItem('userInfo'));
