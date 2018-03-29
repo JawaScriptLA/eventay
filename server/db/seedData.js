@@ -21,9 +21,13 @@ const insert = async () => {
       INSERT INTO events (title, description, start_time, end_time, host_id, publicity) VALUES
       ('dummy event', 'this is a dummy event', '2018-05-07 09:00:00-07', '2018-05-07 11:00:00-07', 
       (SELECT id from users where username = 'antonio'), 'true');
+      INSERT INTO attendants (status, access, user_id, event_id, invitor_id) VALUES
+      ('going', 'member', (SELECT id FROM users WHERE username = 'alex'), 1, (SELECT id FROM users WHERE username = 'antonio'));
       INSERT INTO events (title, description, start_time, end_time, host_id, publicity) VALUES
       ('dummy event', 'this is a dummy event', '2018-05-07 13:00:00-07', '2018-05-07 14:00:00-07', 
       (SELECT id from users where username = 'antonio'), 'true');
+      INSERT INTO attendants (status, access, user_id, event_id, invitor_id) VALUES
+      ('going', 'member', (SELECT id FROM users WHERE username = 'will'), 1, (SELECT id FROM users WHERE username = 'antonio'));
       INSERT INTO events (title, description, start_time, end_time, host_id, publicity) VALUES
       ('dummy event', 'this is a dummy event', '2018-05-07 15:00:00-07', '2018-05-07 17:00:00-07', 
       (SELECT id from users where username = 'antonio'), 'true');

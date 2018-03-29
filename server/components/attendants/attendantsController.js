@@ -29,10 +29,10 @@ module.exports = {
   getEventAttendants: async ({ event_id }) => {
     try {
       const attendants = [];
-      const data = await db.queryAsync(`SELECT * FROM attendants WHERE event_id=${event_id}`);
-      for (let i = 0; i < data.rows.length; i++) {
-        const info = await db.queryAsync(`SELECT * FROM users WHERE id=${data.rows[i].user_id}`);
-        attendants.push(info.rows[0]);
+      const { rows } = await db.queryAsync(`SELECT * FROM attendants WHERE event_id=${event_id}`);
+      for (let i = 0; i < rows.length; i++) {
+        const user = await db.queryAsync(`SELECT * FROM users WHERE id=${rows[i].user_id}`);
+        attendants.push(Object.assign(user.rows[0], rows[i]));
       }
       return attendants;
     } catch (err) {
