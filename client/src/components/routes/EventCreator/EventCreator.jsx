@@ -51,7 +51,6 @@ export default class EventCreator extends React.Component {
       dialogOpen: false
     };
     this.getAllFriends();
-    this.handleRecommendationClick = this.handleRecommendationClick.bind(this);
     this.generateRecommendations = this.generateRecommendations.bind(this);
     this.createEvent = this.createEvent.bind(this);
 
@@ -96,10 +95,6 @@ export default class EventCreator extends React.Component {
         this.setState({ allFriends: friendIds });
       })
       .catch(err => console.log(err));
-  }
-
-  handleRecommendationClick(newTime) {
-    this.setState({ selectedTime: newTime });
   }
 
   generateRecommendations() {
@@ -154,6 +149,7 @@ export default class EventCreator extends React.Component {
       .post(
         '/api/event',
         {
+          // TODO: add additional fields to store in db
           title: this.state.eventName,
           start_time: this.state.selectedTime[0],
           end_time: this.state.selectedTime[1],
@@ -363,15 +359,15 @@ export default class EventCreator extends React.Component {
               onRequestClose={this.handleClose}
             >
               <div>Event name: {this.state.eventName}</div>
-              <div>Description: {this.state.eventDescription}</div>
-              <div>Location: {this.state.eventLocation}</div>
+              <div>Description: {this.state.eventDescription || 'N/A'}</div>
+              <div>Location: {this.state.eventLocation || 'N/A'}</div>
               <div>Start time: {convertTime(this.state.selectedTime[0])}</div>
               <div>End time: {convertTime(this.state.selectedTime[1])}</div>
               {/* TODO: reformat list of friends*/}
               <div>
                 Invited Friends:
-                {this.state.selectedFriendNames.map(friend, idx => {
-                  return <div key={idx}>friend!!!!</div>;
+                {this.state.selectedFriendNames.map((friendName, idx) => {
+                  return <div key={idx}>{friendName} </div>;
                 })}
               </div>
             </Dialog>
