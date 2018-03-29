@@ -29,7 +29,6 @@ export default class EventViewer extends Component {
 
   initSetup() {
     if (this.state.event.id) {
-      console.log('initSetup', this.state.event);
       axios.get(`/api/friends/${this.state.user.id}`, this.state.config)
         .then((friends) => {
           this.setState({ friends: friends.data });
@@ -72,9 +71,8 @@ export default class EventViewer extends Component {
       return <div>This is not an event</div>
     } else if (!Array.isArray(this.state.attendants)) {
       this.initSetup();
-      return <div>Loading...</div>
+      return <div>Please wait...</div>
     }
-
     return (
       <div>
         <NavBar history={this.props.history} />

@@ -15,11 +15,11 @@ module.exports = {
         return str;
       };
       const dbQueryFriends = `
-        SELECT id, username, profile_picture FROM users
+        SELECT * FROM users
         WHERE ${makeQuery(query, 'username')}
       `;
       const dbQueryEvents = `
-        SELECT id, title, host_id, thumbnail FROM events
+        SELECT * FROM events
         WHERE (host_id=${user_id} AND (${makeQuery(query, 'title')}))
         OR (publicity=TRUE AND (${makeQuery(query, 'title')}))
       `;
