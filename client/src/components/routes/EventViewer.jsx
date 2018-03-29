@@ -25,7 +25,7 @@ export default class EventViewer extends Component {
         .catch((err) => console.error('Error get event info: ', err));
   }
 
-  componentDidMount() {
+  init() {
     if (Object.keys(this.state.event).length > 0) {
       axios.get(`/api/friends/${this.state.user.id}`, this.state.config)
         .then((friends) => this.setState({ friends: friends.data }))
@@ -55,7 +55,7 @@ export default class EventViewer extends Component {
     if (!this.state.event) {
       return <div>This is not an event</div>;
     } else if (!Array.isArray(this.state.attendants)) {
-      this.componentDidMount();
+      this.init();
       return <div>Loading...</div>;
     }
     
