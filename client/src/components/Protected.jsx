@@ -4,13 +4,10 @@ import jwt from 'jsonwebtoken';
 export default class Protected extends React.Component {
   componentWillMount() {
     try {
-      console.log('currently my token is:', localStorage.getItem('token'));
       if (!localStorage.getItem('token')) {
-        console.log('i do not have a token');
         this.props.history.push('/login');
       }
     } catch (e) {
-      console.log('Error in Protected component', e);
       this.props.history.push('/login');
     }
   }

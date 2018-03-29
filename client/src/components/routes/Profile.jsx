@@ -103,7 +103,9 @@ class Profile extends React.Component {
                   this.getEvents(response.data.id);
                   this.setState({ isFriend: true, isFriendPending: false });
                 } else if (check.data[0].status === 'pending') {
-                  if (check.data.target_id === user.id) {
+                  console.log('friendship pending');
+                  if (check.data[0].target_id === user.id) {
+                    console.log('canAcceptRequest');
                     this.setState({
                       isFriend: false,
                       isFriendPending: true,
@@ -178,7 +180,12 @@ class Profile extends React.Component {
   }
 
   handleBlockUser() {
-    console.log('handleBlockUser');
+    axios.put('/api/friend', {
+      user_id: this.props.userInfo.id,
+      target_id: this.state.profileInfo.id,
+      status: 'blocked',
+    }, this.state.authHeader)
+      .then(response => this.setState({ isFriendPending: false, isFriend: false, canAcceptFriendRequest: false, invalidUser: true }));
   }
 
   handleProfileBioModalOpen() {
@@ -267,7 +274,7 @@ class Profile extends React.Component {
           <Card
             style={{
               margin: 'auto',
-              width: '60%'
+              width: '80%',
             }}
           >
             <CardHeader
