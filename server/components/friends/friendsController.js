@@ -31,7 +31,7 @@ module.exports = {
   getPendingFriends: async ({ user_id }) => {
     try {
       const data = await db.queryAsync(`
-        SELECT username, profile_picture FROM users
+        SELECT id, username, profile_picture FROM users
         WHERE id IN (
           SELECT user_id FROM friends
           WHERE target_id=${user_id} AND status='pending'
