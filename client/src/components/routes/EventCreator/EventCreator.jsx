@@ -39,13 +39,13 @@ export default class EventCreator extends React.Component {
       durationMins: '',
       durationHrs: '',
       startDate: null,
-      startHours: null,
-      startMinutes: null,
-      startAMPM: null,
+      // startHours: null,
+      // startMinutes: null,
+      // startAMPM: null,
       endDate: null,
-      endHours: null,
-      endMinutes: null,
-      endAMPM: null,
+      // endHours: null,
+      // endMinutes: null,
+      // endAMPM: null,
       excludeWeekends: true, //initially should be false
       stepIndex: 0,
       dialogOpen: false,
@@ -91,20 +91,22 @@ export default class EventCreator extends React.Component {
   }
 
   generateRecommendations() {
-    const start = calculateTotalTime(
-      this.state.startDate.getTime(),
-      this.state.startHours,
-      this.state.startMinutes,
-      this.state.startAMPM
-    );
-    const end = calculateTotalTime(
-      this.state.endDate.getTime(),
-      this.state.endHours,
-      this.state.endMinutes,
-      this.state.endAMPM
-    );
+    // const start = calculateTotalTime(
+    //   this.state.startDate.getTime()
+    //   // this.state.startHours,
+    //   // this.state.startMinutes,
+    //   // this.state.startAMPM
+    // );
+    // const end = calculateTotalTime(
+    //   this.state.endDate.getTime()
+    //   // this.state.endHours,
+    //   // this.state.endMinutes,
+    //   // this.state.endAMPM
+    // );
+    const startMilliseconds = this.state.startDate.getTime();
+    const endMilliseconds = this.state.endDate.getTime();
 
-    const timeRange = [[start, end]];
+    // const timeRange = [[start, end]];
     const durationAsMilliseconds =
       (Number(this.state.durationHrs) * 60 + Number(this.state.durationMins)) *
       60000;
@@ -114,9 +116,11 @@ export default class EventCreator extends React.Component {
       .post(
         '/api/schedule/showRecommendedTimes',
         {
+          startMilliseconds: startMilliseconds,
+          endMilliseconds: endMilliseconds,
           selectedFriendIds: invitees,
           durationAsMilliseconds: durationAsMilliseconds,
-          timeRange: timeRange,
+          // timeRange: timeRange,
           excludeWeekends: this.state.excludeWeekends
         },
         this.state.authHeader
@@ -273,13 +277,13 @@ export default class EventCreator extends React.Component {
               handleDateChanges={this.handleDateChanges}
               handleDropdownChanges={this.handleDropdownChanges}
               startDate={this.state.startDate}
-              startHours={this.state.startHours}
-              startMinutes={this.state.startMinutes}
-              startAMPM={this.state.startAMPM}
+              // startHours={this.state.startHours}
+              // startMinutes={this.state.startMinutes}
+              // startAMPM={this.state.startAMPM}
               endDate={this.state.endDate}
-              endHours={this.state.endHours}
-              endMinutes={this.state.endMinutes}
-              endAMPM={this.state.endAMPM}
+              // endHours={this.state.endHours}
+              // endMinutes={this.state.endMinutes}
+              // endAMPM={this.state.endAMPM}
             />
             <DurationFields
               durationHrs={this.state.durationHrs}

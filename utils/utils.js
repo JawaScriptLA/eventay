@@ -18,14 +18,14 @@ module.exports = {
     return dateStr + timeStr;
   },
 
-  calculateTotalTime: (dateAsMilliseconds, hours, minutes, ampm) => {
-    return new Date(
-      dateAsMilliseconds +
-        (hours % 12) * 3600000 +
-        minutes * 60000 +
-        ampm * 43200000
-    );
-  },
+  // calculateTotalTime: (dateAsMilliseconds, hours, minutes, ampm) => {
+  //   return new Date(
+  //     dateAsMilliseconds +
+  //       (hours % 12) * 3600000 +
+  //       minutes * 60000 +
+  //       ampm * 43200000
+  //   );
+  // },
 
   conflictExists: (
     firstStartTime,

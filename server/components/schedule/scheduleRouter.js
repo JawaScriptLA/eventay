@@ -5,9 +5,10 @@ const { conflictExists, includesWeekend } = require('../../../utils/utils.js');
 router.post('/showRecommendedTimes', async (req, res) => {
   console.log('req.body is:', req.body);
   const {
-    durationAsMilliseconds,
-    timeRange,
+    startMilliseconds,
+    endMilliseconds,
     selectedFriendIds,
+    durationAsMilliseconds,
     excludeWeekends
   } = req.body;
   const halfHourAsMilliseconds = 1800000;
@@ -20,20 +21,17 @@ router.post('/showRecommendedTimes', async (req, res) => {
   }
 
   // Generate initial list of possible times
-  for (range of timeRange) {
-    const currRangeEnd = Date.parse(range[1]);
-    let currStart = Date.parse(range[0]);
-    let currEnd = currStart + durationAsMilliseconds;
-
-    while (currEnd <= currRangeEnd) {
-      availableTimes[idx] = [
-        new Date(currStart).toLocaleString(),
-        new Date(currEnd).toLocaleString()
-      ];
-      idx++;
-      currStart += halfHourAsMilliseconds;
-      currEnd += halfHourAsMilliseconds;
-    }
+  const rangeEnd = endMilliseconds;
+  let currStart = startMilliseconds;
+  let currEnd = currStart + durationAsMilliseconds;
+  while (currEnd <= rangeEnd) {
+    availableTimes[idx] = [
+      new Date(currStart).toLocaleString(),
+      new Date(currEnd).toLocaleString()
+    ];
+    idx++;
+    currStart += halfHourAsMilliseconds;
+    currEnd += halfHourAsMilliseconds;
   }
 
   // Eliminate times based on filters

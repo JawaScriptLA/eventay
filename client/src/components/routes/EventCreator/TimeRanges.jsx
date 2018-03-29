@@ -22,7 +22,7 @@ const TimeRanges = props => {
           }}
         />
 
-        <SelectField
+        {/* <SelectField
           floatingLabelText="Hour"
           // value={props.startHours}
           value={12}
@@ -65,7 +65,7 @@ const TimeRanges = props => {
         >
           <MenuItem value={0} primaryText="AM" />
           <MenuItem value={1} primaryText="PM" />
-        </SelectField>
+        </SelectField> */}
       </div>
       <div>
         <h2>and...</h2>
@@ -79,7 +79,7 @@ const TimeRanges = props => {
             props.handleDateChanges(newDate, 'endDate');
           }}
         />
-        <SelectField
+        {/* <SelectField
           floatingLabelText="Hour"
           // value={props.endHours}
           value={12}
@@ -122,7 +122,7 @@ const TimeRanges = props => {
         >
           <MenuItem value={0} primaryText="AM" />
           <MenuItem value={1} primaryText="PM" />
-        </SelectField>
+        </SelectField> */}
       </div>
     </div>
   );
