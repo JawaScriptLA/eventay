@@ -21,46 +21,57 @@ export default class EventViewer extends Component {
     
     this.props.location.state ? this.setState({ event: this.props.location.state.event }) : 
       axios.get(`/api/event/eventinfo/${this.props.match.params.id}`, this.state.config)
-        .then(res => this.setState({ event: res.data[0] }));
+        .then(res => this.setState({ event: res.data[0] }))
+        .catch(err => {
+          console.error('Error get event info: ', err);
+        });
+  }
+
+  initSetup() {
+    if (this.state.event) {
+      axios.get(`/api/friends/${this.state.user.id}`, this.state.config)
+        .then((friends) => {
+          this.setState({ friends: friends.data });
+        })
+        .catch((err) => {
+          console.log('Error friends:', err);
+        });
+    
+      axios.get(`/api/attendant/${this.state.event.id}`, this.state.config)
+        .then((attendants) => {
+          let isAttendant = attendants.data.reduce((acc, attendant) => (acc || attendant.user_id === this.state.user.id), false);
+          this.setState({
+            attendants: attendants.data,
+            role: this.state.event.host_id === this.state.user.id ? 'host' : isAttendant ? 'attendant' : 'stranger'
+          });
+        })
+        .catch((err) => {
+          console.log('Error attendants:', err);
+        });
+      
+      axios.get(`/api/post/${this.state.event.id}`, this.state.config)
+        .then((posts) => {
+          this.setState({ posts: posts.data });
+        })
+        .catch((err) => {
+          console.log('Error posts:', err);
+        });
+    }
   }
 
   componentDidMount() {
     if(Object.keys(this.state.event).length === 0) {
       return;
     }
-    axios.get(`/api/friends/${this.state.user.id}`, this.state.config)
-    .then((friends) => {
-      this.setState({ friends: friends.data });
-    })
-    .catch((err) => {
-      console.log('Error friends:', err);
-    });
-  
-  axios.get(`/api/attendant/${this.state.event.id}`, this.state.config)
-    .then((attendants) => {
-      let isAttendant = attendants.data.reduce((acc, attendant) => (acc || attendant.user_id === this.state.user.id), false);
-      this.setState({
-        attendants: attendants.data,
-        role: this.state.event.host_id === this.state.user.id ? 'host' : isAttendant ? 'attendant' : 'stranger'
-      });
-    })
-    .catch((err) => {
-      console.log('Error attendants:', err);
-    });
-  
-  axios.get(`/api/post/${this.state.event.id}`, this.state.config)
-    .then((posts) => {
-      this.setState({ posts: posts.data });
-    })
-    .catch((err) => {
-      console.log('Error posts:', err);
-    });
+    this.initSetup();
   }
   
   render() {
-    if(!Array.isArray(this.state.attendants)) {
-      this.componentDidMount();
-      return <div></div>
+    if(!this.state.event) {
+      return <div>This is not an event</div>
+    } else if (!Array.isArray(this.state.attendants)) {
+      this.initSetup();
+      return <div>Loading...</div>
     }
 
     return (
