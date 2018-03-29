@@ -147,7 +147,12 @@ class Profile extends React.Component {
   }
 
   handleBlockUser() {
-    console.log('handleBlockUser');
+    axios.put('/api/friend', {
+      user_id: this.props.userInfo.id,
+      target_id: this.state.profileInfo.id,
+      status: 'blocked',
+    }, this.state.authHeader)
+      .then(response => this.setState({ isFriendPending: false, isFriend: false, canAcceptFriendRequest: false, invalidUser: true }));
   }
 
   handleProfileBioModalOpen() {
@@ -226,7 +231,7 @@ class Profile extends React.Component {
           <Card
             style={{
               margin: 'auto',
-              width: '60%',
+              width: '80%',
             }}
           >
             <CardHeader

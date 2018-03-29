@@ -53,7 +53,7 @@ export default class NavBar extends Component {
   render() {
     return (
       <div id="nav-bar">
-        <AppBar title="Eventay" onClick={() => this.props.history.push('/')} onLeftIconButtonClick={this.handleClick}>
+        <AppBar title={<span onClick={() => this.props.history.push('/')}>Eventay</span>} onLeftIconButtonClick={this.handleClick}>
           <Popover
             open={this.state.open}
             anchorEl={this.state.anchorEl}

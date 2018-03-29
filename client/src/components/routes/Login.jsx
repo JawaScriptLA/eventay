@@ -12,7 +12,6 @@ class Login extends React.Component {
     this.handleSignupClick = this.handleSignupClick.bind(this);
     this.handleSubmitClick = this.handleSubmitClick.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    console.log('leaving login constructor');
   }
 
   handleSubmitClick() {
@@ -48,7 +47,6 @@ class Login extends React.Component {
   }
 
   render() {
-    console.log('in the login.jsx render function');
     return (
       <div>
         Login page
