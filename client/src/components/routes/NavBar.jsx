@@ -88,17 +88,16 @@ export default class NavBar extends Component {
                     <Avatar src={notif.profile_picture} />
                   }
                 >
-                  <span
+                  <a
                     key={counter}
-                    onClick={
-                      () => this.props.history.push(
-                        `/profile/${notif.username}`
-                      )
-                    }
+                    href={`/profile/${notif.username}`}
+                    style={ {
+                      textDecoration: 'none',
+                      color: '#000000'
+                    } }
                   >
                   {notif.username}
-                  </span>
-                  
+                  </a>                  
                   <div
                     style={ {float: 'right'} }
                   >
@@ -150,17 +149,16 @@ export default class NavBar extends Component {
                     <Avatar src={notif.thumbnail} />
                   }
                 >
-                  <span
+                  <a
                     key={counter}
-                    onClick={
-                      () => this.props.history.push({
-                        pathname: `/event/${notif.id}`,
-                        state: { event: notif }
-                      })
-                    }
+                    href={`/event/${notif.id}`}
+                    style={ {
+                      textDecoration: 'none',
+                      color: '#000000'
+                    } }
                   >
                   {notif.title}
-                  </span>
+                  </a>
                   <div
                     style={ {float: 'right'} }
                   >

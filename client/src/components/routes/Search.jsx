@@ -7,13 +7,11 @@ import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Avatar from 'material-ui/Avatar';
 
-const config = {
-  headers: { Authorization: 'bearer ' }
-};
 export default class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      config: {},
       query: '',
       searchFriends: [],
       searchEvents: [],
@@ -28,11 +26,14 @@ export default class Search extends Component {
     this.setState({ query: e });
   }
   componentWillMount() {
-    config.headers.Authorization += localStorage.token;
+    const config = {
+      headers: { Authorization: 'bearer ' + localStorage.token}
+    };
+    this.setState( {config: config} );
   }
   handleSearchRequest() {
     axios
-      .get(`/api/search/${this.props.userInfo.id}/${this.state.query}`, config)
+      .get(`/api/search/${this.props.userInfo.id}/${this.state.query}`, this.state.config)
       .then(result => {
         var obj = {};
         this.setState({
@@ -69,14 +70,15 @@ export default class Search extends Component {
                     <Avatar src={data.thumbnail} />
                   }
                 >
-                <span
-                  onClick={() => this.props.history.push({
-                    pathname: `/event/${data.id}`,
-                    state: {event: data},
-                  })}
-                >
+                  <a
+                    href={`/event/${data.id}`}
+                    style={ {
+                      textDecoration: 'none',
+                      color: '#000000'
+                    } }
+                  >
                   {data.title}
-                </span>
+                  </a>
                 </ListItem>
               );
             })
@@ -100,13 +102,15 @@ export default class Search extends Component {
                     <Avatar src={data.profile_picture} />
                   }
                 >
-                  <span
-                    onClick={
-                      () => this.props.history.push(`/profile/${data.username}`)
-                    }
+                  <a
+                    href={`/profile/${data.username}`}
+                    style={ {
+                      textDecoration: 'none',
+                      color: '#000000'
+                    } }
                   >
-                    {data.username}
-                  </span>
+                  {data.username}
+                  </a>
                 </ListItem>
               )
             })
