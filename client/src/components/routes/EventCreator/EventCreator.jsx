@@ -1,10 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {
-  convertTime,
-  calculateTotalTime,
-  isWeekend
-} from '../../../../../utils/utils.js';
+import { convertTime, calculateTotalTime } from '../../../../../utils/utils.js';
 
 import DurationFields from './DurationFields.jsx';
 import FriendsTable from './FriendsTable.jsx';
@@ -50,9 +46,7 @@ export default class EventCreator extends React.Component {
       endHours: null,
       endMinutes: null,
       endAMPM: null,
-
-      excludeWeekends=false,
-
+      excludeWeekends: true, //initially should be false
       stepIndex: 0,
       dialogOpen: false,
       authHeader: { headers: { Authorization: 'Bearer ' + localStorage.token } }
@@ -122,7 +116,8 @@ export default class EventCreator extends React.Component {
         {
           selectedFriendIds: invitees,
           durationAsMilliseconds: durationAsMilliseconds,
-          timeRange: timeRange
+          timeRange: timeRange,
+          excludeWeekends: this.state.excludeWeekends
         },
         this.state.authHeader
       )

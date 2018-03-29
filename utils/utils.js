@@ -44,7 +44,7 @@ module.exports = {
     return cond1 || cond2 || cond3 || cond4;
   },
 
-  isWeekend: (startTimeStr, endTimeStr) => {
+  includesWeekend: (startTimeStr, endTimeStr) => {
     let start = new Date(startTimeStr);
     let startDay = start.getDay();
     let end = new Date(endTimeStr);

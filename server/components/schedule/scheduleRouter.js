@@ -1,10 +1,15 @@
 const router = require('express').Router();
 const { showUserEvents } = require('../attendants/attendantsController.js');
-const { conflictExists } = require('../../../utils/utils.js');
+const { conflictExists, includesWeekend } = require('../../../utils/utils.js');
 
 router.post('/showRecommendedTimes', async (req, res) => {
   console.log('req.body is:', req.body);
-  const { durationAsMilliseconds, timeRange, selectedFriendIds } = req.body;
+  const {
+    durationAsMilliseconds,
+    timeRange,
+    selectedFriendIds,
+    excludeWeekends
+  } = req.body;
   const halfHourAsMilliseconds = 1800000;
   const availableTimes = {};
   let idx = 0;
@@ -30,6 +35,18 @@ router.post('/showRecommendedTimes', async (req, res) => {
       currEnd += halfHourAsMilliseconds;
     }
   }
+
+  // Eliminate times based on filters
+  if (excludeWeekends) {
+    for (timeChunk in availableTimes) {
+      let firstStartTime = availableTimes[timeChunk][0];
+      let firstEndTime = availableTimes[timeChunk][1];
+      if (includesWeekend(firstStartTime, firstEndTime)) {
+        delete availableTimes[timeChunk];
+      }
+    }
+  }
+
   // Eliminate conflicting times
   for (timeChunk in availableTimes) {
     let firstStartTime = Date.parse(availableTimes[timeChunk][0]);
