@@ -69,5 +69,24 @@ module.exports = {
       return true;
     }
     return false;
+  },
+
+  isOvernight: (startTimeStr, endTimeStr) => {
+    let start = new Date(startTimeStr);
+    let startHour = start.getHours();
+    let end = new Date(endTimeStr);
+    let endHour = end.getHours();
+    if (startHour === 23 || startHour < 6) {
+      return true;
+    } else if (
+      (endHour === 23 && end.getMinutes() > 0) ||
+      endHour < 6 ||
+      (endHour === 6 && end.getMinutes() === 0)
+    ) {
+      return true;
+    } else if (start.toDateString() !== end.toDateString()) {
+      return true;
+    }
+    return false;
   }
 };

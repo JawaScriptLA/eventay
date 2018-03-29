@@ -47,6 +47,7 @@ export default class EventCreator extends React.Component {
       // endMinutes: null,
       // endAMPM: null,
       excludeWeekends: false,
+      excludeOvernight: false,
       stepIndex: 0,
       dialogOpen: false,
       authHeader: { headers: { Authorization: 'Bearer ' + localStorage.token } }
@@ -124,7 +125,8 @@ export default class EventCreator extends React.Component {
           selectedFriendIds: invitees,
           durationAsMilliseconds: durationAsMilliseconds,
           // timeRange: timeRange,
-          excludeWeekends: this.state.excludeWeekends
+          excludeWeekends: this.state.excludeWeekends,
+          excludeOvernight: this.state.excludeOvernight
         },
         this.state.authHeader
       )
@@ -293,6 +295,7 @@ export default class EventCreator extends React.Component {
               handleDropdownChanges={this.handleDropdownChanges}
               handleCheckbox={this.handleCheckbox}
               excludeWeekends={this.state.excludeWeekends}
+              excludeOvernight={this.state.excludeOvernight}
               startDate={this.state.startDate}
               // startHours={this.state.startHours}
               // startMinutes={this.state.startMinutes}

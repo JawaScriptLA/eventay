@@ -5,6 +5,7 @@ const DurationFields = props => {
   return (
     <div>
       <h2>Add duration (hours and minutes)</h2>
+      {/* TODO: modify these to dropdowns */}
       <TextField
         floatingLabelText="Enter # of hours..."
         name="durationHrs"

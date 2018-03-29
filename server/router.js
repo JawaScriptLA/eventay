@@ -16,7 +16,6 @@ const {
 const { getUserProfile } = require('./components/users/usersController');
 const { search } = require('./components/search/searchController.js');
 const { select } = require('./queries/select.js');
-const { conflictExists } = require('../utils/utils.js');
 
 module.exports = passportObj => {
   router.use('/auth', authRouter(passportObj));

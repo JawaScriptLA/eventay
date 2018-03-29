@@ -126,9 +126,15 @@ const TimeRanges = props => {
         </SelectField> */}
       </div>
       <Checkbox
-        label="Exclude weekends"
+        label="Exclude weekend times"
         name="excludeWeekends"
         checked={props.excludeWeekends}
+        onCheck={props.handleCheckbox}
+      />
+      <Checkbox
+        label="Exclude overnight times"
+        name="excludeOvernight"
+        checked={props.excludeOvernight}
         onCheck={props.handleCheckbox}
       />
     </div>
