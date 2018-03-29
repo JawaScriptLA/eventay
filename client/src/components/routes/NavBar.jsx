@@ -12,11 +12,14 @@ import Dialog from 'material-ui/Dialog';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Avatar from 'material-ui/Avatar';
+import FlatButton from 'material-ui/FlatButton';
+
 
 export default class NavBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      config: { headers: { Authorization: 'bearer ' + localStorage.token } },
       open: false,
       pendingFriends: [],
       pendingInvites: [],
@@ -27,6 +30,7 @@ export default class NavBar extends Component {
     this.handleRequestClose = this.handleRequestClose.bind(this);
     this.handleNotifsClose = this.handleNotifsClose.bind(this);
     this.handleNotifsOpen = this.handleNotifsOpen.bind(this);
+    this.handleNotifInvite = this.handleNotifInvite.bind(this);
   }
 
   handleClick(e) {
@@ -39,17 +43,14 @@ export default class NavBar extends Component {
   }
 
   componentWillMount() {
-    const config = {
-      headers: { Authorization: 'bearer ' + localStorage.token }
-    };
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     userInfo
       ? (this.setState({ userInfo: userInfo }),
-        axios.get(`/api/friend/${userInfo.id}`, config).then(result => {
+        axios.get(`/api/friend/${userInfo.id}`, this.state.config).then(result => {
           this.setState({ pendingFriends: result.data });
         }),
         axios
-          .get(`/api/attendant/pendingInvites/${userInfo.id}`, config)
+          .get(`/api/attendant/pendingInvites/${userInfo.id}`, this.state.config)
           .then(result => {
             this.setState({ pendingInvites: result.data });
           }))
@@ -87,7 +88,45 @@ export default class NavBar extends Component {
                     <Avatar src={notif.profile_picture} />
                   }
                 >
+                  <span
+                    key={counter}
+                    onClick={
+                      () => this.props.history.push(
+                        `/profile/${notif.username}`
+                      )
+                    }
+                  >
                   {notif.username}
+                  </span>
+                  
+                  <div
+                    style={ {float: 'right'} }
+                  >
+                    <FlatButton
+                      value={notif.username}
+                      label="Accept"
+                      onClick={ () =>
+                        this.handleNotifInvite(
+                          'friend',
+                          'accept',
+                          {user_id: `${this.state.userInfo.id}`,
+                            target_id: `${notif.id}`,
+                            status: 'accepted'}
+                        )
+                      }
+                    />
+                    <FlatButton
+                      value={notif.username}
+                      label="Deny"
+                      onClick={ () =>
+                        this.handleNotifInvite(
+                          'friend',
+                          'deny',
+                          {user_id: `${notif.id}`,
+                          target_id: `${this.state.userInfo.id}`}
+                        )}
+                    />
+                  </div>
                 </ListItem>
             );
             })
@@ -111,7 +150,49 @@ export default class NavBar extends Component {
                     <Avatar src={notif.thumbnail} />
                   }
                 >
+                  <span
+                    key={counter}
+                    onClick={
+                      () => this.props.history.push(
+                        `/event/${notif.id}`
+                      )
+                    }
+                  >
                   {notif.title}
+                  </span>
+                  <div
+                    style={ {float: 'right'} }
+                  >
+                    <FlatButton
+                      value={notif.title}
+                      label="Accept"
+                      onClick={ () =>
+                        this.handleNotifInvite(
+                          'event',
+                          'accept',
+                          {
+                            user_id: `${this.state.userInfo.id}`,
+                            event_id: `${notif.id}`,
+                            status: 'going'
+                          }
+                        )
+                      }
+                    />
+                    <FlatButton
+                      value={notif.title}
+                      label="Deny"
+                      onClick={() =>
+                        this.handleNotifInvite(
+                          'event',
+                          'deny',
+                          {
+                            user_id: `${this.state.userInfo.id}`,
+                            event_id: `${notif.id}`
+                          }
+                        )
+                      }
+                    />
+                  </div>
                 </ListItem>
               )
             }
@@ -122,6 +203,35 @@ export default class NavBar extends Component {
     }
 
     return content;
+  }
+
+  handleNotifInvite (inviteType, decision, content) {
+    if (inviteType === 'friend') {
+      if (decision === 'accept') {
+        axios.put(`/api/friend/`, content, this.state.config)
+          .then(result => console.log('ACCEPT FRIEND REQ'))
+          .catch(err => console.log(err));
+      } else if (decision === 'deny') {
+        const payload = {
+          data: content,
+          headers: this.state.config.headers,
+        }
+        axios.delete(`/api/friend/`, payload)
+          .then(result => console.log('DENY FRIEND REQ: '));
+      }
+    } else if (inviteType === 'event') {
+      if (decision === 'accept') {
+        axios.put(`/api/attendant`, content, this.state.config)
+          .then(result => console.log('ACCEPT EVENT REQ: ', result) );
+      } else if (decision === 'deny') {
+        const payload = {
+          data: content,
+          headers: this.state.config.headers,
+        };
+        axios.delete(`/api/attendant`, payload)
+          .then(result => console.log('DENY FRIEND REQ: ', result) );
+      }
+    }
   }
 
   render() {
