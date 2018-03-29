@@ -1,9 +1,17 @@
 const db = require('../../db/db');
 
 module.exports = {
-  getUserInfo: async ({ username }) => {
+  getUserInfoByName: async ({ username }) => {
     try {
       const data = await db.queryAsync(`SELECT * FROM users WHERE username='${username}'`);
+      return data.rows[0];
+    } catch (err) {
+      throw err;
+    }
+  },
+  getUserInfoById: async ({ id }) => {
+    try {
+      const data = await db.queryAsync(`SELECT * FROM users WHERE id=${id}`);
       return data.rows[0];
     } catch (err) {
       throw err;

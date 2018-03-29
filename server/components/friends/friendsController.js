@@ -79,7 +79,7 @@ module.exports = {
     try {
       const data = await db.queryAsync(`
         DELETE FROM friends
-        WHERE user_id=${user_id} AND target_id=${target_id} OR user_id=${target_id} AND target_id=${user_id}
+        WHERE (user_id=${user_id} AND target_id=${target_id}) OR (user_id=${target_id} AND target_id=${user_id})
       `);
     } catch (err) {
       throw err;
