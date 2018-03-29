@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { convertTime, calculateTotalTime } from '../../../utils/utils.js';
+import { convertTime, calculateTotalTime } from '../../../../../utils/utils.js';
 
 import DurationFields from './DurationFields.jsx';
 import FriendsTable from './FriendsTable.jsx';

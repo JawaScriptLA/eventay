@@ -25,5 +25,22 @@ module.exports = {
         minutes * 60000 +
         ampm * 43200000
     );
+  },
+
+  conflictExists: (
+    firstStartTime,
+    firstEndTime,
+    secondStartTime,
+    secondEndTime
+  ) => {
+    let cond1 =
+      firstStartTime < secondStartTime && secondStartTime < firstEndTime;
+    let cond2 =
+      secondStartTime < firstStartTime && firstStartTime < secondEndTime;
+    let cond3 =
+      secondStartTime <= firstStartTime && firstEndTime <= secondEndTime;
+    let cond4 =
+      firstStartTime <= secondStartTime && secondEndTime <= firstEndTime;
+    return cond1 || cond2 || cond3 || cond4;
   }
 };
