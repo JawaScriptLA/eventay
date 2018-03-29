@@ -67,8 +67,12 @@ export default class EventViewer extends Component {
         <p>{this.state.event.description}</p>
         {
           this.state.event.start_time ? 
-          `${this.state.event.start_time.replace('T', ' ').substring(0, this.state.event.start_time.length - 5)} 
-          - ${this.state.event.end_time.replace('T', ' ').substring(0, this.state.event.end_time.length - 5)}` : <span>Loading...</span>
+          `${this.state.event.start_time
+              .replace('T', ' ')
+              .substring(0, this.state.event.start_time.length - 5)} 
+          - ${this.state.event.end_time
+              .replace('T', ' ')
+              .substring(0, this.state.event.end_time.length - 5)}` : <span>Loading...</span>
         }
         {this.state.host ?
           <div>

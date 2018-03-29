@@ -28,7 +28,6 @@ class EventList extends React.Component{
   }
 
   render() {
-    console.log(this.props.events);
     return (
       <List
         style={{

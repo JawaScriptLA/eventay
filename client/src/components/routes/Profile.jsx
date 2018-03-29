@@ -67,7 +67,6 @@ class Profile extends React.Component {
 
   componentWillReceiveProps() {
     const user = JSON.parse(localStorage.getItem('userInfo'));
-
     // get user info
     axios
       .get(
@@ -103,9 +102,7 @@ class Profile extends React.Component {
                   this.getEvents(response.data.id);
                   this.setState({ isFriend: true, isFriendPending: false });
                 } else if (check.data[0].status === 'pending') {
-                  console.log('friendship pending');
                   if (check.data[0].target_id === user.id) {
-                    console.log('canAcceptRequest');
                     this.setState({
                       isFriend: false,
                       isFriendPending: true,
@@ -214,7 +211,8 @@ class Profile extends React.Component {
   }
 
   handleUpdatePhoto(photo) {
-    const url = photo.filesUploaded.url;
+    const url = photo.filesUploaded[0].url;
+    console.log(url);
     // todo update bio info
     axios
       .put(
@@ -259,14 +257,12 @@ class Profile extends React.Component {
   }
 
   getEvents(userId) {
-    // console.log('userId', userId)
     axios
       .get(`/api/event/${userId}`, this.state.authHeader)
       .then(response => this.setState({ events: response.data }));
   }
 
   render() {
-    // console.log(this.state);
     if (!this.state.invalidUser) {
       return (
         <div>
