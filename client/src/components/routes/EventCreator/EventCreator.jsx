@@ -348,12 +348,14 @@ export default class EventCreator extends React.Component {
               <div>Location: {this.state.eventLocation || 'N/A'}</div>
               <div>Start time: {convertTime(this.state.selectedTime[0])}</div>
               <div>End time: {convertTime(this.state.selectedTime[1])}</div>
-              {/* TODO: reformat list of friends*/}
               <div>
-                Invited Friends:
-                {this.state.selectedFriendNames.map((friendName, idx) => {
-                  return <div key={idx}>{friendName} </div>;
-                })}
+                Publicity:{' '}
+                {(this.state.eventIsPublic && <span>public</span>) || (
+                  <span>private</span>
+                )}
+              </div>
+              <div>
+                Invited Friends: {this.state.selectedFriendNames.join(', ')}
               </div>
             </Dialog>
           </div>
