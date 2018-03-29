@@ -10,21 +10,24 @@ export default class EventViewer extends Component {
       config: { headers: { Authorization: 'bearer ' + localStorage.getItem('token') } },
       user: {},
       friends: [],
-      attendants: [],
+      attendants: null,
       role: '',
       posts: [],
     }
   }
   
   componentWillMount() {
-    this.setState({ user: JSON.parse(localStorage.getItem('userInfo')) })
-
+    this.setState({ user: JSON.parse(localStorage.getItem('userInfo')) });
+    
     this.props.location.state ? this.setState({ event: this.props.location.state.event }) : 
-      axios.get(`/api/event/eventinfo/${this.props.match.params.id}`)
+      axios.get(`/api/event/eventinfo/${this.props.match.params.id}`, this.state.config)
         .then(res => this.setState({ event: res.data[0] }));
   }
 
   componentDidMount() {
+    if(Object.keys(this.state.event).length === 0) {
+      return;
+    }
     axios.get(`/api/friends/${this.state.user.id}`, this.state.config)
     .then((friends) => {
       this.setState({ friends: friends.data });
@@ -55,14 +58,22 @@ export default class EventViewer extends Component {
   }
   
   render() {
-    console.log(this.state);
+    if(!Array.isArray(this.state.attendants)) {
+      this.componentDidMount();
+      return <div></div>
+    }
+
     return (
       <div>
         <NavBar history={this.props.history} />
         <h2>{this.state.event.title}</h2>
         <img src={this.state.event.thumbnail}/>
         <p>{this.state.event.description}</p>
-        {this.state.event.start_time.replace('T', ' ').substring(0, this.state.event.start_time.length - 5)} - {this.state.event.end_time.replace('T', ' ').substring(0, this.state.event.end_time.length - 5)}
+        {
+          this.state.event.start_time ? 
+          `${this.state.event.start_time.replace('T', ' ').substring(0, this.state.event.start_time.length - 5)} 
+          - ${this.state.event.end_time.replace('T', ' ').substring(0, this.state.event.end_time.length - 5)}` : <span>Loading...</span>
+        }
       </div>
     );
   }
