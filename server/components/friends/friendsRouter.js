@@ -38,7 +38,6 @@ router.route('/')
   })
   .delete(async (req, res) => {
     try {
-      console.log('del friend', req.body)
       await controller.removeFriend(req.body);
       res.sendStatus(200);
     } catch (err) {
