@@ -39,7 +39,7 @@ export default class NavMenu extends Component {
       <div>
           <Menu>
             <MenuItem primaryText="Create Event" onClick={e => this.props.history.push('/create')} />
-            <MenuItem primaryText="Profile" onClick={e => this.props.history.push(`/profile/${this.state.user.username}`)} />
+            <MenuItem primaryText="Profile" href={`/profile/${this.state.user.username}`}/>
             <Divider />
             <MenuItem primaryText="Log Out" onClick={e => this.handleLogoutClick()} />
           </Menu>

@@ -29,13 +29,12 @@ export default class EventViewer extends Component {
 
   initSetup() {
     if (this.state.event.id) {
-      console.log('initSetup', this.state.event);
       axios.get(`/api/friends/${this.state.user.id}`, this.state.config)
         .then((friends) => {
           this.setState({ friends: friends.data });
         })
         .catch((err) => {
-          console.log('Error friends:', err);
+          console.error('Error friends:', err);
         });
     
       axios.get(`/api/attendant/${this.state.event.id}`, this.state.config)
@@ -47,7 +46,7 @@ export default class EventViewer extends Component {
           });
         })
         .catch((err) => {
-          console.log('Error attendants:', err);
+          console.error('Error attendants:', err);
         });
       
       axios.get(`/api/post/${this.state.event.id}`, this.state.config)
@@ -55,7 +54,7 @@ export default class EventViewer extends Component {
           this.setState({ posts: posts.data });
         })
         .catch((err) => {
-          console.log('Error posts:', err);
+          console.error('Error posts:', err);
         });
     }
   }
@@ -72,9 +71,8 @@ export default class EventViewer extends Component {
       return <div>This is not an event</div>
     } else if (!Array.isArray(this.state.attendants)) {
       this.initSetup();
-      return <div>Loading...</div>
+      return <div>Please wait...</div>
     }
-
     return (
       <div>
         <NavBar history={this.props.history} />
@@ -83,8 +81,12 @@ export default class EventViewer extends Component {
         <p>{this.state.event.description}</p>
         {
           this.state.event.start_time ? 
-          `${this.state.event.start_time.replace('T', ' ').substring(0, this.state.event.start_time.length - 5)} 
-          - ${this.state.event.end_time.replace('T', ' ').substring(0, this.state.event.end_time.length - 5)}` : <span>Loading...</span>
+          `${this.state.event.start_time
+              .replace('T', ' ')
+              .substring(0, this.state.event.start_time.length - 5)} 
+          - ${this.state.event.end_time
+              .replace('T', ' ')
+              .substring(0, this.state.event.end_time.length - 5)}` : <span>Loading...</span>
         }
       </div>
     );
