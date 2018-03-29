@@ -311,38 +311,43 @@ export default class EventCreator extends React.Component {
         ];
         return (
           <div>
-            {(this.state.recommendedTimes.length > 0 && (
-              <Table
-                height="500px"
-                onRowSelection={rowIds => {
-                  this.handleSelectionChange2(
-                    rowIds,
-                    this.state.recommendedTimes[rowIds][0],
-                    this.state.recommendedTimes[rowIds][1]
-                  );
-                }}
-              >
-                <TableHeader displaySelectAll={false}>
-                  <TableRow>
-                    <TableHeaderColumn>Start time</TableHeaderColumn>
-                    <TableHeaderColumn>End time</TableHeaderColumn>
-                  </TableRow>
-                </TableHeader>
-                <TableBody showRowHover={true} deselectOnClickaway={false}>
-                  {this.state.recommendedTimes.map((time, idx) => (
+            <Table
+              height="500px"
+              onRowSelection={rowIds => {
+                this.handleSelectionChange2(
+                  rowIds,
+                  this.state.recommendedTimes[rowIds][0],
+                  this.state.recommendedTimes[rowIds][1]
+                );
+              }}
+            >
+              <TableHeader displaySelectAll={false}>
+                <TableRow>
+                  <TableHeaderColumn>Start time</TableHeaderColumn>
+                  <TableHeaderColumn>End time</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody showRowHover={true} deselectOnClickaway={false}>
+                {/* {this.state.recommendedTimes.map((time, idx) => (
+                    <TableRow selected={this.isSelected2(idx)} key={idx}>
+                      <TableRowColumn>{convertTime(time[0])}</TableRowColumn>
+                      <TableRowColumn>{convertTime(time[1])}</TableRowColumn>
+                    </TableRow>
+                  ))} */}
+
+                {this.state.recommendedTimes
+                  .filter((time, idx) => {
+                    console.log(time);
+                    return true;
+                  })
+                  .map((time, idx) => (
                     <TableRow selected={this.isSelected2(idx)} key={idx}>
                       <TableRowColumn>{convertTime(time[0])}</TableRowColumn>
                       <TableRowColumn>{convertTime(time[1])}</TableRowColumn>
                     </TableRow>
                   ))}
-                </TableBody>
-              </Table>
-            )) || (
-              <div style={{ textAlign: 'center' }}>
-                No recommended times! Please modify your search criteria and try
-                again.
-              </div>
-            )}
+              </TableBody>
+            </Table>
 
             <Dialog
               title="Review details"
