@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import NavBar from './NavBar.jsx';
+import AttendantsList from '../misc/AttendantsList.jsx';
 
 export default class EventViewer extends Component {
   constructor(props) {
@@ -128,6 +129,13 @@ export default class EventViewer extends Component {
           `${this.state.event.start_time.replace('T', ' ').substring(0, this.state.event.start_time.length - 5)} 
           - ${this.state.event.end_time.replace('T', ' ').substring(0, this.state.event.end_time.length - 5)}` : <span>Loading...</span>
         }
+        {this.state.host ?
+          <div>
+            <p>{this.state.host.username}</p>
+            <img src={this.state.host.profile_picture}/>
+          </div>
+        : null}
+        <AttendantsList attendants={this.state.attendants} history={this.props.history} />
       </div>
     );
   }
