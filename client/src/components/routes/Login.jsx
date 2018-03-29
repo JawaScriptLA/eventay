@@ -5,6 +5,10 @@ import { bindActionCreators } from 'redux';
 import * as userInfoActions from '../../actions/userInfoActions';
 import PropTypes from 'prop-types';
 
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+import Paper from 'material-ui/Paper';
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -48,36 +52,67 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div>
-        Login page
-        <div>
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <div>
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <div>
-          <input
-            type="submit"
-            value="Submit"
-            onClick={this.handleSubmitClick}
-          />
-        </div>
-        <input
-          type="submit"
-          value="Create new account"
+      <div
+        style={{
+          width: '100%',
+        }}
+      >
+        <div
+          style={{
+            float: 'none',
+            maxWidth: '40%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}
+        >
+        <Paper
+          style={{
+            height: '100%',
+            width: '100%',
+            padding: '15%',
+            margin: 20,
+            textAlign: 'center',
+            display: 'inline-block',
+          }}
+          zDepth={3}
+        >
+        <h1 style={{
+          fontFamily: 'Stalemate, cursive',
+          fontSize: '4em'
+          }}
+        >Eventé Login</h1>
+        <br />
+
+        <TextField
+          name="username"
+          floatingLabelText="username"
+          onChange={this.handleInputChange}
+        />
+
+        <br />
+
+        <TextField
+          name="password"
+          floatingLabelText="password"
+          onChange={this.handleInputChange}
+        />
+
+        <br />
+
+        <RaisedButton
+          label="Login"
+          primary={true}
+          style={{margin: 12}}
+          onClick={this.handleSubmitClick}
+        />
+
+        <RaisedButton
+          label="New Account"
+          style={{margin: 12}}
           onClick={this.handleSignupClick}
         />
+        </Paper>
+        </div>
       </div>
     );
   }
