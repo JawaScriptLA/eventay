@@ -133,8 +133,8 @@ module.exports = {
         CREATE TABLE IF NOT EXISTS attendants
         (
           id SERIAL,
-          access ACCESS NOT NULL DEFAULT 'member',
           status ATTENDANTS_STATUS NOT NULL DEFAULT 'pending',
+          access ACCESS NOT NULL DEFAULT 'member',
           user_id INT NOT NULL,
           event_id INT NOT NULL,
           invitor_id INT,
