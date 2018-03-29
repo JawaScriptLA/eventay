@@ -28,7 +28,8 @@ export default class EventViewer extends Component {
   }
 
   initSetup() {
-    if (this.state.event) {
+    if (this.state.event.id) {
+      console.log('initSetup', this.state.event);
       axios.get(`/api/friends/${this.state.user.id}`, this.state.config)
         .then((friends) => {
           this.setState({ friends: friends.data });
