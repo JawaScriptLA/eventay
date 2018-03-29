@@ -104,6 +104,14 @@ class Signup extends React.Component {
           onClick={this.handleSubmitClick}
         />
 
+        <br />
+
+        <RaisedButton
+          label="Back to Login"
+          style={{margin: 12}}
+          href={`/login`}
+        />
+
         </Paper>
         </div>
       </div>
