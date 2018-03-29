@@ -34,7 +34,6 @@ class FriendsList extends React.Component {
   }
 
   renderData(item) {
-
     return (
       <ListItem
         primaryText={item.username}
@@ -47,7 +46,7 @@ class FriendsList extends React.Component {
         value={item.username}
         key={item.id}
       />
-    )
+    );
   }
 
   render() {
