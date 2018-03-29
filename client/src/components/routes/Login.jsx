@@ -84,6 +84,8 @@ class Login extends React.Component {
         <br />
 
         <TextField
+          type="text"
+          inputStyle={{WebkitBoxShadow: '0 0 0 1000px white inset'}}
           name="username"
           floatingLabelText="username"
           onChange={this.handleInputChange}
@@ -92,6 +94,8 @@ class Login extends React.Component {
         <br />
 
         <TextField
+          type="password"
+          inputStyle={{WebkitBoxShadow: '0 0 0 1000px white inset'}}
           name="password"
           floatingLabelText="password"
           onChange={this.handleInputChange}
