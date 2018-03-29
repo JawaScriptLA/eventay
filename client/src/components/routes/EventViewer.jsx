@@ -5,6 +5,7 @@ import AttendantsList from '../misc/AttendantsList.jsx';
 import CreatePost from '../posts/CreatePost.jsx';
 import {Avatar} from 'material-ui';
 import Posts from '../posts/Posts.jsx';
+import FriendsList from '../misc/friendsList.jsx';
 
 export default class EventViewer extends Component {
   constructor(props) {
@@ -95,6 +96,10 @@ export default class EventViewer extends Component {
         });
   }
 
+  handleInvite({ target: { name } }) {
+    console.log('inviting:', name);
+  }
+  
   render() {
     if (!this.state.event) {
       return <div>This is not an event</div>;
@@ -135,6 +140,7 @@ export default class EventViewer extends Component {
             event={this.state.event}
             config={this.state.config}
           /> : null}
+        <FriendsList history={this.props.history} invite={this.handleInvite} />
       </div>
     );
   }
