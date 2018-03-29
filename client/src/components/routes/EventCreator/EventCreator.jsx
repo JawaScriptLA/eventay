@@ -28,7 +28,7 @@ export default class EventCreator extends React.Component {
       eventName: '',
       eventDescription: '',
       eventLocation: '',
-      eventIsPrivate: false,
+      eventIsPublic: false,
       allFriends: [],
       selectedFriendIds: [],
       selectedRowIds: [],
@@ -48,7 +48,8 @@ export default class EventCreator extends React.Component {
       endAMPM: null,
 
       stepIndex: 0,
-      dialogOpen: false
+      dialogOpen: false,
+      authHeader: { headers: { Authorization: 'Bearer ' + localStorage.token } }
     };
     this.getAllFriends();
     this.generateRecommendations = this.generateRecommendations.bind(this);
@@ -78,15 +79,7 @@ export default class EventCreator extends React.Component {
   getAllFriends() {
     const ownId = JSON.parse(localStorage.getItem('userInfo')).id;
     axios
-      .get(
-        `/api/friends/${ownId}`,
-        // TODO: move headers to state
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        }
-      )
+      .get(`/api/friends/${ownId}`, this.state.authHeader)
       .then(res => {
         const friendIds = [];
         for (let idx in res.data) {
@@ -125,11 +118,7 @@ export default class EventCreator extends React.Component {
           durationAsMilliseconds: durationAsMilliseconds,
           timeRange: timeRange
         },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        }
+        this.state.authHeader
       )
       .then(res => {
         let recommendations = [];
@@ -149,17 +138,17 @@ export default class EventCreator extends React.Component {
       .post(
         '/api/event',
         {
-          // TODO: add additional fields to store in db
+          // TODO: add thumbnail to post request
           title: this.state.eventName,
+          description: this.state.eventDescription,
+          location: this.state.eventLocation,
+          // thumbnail:,
           start_time: this.state.selectedTime[0],
           end_time: this.state.selectedTime[1],
+          publicity: this.state.eventIsPublic,
           host_id: ownId
         },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        }
+        this.state.authHeader
       )
       .then(res => {
         let newEventId = res.data[0].id;
@@ -171,11 +160,7 @@ export default class EventCreator extends React.Component {
               invitor_id: ownId,
               event_id: newEventId
             },
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-              }
-            }
+            this.state.authHeader
           );
         }
       })
@@ -275,7 +260,7 @@ export default class EventCreator extends React.Component {
             eventName={this.state.eventName}
             eventDescription={this.state.eventDescription}
             eventLocation={this.state.eventLocation}
-            eventIsPrivate={this.state.eventIsPrivate}
+            eventIsPublic={this.state.eventIsPublic}
             handleTextChanges={this.handleTextChanges}
             handleToggleChanges={this.handleToggleChanges}
           />

@@ -37,9 +37,9 @@ const BasicEventInfo = props => {
       <div>ADD THUMBNAIL HERE</div>
       {/* // TODO: use filestack to upload thumbnail */}
       <Toggle
-        label="Mark event as private:"
+        label="Mark event as public:"
         style={{ marginTop: '5%' }}
-        name="eventIsPrivate"
+        name="eventIsPublic"
         onToggle={(e, isToggled) => props.handleToggleChanges(e, isToggled)}
       />
     </div>
