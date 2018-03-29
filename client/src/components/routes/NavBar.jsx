@@ -249,7 +249,7 @@ export default class NavBar extends Component {
             <NavMenu history={this.props.history} />
           </Popover>
 
-          <Search userInfo={this.state.userInfo} />
+          <Search history={this.props.history} userInfo={this.state.userInfo} />
           <div
             id="notifications"
             onClick={this.handleNotifsOpen}
