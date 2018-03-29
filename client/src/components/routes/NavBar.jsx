@@ -153,9 +153,10 @@ export default class NavBar extends Component {
                   <span
                     key={counter}
                     onClick={
-                      () => this.props.history.push(
-                        `/event/${notif.id}`
-                      )
+                      () => this.props.history.push({
+                        pathname: `/event/${notif.id}`,
+                        state: { event: notif }
+                      })
                     }
                   >
                   {notif.title}
