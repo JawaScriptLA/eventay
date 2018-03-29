@@ -1,9 +1,10 @@
 import React from 'react';
 
 import DatePicker from 'material-ui/DatePicker';
-import TimePicker from 'material-ui/TimePicker';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+// import TimePicker from 'material-ui/TimePicker';
+// import SelectField from 'material-ui/SelectField';
+// import MenuItem from 'material-ui/MenuItem';
+import Checkbox from 'material-ui/Checkbox';
 
 const TimeRanges = props => {
   // TODO (after testing): update hardcoded component values
@@ -124,6 +125,12 @@ const TimeRanges = props => {
           <MenuItem value={1} primaryText="PM" />
         </SelectField> */}
       </div>
+      <Checkbox
+        label="Exclude weekends"
+        name="excludeWeekends"
+        checked={props.excludeWeekends}
+        onCheck={props.handleCheckbox}
+      />
     </div>
   );
 };

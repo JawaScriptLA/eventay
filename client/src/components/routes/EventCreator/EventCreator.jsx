@@ -46,7 +46,7 @@ export default class EventCreator extends React.Component {
       // endHours: null,
       // endMinutes: null,
       // endAMPM: null,
-      excludeWeekends: true, //initially should be false
+      excludeWeekends: false,
       stepIndex: 0,
       dialogOpen: false,
       authHeader: { headers: { Authorization: 'Bearer ' + localStorage.token } }
@@ -74,6 +74,9 @@ export default class EventCreator extends React.Component {
     // Dialog box
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
+
+    // Checkbox
+    this.handleCheckbox = this.handleCheckbox.bind(this);
   }
 
   getAllFriends() {
@@ -217,6 +220,10 @@ export default class EventCreator extends React.Component {
     this.setState({ dialogOpen: false });
   }
 
+  handleCheckbox(e, isChecked) {
+    this.setState({ [e.target.name]: isChecked });
+  }
+
   isSelected(index) {
     return this.state.selectedRowIds.indexOf(index) !== -1;
   }
@@ -249,12 +256,20 @@ export default class EventCreator extends React.Component {
     });
   }
 
+  // handleSelectionChange2(selectedRow, recommendations) {
   handleSelectionChange2(selectedRow, startTime, endTime) {
-    let newTime = [startTime, endTime];
-    this.setState({
-      selectedTimeRowId: selectedRow,
-      selectedTime: newTime
-    });
+    if (!startTime) {
+      this.setState({
+        selectedTimeRowId: [],
+        selectedTime: ['', '']
+      });
+    } else {
+      let newTime = [startTime, endTime];
+      this.setState({
+        selectedTimeRowId: selectedRow,
+        selectedTime: newTime
+      });
+    }
   }
 
   getStepContent(stepIndex) {
@@ -276,6 +291,8 @@ export default class EventCreator extends React.Component {
             <TimeRanges
               handleDateChanges={this.handleDateChanges}
               handleDropdownChanges={this.handleDropdownChanges}
+              handleCheckbox={this.handleCheckbox}
+              excludeWeekends={this.state.excludeWeekends}
               startDate={this.state.startDate}
               // startHours={this.state.startHours}
               // startMinutes={this.state.startMinutes}
@@ -319,11 +336,15 @@ export default class EventCreator extends React.Component {
             <Table
               height="500px"
               onRowSelection={rowIds => {
-                this.handleSelectionChange2(
-                  rowIds,
-                  this.state.recommendedTimes[rowIds][0],
-                  this.state.recommendedTimes[rowIds][1]
-                );
+                let time1, time2;
+                if (this.state.recommendedTimes[rowIds]) {
+                  time1 = this.state.recommendedTimes[rowIds][0];
+                  time2 = this.state.recommendedTimes[rowIds][1];
+                } else {
+                  time1 = null;
+                  time2 = null;
+                }
+                this.handleSelectionChange2(rowIds, time1, time2);
               }}
             >
               <TableHeader displaySelectAll={false}>

@@ -12,6 +12,7 @@ router.post('/showRecommendedTimes', async (req, res) => {
     excludeWeekends
   } = req.body;
   const halfHourAsMilliseconds = 1800000;
+  const dayAsMilliseconds = 86400000;
   const availableTimes = {};
   let idx = 0;
 
@@ -21,7 +22,7 @@ router.post('/showRecommendedTimes', async (req, res) => {
   }
 
   // Generate initial list of possible times
-  const rangeEnd = endMilliseconds;
+  const rangeEnd = endMilliseconds + dayAsMilliseconds;
   let currStart = startMilliseconds;
   let currEnd = currStart + durationAsMilliseconds;
   while (currEnd <= rangeEnd) {
