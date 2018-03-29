@@ -75,5 +75,15 @@ module.exports = {
     } catch (err) {
       throw err;
     }
+  },
+  getEventDetails: async ({event_id}) => {
+    try {
+      const data = await db.queryAsync(`
+      SELECT * FROM events 
+      WHERE id=${event_id}`);
+      return data.rows;
+    } catch (err) {
+      throw err;
+    }
   }
 };
