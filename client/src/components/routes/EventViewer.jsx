@@ -5,52 +5,57 @@ import NavBar from './NavBar.jsx';
 export default class EventViewer extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      event: {},
+      config: { headers: { Authorization: 'bearer ' + localStorage.getItem('token') } },
+      user: {},
+      friends: [],
+      attendants: [],
+      role: '',
+      posts: [],
+    }
   }
   
   componentWillMount() {
-    console.log(this.props);
-    const config = { headers: { Authorization: 'bearer ' + localStorage.getItem('token') } };
-    const event = this.props.location.state.event;
-    const user = JSON.parse(localStorage.getItem('userInfo'));
-    console.log('event:', event);
-    console.log('user:', user);
-    this.setState({
-      event: event
+    this.setState({ user: JSON.parse(localStorage.getItem('userInfo')) })
+
+    this.props.location.state ? this.setState({ event: this.props.location.state.event }) : 
+      axios.get(`/api/event/eventinfo/${this.props.match.params.id}`)
+        .then(res => this.setState({ event: res.data[0] }));
+  }
+
+  componentDidMount() {
+    axios.get(`/api/friends/${this.state.user.id}`, this.state.config)
+    .then((friends) => {
+      this.setState({ friends: friends.data });
+    })
+    .catch((err) => {
+      console.log('Error friends:', err);
     });
-    axios.get(`/api/friends/${user.id}`, config)
-      .then((friends) => {
-        console.log('friends:', friends.data);
-        this.setState({ friends: friends.data });
-      })
-      .catch((err) => {
-        console.log('Error friends:', err);
+  
+  axios.get(`/api/attendant/${this.state.event.id}`, this.state.config)
+    .then((attendants) => {
+      let isAttendant = attendants.data.reduce((acc, attendant) => (acc || attendant.user_id === this.state.user.id), false);
+      this.setState({
+        attendants: attendants.data,
+        role: this.state.event.host_id === this.state.user.id ? 'host' : isAttendant ? 'attendant' : 'stranger'
       });
-    
-    axios.get(`/api/attendant/${event.id}`, config)
-      .then((attendants) => {
-        console.log('attendants:', attendants.data);
-        let isAttendant = attendants.data.reduce((acc, attendant) => (acc || attendant.user_id === user.id), false);
-        this.setState({
-          attendants: attendants.data,
-          role: event.host_id === user.id ? 'host' : isAttendant ? 'attendant' : 'stranger'
-        });
-      })
-      .catch((err) => {
-        console.log('Error attendants:', err);
-      });
-    
-    axios.get(`/api/post/${event.id}`, config)
-      .then((posts) => {
-        console.log('posts:', posts.data);
-        this.setState({ posts: posts.data });
-      })
-      .catch((err) => {
-        console.log('Error posts:', err);
-      });
+    })
+    .catch((err) => {
+      console.log('Error attendants:', err);
+    });
+  
+  axios.get(`/api/post/${this.state.event.id}`, this.state.config)
+    .then((posts) => {
+      this.setState({ posts: posts.data });
+    })
+    .catch((err) => {
+      console.log('Error posts:', err);
+    });
   }
   
   render() {
+    console.log(this.state);
     return (
       <div>
         <NavBar history={this.props.history} />
