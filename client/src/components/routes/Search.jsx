@@ -69,14 +69,14 @@ export default class Search extends Component {
                     <Avatar src={data.thumbnail} />
                   }
                 >
-                <div
+                <span
                   onClick={() => this.props.history.push({
                     pathname: `/event/${data.id}`,
                     state: {event: data},
                   })}
                 >
                   {data.title}
-                </div>
+                </span>
                 </ListItem>
               );
             })
@@ -100,13 +100,13 @@ export default class Search extends Component {
                     <Avatar src={data.profile_picture} />
                   }
                 >
-                  <div
+                  <span
                     onClick={
                       () => this.props.history.push(`/profile/${data.username}`)
                     }
                   >
                     {data.username}
-                  </div>
+                  </span>
                 </ListItem>
               )
             })
