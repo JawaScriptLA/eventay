@@ -1,6 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import { convertTime, calculateTotalTime } from '../../../../../utils/utils.js';
+import {
+  convertTime,
+  calculateTotalTime,
+  isWeekend
+} from '../../../../../utils/utils.js';
 
 import DurationFields from './DurationFields.jsx';
 import FriendsTable from './FriendsTable.jsx';
@@ -46,6 +50,8 @@ export default class EventCreator extends React.Component {
       endHours: null,
       endMinutes: null,
       endAMPM: null,
+
+      excludeWeekends=false,
 
       stepIndex: 0,
       dialogOpen: false,
@@ -328,24 +334,12 @@ export default class EventCreator extends React.Component {
                 </TableRow>
               </TableHeader>
               <TableBody showRowHover={true} deselectOnClickaway={false}>
-                {/* {this.state.recommendedTimes.map((time, idx) => (
-                    <TableRow selected={this.isSelected2(idx)} key={idx}>
-                      <TableRowColumn>{convertTime(time[0])}</TableRowColumn>
-                      <TableRowColumn>{convertTime(time[1])}</TableRowColumn>
-                    </TableRow>
-                  ))} */}
-
-                {this.state.recommendedTimes
-                  .filter((time, idx) => {
-                    console.log(time);
-                    return true;
-                  })
-                  .map((time, idx) => (
-                    <TableRow selected={this.isSelected2(idx)} key={idx}>
-                      <TableRowColumn>{convertTime(time[0])}</TableRowColumn>
-                      <TableRowColumn>{convertTime(time[1])}</TableRowColumn>
-                    </TableRow>
-                  ))}
+                {this.state.recommendedTimes.map((time, idx) => (
+                  <TableRow selected={this.isSelected2(idx)} key={idx}>
+                    <TableRowColumn>{convertTime(time[0])}</TableRowColumn>
+                    <TableRowColumn>{convertTime(time[1])}</TableRowColumn>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
 
