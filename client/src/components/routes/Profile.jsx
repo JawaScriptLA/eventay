@@ -67,7 +67,7 @@ class Profile extends React.Component {
 
   componentWillReceiveProps() {
     const user = JSON.parse(localStorage.getItem('userInfo'));
-
+    console.log('cwrp: ', this.props.match.params.username);
     // get user info
     axios
       .get(
