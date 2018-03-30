@@ -16,18 +16,18 @@ class Posts extends React.Component {
     return (
       postList.reverse().map((post) => {
         return (
-          <Card key={post.id} style={{ padding: '10px', margin: '10px' }}>
+          <Card key={post.post.id} style={{ padding: '10px', margin: '10px' }}>
             <CardHeader
               title={<div
-                  onClick={() => this.props.history.push(`/profile/${post.userInfo.username}`)}
-                ><strong>{post.userInfo.username}</strong></div>}
-              avatar={post.userInfo.profile_picture}
+                  onClick={() => this.props.history.push(`/profile/${post.post.userInfo.username}`)}
+                ><strong>{post.post.userInfo.username}</strong></div>}
+              avatar={post.post.userInfo.profile_picture}
             />
             <CardText style={{ fontSize: '200%', padding: '4px', }}>
-              {post.body}
+              {post.post.body}
             </CardText>
             <Divider />
-            <Comments />
+            <Comments comments={post.comments}/>
             <TextField hintText="Respond..." />
           </Card>
         )

@@ -3,6 +3,7 @@ import axios from 'axios';
 import NavBar from './NavBar.jsx';
 import AttendantsList from '../misc/AttendantsList.jsx';
 import CreatePost from '../posts/CreatePost.jsx';
+import {Avatar} from 'material-ui';
 import Posts from '../posts/Posts.jsx';
 
 export default class EventViewer extends Component {
@@ -46,14 +47,22 @@ export default class EventViewer extends Component {
       
       axios.get(`/api/post/${this.state.event.id}`, this.state.config)
         .then((res) => {
-          const processedPost = []
+          const processedPosts = [];
+          const processedComments = [];
+          const postObjList = [];
           for (let i = 0; i < res.data.length; i++) {
             axios.get(`/api/user/id/${res.data[i].user_id}`, this.state.config)
             .then(userRes => {
               res.data[i].userInfo = userRes.data;
-              processedPost.push(res.data[i]);
-              if(res.data.length === processedPost.length) {
-                this.setState({ posts: processedPost })
+              res.data[i].parent_id ? processedComments.push(res.data[i]) : processedPosts.push(res.data[i]);
+              if(res.data.length - 1 === i) {
+                for (let i = 0; i < processedPosts.length; i++) {
+                  let postObj = {};
+                  postObj.post = processedPosts[i];
+                  postObj.comments = processedComments.filter(comment => comment.parent_id === processedPosts[i].id);
+                  postObjList.push(postObj);
+                }
+                this.setState({ posts: postObjList })
               }
             });
           }
@@ -93,7 +102,7 @@ export default class EventViewer extends Component {
         <p>{this.state.event.description}</p>
         {
           this.state.event.start_time ? 
-          `${this.state.event.start_time
+          `Time: ${this.state.event.start_time
               .replace('T', ' ')
               .substring(0, this.state.event.start_time.length - 5)} 
           - ${this.state.event.end_time
@@ -102,8 +111,8 @@ export default class EventViewer extends Component {
         }
         {this.state.host ?
           <div>
-            <p>{this.state.host.username}</p>
-            <img src={this.state.host.profile_picture}/>
+            <p>Host: {this.state.host.username}</p>
+            <Avatar size={100} src={this.state.host.profile_picture}/>
           </div>
         : null}
         <AttendantsList attendants={this.state.attendants} history={this.props.history} /> <br/>
