@@ -20,7 +20,7 @@ class Posts extends React.Component {
             <CardHeader
               title={<div
                   onClick={() => this.props.history.push(`/profile/${post.userInfo.username}`)}
-                >{post.userInfo.username}</div>}
+                ><strong>{post.userInfo.username}</strong></div>}
               avatar={post.userInfo.profile_picture}
             />
             <CardText style={{ fontSize: '200%', padding: '4px', }}>
