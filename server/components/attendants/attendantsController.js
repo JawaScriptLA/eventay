@@ -16,10 +16,6 @@ module.exports = {
         ${user_id},
         ${event_id},
         ${invitor_id ? `'${invitor_id}'` : null}
-        WHERE NOT EXISTS (
-          SELECT * FROM attendants
-          WHERE event_id=${event_id} AND invitor_id=${invitor_id} AND user_id=${user_id}
-        )
       `);
     } catch (err) {
       console.log('THE ERROR: ', err);
