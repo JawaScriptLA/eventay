@@ -2,16 +2,16 @@ const db = require('../../db/db.js');
 
 module.exports = {
   createPost: async ({ body, user_id, event_id, parent_id }) => {
-    console.log('createPost');
     try {
-      await db.queryAsync(`
+      const data = await db.queryAsync(`
         INSERT INTO posts (body, user_id, event_id, parent_id)
         SELECT '${body}', ${user_id}, ${event_id}, ${parent_id ? `'${parent_id}'` : null}
         WHERE EXISTS (
           SELECT user_id FROM attendants
           WHERE user_id=${user_id} AND event_id=${event_id}
-        )
+        ) RETURNING *
       `);
+      return data;
     } catch (err) {
       throw err;
     }

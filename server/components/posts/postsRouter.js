@@ -14,8 +14,9 @@ router.route('/')
   .post(async (req, res) => {
     console.log('HERE', req.body);
     try {
-      await controller.createPost(req.body);
-      res.sendStatus(200);
+      const data = await controller.createPost(req.body);
+      console.log('DATA: ', data.rows);
+      res.send(data.rows);
     } catch (err) {
       console.error('createPost error: ', err.cause)
       res.sendStatus(500);
