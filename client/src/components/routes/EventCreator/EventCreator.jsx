@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { convertTime, calculateTotalTime } from '../../../utils/utils.js';
+import { convertTime, calculateTotalTime } from '../../../../../utils/utils.js';
 
 import DurationFields from './DurationFields.jsx';
 import FriendsTable from './FriendsTable.jsx';
@@ -28,7 +28,7 @@ export default class EventCreator extends React.Component {
       eventName: '',
       eventDescription: '',
       eventLocation: '',
-      eventIsPrivate: false,
+      eventIsPublic: false,
       allFriends: [],
       selectedFriendIds: [],
       selectedRowIds: [],
@@ -39,16 +39,19 @@ export default class EventCreator extends React.Component {
       durationMins: '',
       durationHrs: '',
       startDate: null,
-      startHours: null,
-      startMinutes: null,
-      startAMPM: null,
+      // startHours: null,
+      // startMinutes: null,
+      // startAMPM: null,
       endDate: null,
-      endHours: null,
-      endMinutes: null,
-      endAMPM: null,
-
+      // endHours: null,
+      // endMinutes: null,
+      // endAMPM: null,
+      excludeWeekends: false,
+      excludeOvernight: false,
+      excludeWorkday: false,
       stepIndex: 0,
-      dialogOpen: false
+      dialogOpen: false,
+      authHeader: { headers: { Authorization: 'Bearer ' + localStorage.token } }
     };
     this.getAllFriends();
     this.generateRecommendations = this.generateRecommendations.bind(this);
@@ -73,20 +76,15 @@ export default class EventCreator extends React.Component {
     // Dialog box
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
+
+    // Checkbox
+    this.handleCheckbox = this.handleCheckbox.bind(this);
   }
 
   getAllFriends() {
     const ownId = JSON.parse(localStorage.getItem('userInfo')).id;
     axios
-      .get(
-        `/api/friends/${ownId}`,
-        // TODO: move headers to state
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        }
-      )
+      .get(`/api/friends/${ownId}`, this.state.authHeader)
       .then(res => {
         const friendIds = [];
         for (let idx in res.data) {
@@ -98,20 +96,22 @@ export default class EventCreator extends React.Component {
   }
 
   generateRecommendations() {
-    const start = calculateTotalTime(
-      this.state.startDate.getTime(),
-      this.state.startHours,
-      this.state.startMinutes,
-      this.state.startAMPM
-    );
-    const end = calculateTotalTime(
-      this.state.endDate.getTime(),
-      this.state.endHours,
-      this.state.endMinutes,
-      this.state.endAMPM
-    );
+    // const start = calculateTotalTime(
+    //   this.state.startDate.getTime()
+    //   // this.state.startHours,
+    //   // this.state.startMinutes,
+    //   // this.state.startAMPM
+    // );
+    // const end = calculateTotalTime(
+    //   this.state.endDate.getTime()
+    //   // this.state.endHours,
+    //   // this.state.endMinutes,
+    //   // this.state.endAMPM
+    // );
+    const startMilliseconds = this.state.startDate.getTime();
+    const endMilliseconds = this.state.endDate.getTime();
 
-    const timeRange = [[start, end]];
+    // const timeRange = [[start, end]];
     const durationAsMilliseconds =
       (Number(this.state.durationHrs) * 60 + Number(this.state.durationMins)) *
       60000;
@@ -121,15 +121,15 @@ export default class EventCreator extends React.Component {
       .post(
         '/api/schedule/showRecommendedTimes',
         {
+          startMilliseconds: startMilliseconds,
+          endMilliseconds: endMilliseconds,
           selectedFriendIds: invitees,
           durationAsMilliseconds: durationAsMilliseconds,
-          timeRange: timeRange
+          excludeWeekends: this.state.excludeWeekends,
+          excludeOvernight: this.state.excludeOvernight,
+          excludeWorkday: this.state.excludeWorkday
         },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        }
+        this.state.authHeader
       )
       .then(res => {
         let recommendations = [];
@@ -149,17 +149,17 @@ export default class EventCreator extends React.Component {
       .post(
         '/api/event',
         {
-          // TODO: add additional fields to store in db
+          // TODO: add thumbnail to post request
           title: this.state.eventName,
+          description: this.state.eventDescription,
+          location: this.state.eventLocation,
+          // thumbnail:,
           start_time: this.state.selectedTime[0],
           end_time: this.state.selectedTime[1],
+          publicity: this.state.eventIsPublic,
           host_id: ownId
         },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        }
+        this.state.authHeader
       )
       .then(res => {
         let newEventId = res.data[0].id;
@@ -171,11 +171,7 @@ export default class EventCreator extends React.Component {
               invitor_id: ownId,
               event_id: newEventId
             },
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-              }
-            }
+            this.state.authHeader
           );
         }
       })
@@ -227,6 +223,10 @@ export default class EventCreator extends React.Component {
     this.setState({ dialogOpen: false });
   }
 
+  handleCheckbox(e, isChecked) {
+    this.setState({ [e.target.name]: isChecked });
+  }
+
   isSelected(index) {
     return this.state.selectedRowIds.indexOf(index) !== -1;
   }
@@ -259,12 +259,20 @@ export default class EventCreator extends React.Component {
     });
   }
 
+  // handleSelectionChange2(selectedRow, recommendations) {
   handleSelectionChange2(selectedRow, startTime, endTime) {
-    let newTime = [startTime, endTime];
-    this.setState({
-      selectedTimeRowId: selectedRow,
-      selectedTime: newTime
-    });
+    if (!startTime) {
+      this.setState({
+        selectedTimeRowId: [],
+        selectedTime: ['', '']
+      });
+    } else {
+      let newTime = [startTime, endTime];
+      this.setState({
+        selectedTimeRowId: selectedRow,
+        selectedTime: newTime
+      });
+    }
   }
 
   getStepContent(stepIndex) {
@@ -275,7 +283,7 @@ export default class EventCreator extends React.Component {
             eventName={this.state.eventName}
             eventDescription={this.state.eventDescription}
             eventLocation={this.state.eventLocation}
-            eventIsPrivate={this.state.eventIsPrivate}
+            eventIsPublic={this.state.eventIsPublic}
             handleTextChanges={this.handleTextChanges}
             handleToggleChanges={this.handleToggleChanges}
           />
@@ -286,14 +294,18 @@ export default class EventCreator extends React.Component {
             <TimeRanges
               handleDateChanges={this.handleDateChanges}
               handleDropdownChanges={this.handleDropdownChanges}
+              handleCheckbox={this.handleCheckbox}
+              excludeWeekends={this.state.excludeWeekends}
+              excludeOvernight={this.state.excludeOvernight}
+              excludeWorkday={this.state.excludeWorkday}
               startDate={this.state.startDate}
-              startHours={this.state.startHours}
-              startMinutes={this.state.startMinutes}
-              startAMPM={this.state.startAMPM}
+              // startHours={this.state.startHours}
+              // startMinutes={this.state.startMinutes}
+              // startAMPM={this.state.startAMPM}
               endDate={this.state.endDate}
-              endHours={this.state.endHours}
-              endMinutes={this.state.endMinutes}
-              endAMPM={this.state.endAMPM}
+              // endHours={this.state.endHours}
+              // endMinutes={this.state.endMinutes}
+              // endAMPM={this.state.endAMPM}
             />
             <DurationFields
               durationHrs={this.state.durationHrs}
@@ -329,11 +341,15 @@ export default class EventCreator extends React.Component {
             <Table
               height="500px"
               onRowSelection={rowIds => {
-                this.handleSelectionChange2(
-                  rowIds,
-                  this.state.recommendedTimes[rowIds][0],
-                  this.state.recommendedTimes[rowIds][1]
-                );
+                let time1, time2;
+                if (this.state.recommendedTimes[rowIds]) {
+                  time1 = this.state.recommendedTimes[rowIds][0];
+                  time2 = this.state.recommendedTimes[rowIds][1];
+                } else {
+                  time1 = null;
+                  time2 = null;
+                }
+                this.handleSelectionChange2(rowIds, time1, time2);
               }}
             >
               <TableHeader displaySelectAll={false}>
@@ -343,15 +359,15 @@ export default class EventCreator extends React.Component {
                 </TableRow>
               </TableHeader>
               <TableBody showRowHover={true} deselectOnClickaway={false}>
-                {this.state.recommendedTimes &&
-                  this.state.recommendedTimes.map((time, idx) => (
-                    <TableRow selected={this.isSelected2(idx)} key={idx}>
-                      <TableRowColumn>{convertTime(time[0])}</TableRowColumn>
-                      <TableRowColumn>{convertTime(time[1])}</TableRowColumn>
-                    </TableRow>
-                  ))}
+                {this.state.recommendedTimes.map((time, idx) => (
+                  <TableRow selected={this.isSelected2(idx)} key={idx}>
+                    <TableRowColumn>{convertTime(time[0])}</TableRowColumn>
+                    <TableRowColumn>{convertTime(time[1])}</TableRowColumn>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
+
             <Dialog
               title="Review details"
               actions={actions}
@@ -363,12 +379,14 @@ export default class EventCreator extends React.Component {
               <div>Location: {this.state.eventLocation || 'N/A'}</div>
               <div>Start time: {convertTime(this.state.selectedTime[0])}</div>
               <div>End time: {convertTime(this.state.selectedTime[1])}</div>
-              {/* TODO: reformat list of friends*/}
               <div>
-                Invited Friends:
-                {this.state.selectedFriendNames.map((friendName, idx) => {
-                  return <div key={idx}>{friendName} </div>;
-                })}
+                Publicity:{' '}
+                {(this.state.eventIsPublic && <span>public</span>) || (
+                  <span>private</span>
+                )}
+              </div>
+              <div>
+                Invited Friends: {this.state.selectedFriendNames.join(', ')}
               </div>
             </Dialog>
           </div>
