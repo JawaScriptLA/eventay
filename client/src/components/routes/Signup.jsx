@@ -5,6 +5,10 @@ import { bindActionCreators } from 'redux';
 import * as userInfoActions from '../../actions/userInfoActions';
 import PropTypes from 'prop-types';
 
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+import Paper from 'material-ui/Paper';
+
 class Signup extends React.Component {
   constructor(props) {
     super(props);
@@ -41,30 +45,74 @@ class Signup extends React.Component {
 
   render() {
     return (
-      <div>
-        Signup page
-        <div>
-          <input
-            type='text'
-            name='username'
-            placeholder='Username'
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <div>
-          <input
-            type='password'
-            name='password'
-            placeholder='Password'
-            onChange={this.handleInputChange}
-          />
-        </div>
-        <div>
-          <input
-            type='submit'
-            value='Submit'
-            onClick={this.handleSubmitClick}
-          />
+      <div
+        style={{
+          width: '100%',
+        }}
+      >
+        <div
+          style={{
+            float: 'none',
+            maxWidth: '40%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}
+        >
+        <Paper
+          style={{
+            height: '100%',
+            width: '100%',
+            padding: '15%',
+            margin: 20,
+            textAlign: 'center',
+            display: 'inline-block',
+          }}
+          zDepth={3}
+        >
+        <h1 style={{
+          fontFamily: 'Stalemate, cursive',
+          fontSize: '4em'
+          }}
+        >Eventé Signup</h1>
+
+        <br />
+
+        <TextField
+          type="text"
+          inputStyle={{WebkitBoxShadow: '0 0 0 1000px white inset'}}
+          name="username"
+          floatingLabelText="username"
+          onChange={this.handleInputChange}
+        />
+
+        <br />
+
+        <TextField
+          type="password"
+          inputStyle={{WebkitBoxShadow: '0 0 0 1000px white inset'}}
+          name="password"
+          floatingLabelText="password"
+          onChange={this.handleInputChange}
+        />
+
+        <br />
+
+        <RaisedButton
+          label="Submit"
+          secondary={true}
+          style={{margin: 12}}
+          onClick={this.handleSubmitClick}
+        />
+
+        <br />
+
+        <RaisedButton
+          label="Back to Login"
+          style={{margin: 12}}
+          href={`/login`}
+        />
+
+        </Paper>
         </div>
       </div>
     );
