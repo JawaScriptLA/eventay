@@ -17,10 +17,12 @@ class Post extends React.Component {
         return (
           <Card key={post.id} style={{ padding: '10px', margin: '10px' }}>
             <CardHeader
-              title={post.userInfo.username}
+              title={<div
+                  onClick={() => this.props.history.push(`/profile/${post.userInfo.username}`)}
+                >{post.userInfo.username}</div>}
               avatar={post.userInfo.profile_picture}
             />
-            <CardText>
+            <CardText style={{ fontSize: 36 }}>
               {post.body}
             </CardText>
             <TextField hintText="Respond..." />
