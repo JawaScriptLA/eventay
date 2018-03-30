@@ -286,7 +286,7 @@ class Profile extends React.Component {
               avatar={
                 <Avatar
                   src={this.state.profileInfo.profile_picture}
-                  style={{ objectFit: 'cover ' }}
+                  style={{ objectFit: 'cover' }}
                   size={200}
                 />
               }

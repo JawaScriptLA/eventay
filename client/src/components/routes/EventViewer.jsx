@@ -3,7 +3,7 @@ import axios from 'axios';
 import NavBar from './NavBar.jsx';
 import AttendantsList from '../misc/AttendantsList.jsx';
 import CreatePost from '../posts/CreatePost.jsx';
-import Post from '../posts/Post.jsx';
+import Posts from '../posts/Posts.jsx';
 
 export default class EventViewer extends Component {
   constructor(props) {
@@ -67,15 +67,16 @@ export default class EventViewer extends Component {
   }
 
   generatePost(body) {
+    let bodyToSend = body.replace("'", "''");
     axios.post(`/api/post`, {
-      body,
+      body: bodyToSend,
       user_id: this.state.user.id,
       event_id: this.state.event.id,
       parent_id: null,
     }, this.state.config)
       .then(res => console.log(res.status));
-  } 
-  
+  }
+
   render() {
     if (!this.state.event) {
       return <div>This is not an event</div>;
@@ -109,7 +110,7 @@ export default class EventViewer extends Component {
         <CreatePost
           generatePost={this.generatePost}
         /> <br />
-        {this.state.posts.length ? <Post history={this.props.history} posts={this.state.posts} /> : null}
+        {this.state.posts.length ? <Posts history={this.props.history} posts={this.state.posts} /> : null}
       </div>
     );
   }
