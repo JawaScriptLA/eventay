@@ -259,7 +259,14 @@ class Profile extends React.Component {
   getEvents(userId) {
     axios
       .get(`/api/event/${userId}`, this.state.authHeader)
-      .then(response => this.setState({ events: response.data }));
+      .then(response => {
+        if (!this.state.isSelf) {
+          const pubEvents = response.data.filter(event => event.publicity);
+          this.setState({ events: pubEvents});
+        } else {
+          this.setState({ events: response.data })
+        }
+      });
   }
 
   render() {

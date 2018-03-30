@@ -12,10 +12,12 @@ router.get('/:event_id', async (req, res) => {
 
 router.route('/')
   .post(async (req, res) => {
+    console.log('HERE', req.body);
     try {
       await controller.createPost(req.body);
       res.sendStatus(200);
     } catch (err) {
+      console.error('createPost error: ', err.cause)
       res.sendStatus(500);
     }
   })
