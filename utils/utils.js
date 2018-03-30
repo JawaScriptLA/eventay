@@ -18,15 +18,6 @@ module.exports = {
     return dateStr + timeStr;
   },
 
-  // calculateTotalTime: (dateAsMilliseconds, hours, minutes, ampm) => {
-  //   return new Date(
-  //     dateAsMilliseconds +
-  //       (hours % 12) * 3600000 +
-  //       minutes * 60000 +
-  //       ampm * 43200000
-  //   );
-  // },
-
   conflictExists: (
     firstStartTime,
     firstEndTime,
@@ -90,7 +81,7 @@ module.exports = {
     return false;
   },
 
-  isWorkday: (startTimeStr, endTimeStr) => {
+  millisecondsUntilMidnight: date => {
     let hours = date.getHours();
     let minutes = date.getMinutes();
     let newMinutes = (60 - minutes) % 60;
@@ -116,7 +107,7 @@ module.exports = {
     } else if (start.toDateString() === end.toDateString() && startHour >= 16) {
       return false;
     } else if (start.toDateString() !== end.toDateString()) {
-      let millsTilMidnight = millisecondsUntilMidnight(start);
+      let millsTilMidnight = module.exports.millisecondsUntilMidnight(start);
       const nineHrsToMilliseconds = 32400000;
       let startEndDiff = end.getTime() - start.getTime();
       if (millsTilMidnight + nineHrsToMilliseconds >= startEndDiff) {

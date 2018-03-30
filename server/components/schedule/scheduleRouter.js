@@ -3,7 +3,9 @@ const { showUserEvents } = require('../attendants/attendantsController.js');
 const {
   conflictExists,
   includesWeekend,
-  isOvernight
+  isOvernight,
+  isWorkday,
+  millisecondsUntilMidnight
 } = require('../../../utils/utils.js');
 
 router.post('/showRecommendedTimes', async (req, res) => {
@@ -41,6 +43,8 @@ router.post('/showRecommendedTimes', async (req, res) => {
     currEnd += halfHourAsMilliseconds;
   }
 
+  console.log('available times:', availableTimes);
+
   // Eliminate times based on filters
   if (excludeWeekends) {
     for (timeChunk in availableTimes) {
@@ -61,6 +65,17 @@ router.post('/showRecommendedTimes', async (req, res) => {
       }
     }
   }
+
+  if (excludeWorkday) {
+    for (timeChunk in availableTimes) {
+      let firstStartTime = availableTimes[timeChunk][0];
+      let firstEndTime = availableTimes[timeChunk][1];
+      if (isWorkday(firstStartTime, firstEndTime)) {
+        delete availableTimes[timeChunk];
+      }
+    }
+  }
+
   // Eliminate conflicting times
   for (timeChunk in availableTimes) {
     let firstStartTime = Date.parse(availableTimes[timeChunk][0]);

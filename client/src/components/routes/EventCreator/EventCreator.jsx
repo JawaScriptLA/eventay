@@ -125,7 +125,6 @@ export default class EventCreator extends React.Component {
           endMilliseconds: endMilliseconds,
           selectedFriendIds: invitees,
           durationAsMilliseconds: durationAsMilliseconds,
-          // timeRange: timeRange,
           excludeWeekends: this.state.excludeWeekends,
           excludeOvernight: this.state.excludeOvernight,
           excludeWorkday: this.state.excludeWorkday

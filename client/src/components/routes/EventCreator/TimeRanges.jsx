@@ -38,19 +38,19 @@ const TimeRanges = props => {
 
       {/* TODO: move these to bottom of page */}
       <Checkbox
-        label="Exclude weekend times"
+        label="Exclude weekend times (Saturday/Sunday)"
         name="excludeWeekends"
         checked={props.excludeWeekends}
         onCheck={props.handleCheckbox}
       />
       <Checkbox
-        label="Exclude overnight times"
+        label="Exclude overnight times (11p-6a)"
         name="excludeOvernight"
         checked={props.excludeOvernight}
         onCheck={props.handleCheckbox}
       />
       <Checkbox
-        label="Exclude workday times"
+        label="Exclude workday times (9a-4p)"
         name="excludeWorkday"
         checked={props.excludeWorkday}
         onCheck={props.handleCheckbox}
