@@ -18,8 +18,9 @@ export default class EventViewer extends Component {
       attendants: null,
       role: '',
       posts: []
-    }
+    };
     this.generatePost = this.generatePost.bind(this);
+    this.handleInvite = this.handleInvite.bind(this);
   }
   
   componentWillMount() {
@@ -97,7 +98,18 @@ export default class EventViewer extends Component {
   }
 
   handleInvite({ target: { name } }) {
-    console.log('inviting:', name);
+    axios.get(`/api/user/${name}`, this.state.config)
+      .then(({ data }) => {
+        axios.post(`/api/attendant`, {
+          access: 'member',
+          status: 'pending',
+          user_id: data.id,
+          event_id: this.state.event.id,
+          invitor_id: this.state.user.id
+        }, this.state.config)
+          .then(() => console.log(`Successfully invited ${name}.`));
+      })
+      .catch((err) => console.error(err));
   }
   
   render() {

@@ -148,7 +148,9 @@ module.exports = {
             ON DELETE CASCADE,
           CONSTRAINT fk_attendants_invitor_id
             FOREIGN KEY(invitor_id) REFERENCES users(id)
-            ON DELETE CASCADE
+            ON DELETE CASCADE,
+          CONSTRAINT uniq_user_id_event_id
+            UNIQUE (user_id, event_id)
         )
       `);
       console.log('Successfully created attendants table.');

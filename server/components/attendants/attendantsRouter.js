@@ -19,14 +19,13 @@ router.get('/pendingInvites/:user_id', async (req, res) => {
   }
 });
 
-router
-  .route('/')
+router.route('/')
   .post(async (req, res) => {
     try {
       await controller.addAttendant(req.body);
       res.sendStatus(200);
     } catch (err) {
-      res.sendStatus(500);
+      res.statusCode(500).send(err);
     }
   })
   .put(async (req, res) => {
