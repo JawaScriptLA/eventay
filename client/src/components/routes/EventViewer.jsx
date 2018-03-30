@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import NavBar from './NavBar.jsx';
 import AttendantsList from '../misc/AttendantsList.jsx';
+import CreatePost from '../posts/CreatePost.jsx';
+import Post from '../posts/Post.jsx';
 
 export default class EventViewer extends Component {
   constructor(props) {
@@ -15,6 +17,7 @@ export default class EventViewer extends Component {
       role: '',
       posts: []
     }
+    this.generatePost = this.generatePost.bind(this);
   }
   
   componentWillMount() {
@@ -42,7 +45,19 @@ export default class EventViewer extends Component {
         .catch((err) => console.error('Error attendants:', err));
       
       axios.get(`/api/post/${this.state.event.id}`, this.state.config)
-        .then((posts) => this.setState({ posts: posts.data }))
+        .then((res) => {
+          const processedPost = []
+          for (let i = 0; i < res.data.length; i++) {
+            axios.get(`/api/user/id/${res.data[i].user_id}`, this.state.config)
+            .then(userRes => {
+              res.data[i].userInfo = userRes.data;
+              processedPost.push(res.data[i]);
+              if(res.data.length === processedPost.length) {
+                this.setState({ posts: processedPost })
+              }
+            });
+          }
+        })
         .catch((err) => console.error('Error posts:', err));
       
       axios.get(`/api/user/id/${this.state.event.host_id}`, this.state.config)
@@ -50,6 +65,16 @@ export default class EventViewer extends Component {
         .catch((err) => console.error('Error users:', err));
     }
   }
+
+  generatePost(body) {
+    axios.post(`/api/post`, {
+      body,
+      user_id: this.state.user.id,
+      event_id: this.state.event.id,
+      parent_id: null,
+    }, this.state.config)
+      .then(res => console.log(res.status));
+  } 
   
   render() {
     if (!this.state.event) {
@@ -80,7 +105,11 @@ export default class EventViewer extends Component {
             <img src={this.state.host.profile_picture}/>
           </div>
         : null}
-        <AttendantsList attendants={this.state.attendants} history={this.props.history} />
+        <AttendantsList attendants={this.state.attendants} history={this.props.history} /> <br/>
+        <CreatePost
+          generatePost={this.generatePost}
+        /> <br />
+        {this.state.posts.length ? <Post posts={this.state.posts} /> : null}
       </div>
     );
   }
