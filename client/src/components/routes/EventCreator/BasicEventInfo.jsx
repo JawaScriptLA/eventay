@@ -13,6 +13,11 @@ const BasicEventInfo = props => {
           value={props.eventName}
           fullWidth={true}
           onChange={props.handleTextChanges}
+          errorText={
+            props.firstNextClicked && !props.eventName.length
+              ? 'Event name is required'
+              : null
+          }
         />
       </div>
       <div>

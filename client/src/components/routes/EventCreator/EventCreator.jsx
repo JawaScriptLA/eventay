@@ -39,18 +39,15 @@ export default class EventCreator extends React.Component {
       durationMins: '',
       durationHrs: '',
       startDate: null,
-      // startHours: null,
-      // startMinutes: null,
-      // startAMPM: null,
       endDate: null,
-      // endHours: null,
-      // endMinutes: null,
-      // endAMPM: null,
+
       excludeWeekends: false,
       excludeOvernight: false,
       excludeWorkday: false,
+
       stepIndex: 0,
       dialogOpen: false,
+      firstNextClicked: false,
       authHeader: { headers: { Authorization: 'Bearer ' + localStorage.token } }
     };
     this.getAllFriends();
@@ -184,7 +181,14 @@ export default class EventCreator extends React.Component {
   }
 
   handleNext() {
+    console.log('next button clicked');
     const { stepIndex } = this.state;
+    if (stepIndex === 0) {
+      this.setState({ firstNextClicked: true });
+      if (!this.state.eventName.length) {
+        return;
+      }
+    }
     if (stepIndex < 3) {
       this.setState({
         stepIndex: stepIndex + 1
@@ -286,6 +290,7 @@ export default class EventCreator extends React.Component {
             eventIsPublic={this.state.eventIsPublic}
             handleTextChanges={this.handleTextChanges}
             handleToggleChanges={this.handleToggleChanges}
+            firstNextClicked={this.state.firstNextClicked}
           />
         );
       case 1:
