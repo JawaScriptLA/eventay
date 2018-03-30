@@ -14,7 +14,8 @@ router.post('/showRecommendedTimes', async (req, res) => {
     selectedFriendIds,
     durationAsMilliseconds,
     excludeWeekends,
-    excludeOvernight
+    excludeOvernight,
+    excludeWorkday
   } = req.body;
   const halfHourAsMilliseconds = 1800000;
   const dayAsMilliseconds = 86400000;

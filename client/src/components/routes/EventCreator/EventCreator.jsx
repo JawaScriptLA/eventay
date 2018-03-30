@@ -48,6 +48,7 @@ export default class EventCreator extends React.Component {
       // endAMPM: null,
       excludeWeekends: false,
       excludeOvernight: false,
+      excludeWorkday: false,
       stepIndex: 0,
       dialogOpen: false,
       authHeader: { headers: { Authorization: 'Bearer ' + localStorage.token } }
@@ -126,7 +127,8 @@ export default class EventCreator extends React.Component {
           durationAsMilliseconds: durationAsMilliseconds,
           // timeRange: timeRange,
           excludeWeekends: this.state.excludeWeekends,
-          excludeOvernight: this.state.excludeOvernight
+          excludeOvernight: this.state.excludeOvernight,
+          excludeWorkday: this.state.excludeWorkday
         },
         this.state.authHeader
       )
@@ -296,6 +298,7 @@ export default class EventCreator extends React.Component {
               handleCheckbox={this.handleCheckbox}
               excludeWeekends={this.state.excludeWeekends}
               excludeOvernight={this.state.excludeOvernight}
+              excludeWorkday={this.state.excludeWorkday}
               startDate={this.state.startDate}
               // startHours={this.state.startHours}
               // startMinutes={this.state.startMinutes}

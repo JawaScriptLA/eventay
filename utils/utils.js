@@ -88,5 +88,41 @@ module.exports = {
       return true;
     }
     return false;
+  },
+
+  isWorkday: (startTimeStr, endTimeStr) => {
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let newMinutes = (60 - minutes) % 60;
+    let newHours = (24 - hours) % 24;
+    if (minutes !== 0) {
+      newHours--;
+    }
+    return newMinutes * 60000 + newHours * 3600000;
+  },
+
+  isWorkday: (startTimeStr, endTimeStr) => {
+    let start = new Date(startTimeStr);
+    let startHour = start.getHours();
+    let end = new Date(endTimeStr);
+    let endHour = end.getHours();
+
+    if (start.toDateString() === end.toDateString() && startHour < 9) {
+      if (endHour < 9) {
+        return false;
+      } else if (endHour === 9 && start.getMinutes() === 0) {
+        return false;
+      }
+    } else if (start.toDateString() === end.toDateString() && startHour >= 16) {
+      return false;
+    } else if (start.toDateString() !== end.toDateString()) {
+      let millsTilMidnight = millisecondsUntilMidnight(start);
+      const nineHrsToMilliseconds = 32400000;
+      let startEndDiff = end.getTime() - start.getTime();
+      if (millsTilMidnight + nineHrsToMilliseconds >= startEndDiff) {
+        return false;
+      }
+    }
+    return true;
   }
 };
