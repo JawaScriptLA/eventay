@@ -35,7 +35,11 @@ class EventList extends React.Component{
           overflow: 'scroll',}}
       >
         <Subheader>Events</Subheader>
-        {this.renderEvents(this.props.events)}
+        {this.props.events.length ? this.renderEvents(this.props.events) : 
+        <ListItem primaryText={`There are currently no events hosted by ${this.props.isSelf? 'you.' : 'this user.'}`}
+          disabled={true}
+        />
+        }
       </List>
     );
   }

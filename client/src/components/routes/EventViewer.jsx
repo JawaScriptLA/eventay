@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import NavBar from './NavBar.jsx';
 import AttendantsList from '../misc/AttendantsList.jsx';
+import CreatePost from '../posts/CreatePost.jsx';
+import {Avatar} from 'material-ui';
+import Posts from '../posts/Posts.jsx';
 
 export default class EventViewer extends Component {
   constructor(props) {
@@ -15,6 +18,7 @@ export default class EventViewer extends Component {
       role: '',
       posts: []
     }
+    this.generatePost = this.generatePost.bind(this);
   }
   
   componentWillMount() {
@@ -42,7 +46,27 @@ export default class EventViewer extends Component {
         .catch((err) => console.error('Error attendants:', err));
       
       axios.get(`/api/post/${this.state.event.id}`, this.state.config)
-        .then((posts) => this.setState({ posts: posts.data }))
+        .then((res) => {
+          const processedPosts = [];
+          const processedComments = [];
+          const postObjList = [];
+          for (let i = 0; i < res.data.length; i++) {
+            axios.get(`/api/user/id/${res.data[i].user_id}`, this.state.config)
+            .then(userRes => {
+              res.data[i].userInfo = userRes.data;
+              res.data[i].parent_id ? processedComments.push(res.data[i]) : processedPosts.push(res.data[i]);
+              if(res.data.length - 1 === i) {
+                for (let i = 0; i < processedPosts.length; i++) {
+                  let postObj = {};
+                  postObj.post = processedPosts[i];
+                  postObj.comments = processedComments.filter(comment => comment.parent_id === processedPosts[i].id);
+                  postObjList.push(postObj);
+                }
+                this.setState({ posts: postObjList })
+              }
+            });
+          }
+        })
         .catch((err) => console.error('Error posts:', err));
       
       axios.get(`/api/user/id/${this.state.event.host_id}`, this.state.config)
@@ -50,7 +74,18 @@ export default class EventViewer extends Component {
         .catch((err) => console.error('Error users:', err));
     }
   }
-  
+
+  generatePost(body) {
+    let bodyToSend = body.replace("'", "''");
+    axios.post(`/api/post`, {
+      body: bodyToSend,
+      user_id: this.state.user.id,
+      event_id: this.state.event.id,
+      parent_id: null,
+    }, this.state.config)
+      .then(res => console.log(res.status));
+  }
+
   render() {
     if (!this.state.event) {
       return <div>This is not an event</div>;
@@ -67,7 +102,7 @@ export default class EventViewer extends Component {
         <p>{this.state.event.description}</p>
         {
           this.state.event.start_time ? 
-          `${this.state.event.start_time
+          `Time: ${this.state.event.start_time
               .replace('T', ' ')
               .substring(0, this.state.event.start_time.length - 5)} 
           - ${this.state.event.end_time
@@ -76,11 +111,21 @@ export default class EventViewer extends Component {
         }
         {this.state.host ?
           <div>
-            <p>{this.state.host.username}</p>
-            <img src={this.state.host.profile_picture}/>
+            <p>Host: {this.state.host.username}</p>
+            <Avatar size={100} src={this.state.host.profile_picture}/>
           </div>
         : null}
-        <AttendantsList attendants={this.state.attendants} history={this.props.history} />
+        <AttendantsList attendants={this.state.attendants} history={this.props.history} /> <br/>
+        <CreatePost
+          generatePost={this.generatePost}
+        /> <br />
+        {this.state.posts.length ? <Posts
+            history={this.props.history}
+            posts={this.state.posts}
+            user={this.state.user}
+            event={this.state.event}
+            config={this.state.config}
+          /> : null}
       </div>
     );
   }
