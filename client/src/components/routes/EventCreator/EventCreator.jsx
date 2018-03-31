@@ -143,7 +143,7 @@ export default class EventCreator extends React.Component {
           title: this.state.eventName,
           description: this.state.eventDescription,
           location: this.state.eventLocation,
-          // thumbnail:,
+          thumbnail: this.state.thumbnailUrl,
           start_time: this.state.selectedTime[0],
           end_time: this.state.selectedTime[1],
           publicity: this.state.eventIsPublic,

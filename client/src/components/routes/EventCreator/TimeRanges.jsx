@@ -7,7 +7,6 @@ const TimeRanges = props => {
     <div>
       <h2>I'd like my event to occur between:</h2>
       <div>
-        {/* TODO: make date pickers on same line */}
         <DatePicker
           floatingLabelText="Date range (start)"
           firstDayOfWeek={0}
