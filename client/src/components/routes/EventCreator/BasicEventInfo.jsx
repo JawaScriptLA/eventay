@@ -50,8 +50,16 @@ const BasicEventInfo = props => {
           maxFiles: 1,
           fromSources: ['local_file_system', 'imagesearch', 'url']
         }}
-        // onSuccess={this.yourCallbackFunction}
+        onSuccess={props.handleThumbnailUpload}
       />
+      {props.thumbnailUrl && (
+        <div>
+          <img
+            style={{ height: '40%', width: '40%', margin: 'auto' }}
+            src={props.thumbnailUrl}
+          />
+        </div>
+      )}
 
       <Toggle
         label="Mark event as public:"

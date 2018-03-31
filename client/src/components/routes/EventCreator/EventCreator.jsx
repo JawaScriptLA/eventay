@@ -41,6 +41,7 @@ export default class EventCreator extends React.Component {
       durationHrs: '',
       startDate: null,
       endDate: null,
+      thumbnailUrl: null,
 
       excludeWeekends: false,
       excludeOvernight: false,
@@ -78,6 +79,9 @@ export default class EventCreator extends React.Component {
 
     // Checkbox
     this.handleCheckbox = this.handleCheckbox.bind(this);
+
+    // Thumbnail upload
+    this.handleThumbnailUpload = this.handleThumbnailUpload.bind(this);
   }
 
   getAllFriends() {
@@ -274,6 +278,10 @@ export default class EventCreator extends React.Component {
     }
   }
 
+  handleThumbnailUpload(res) {
+    this.setState({ thumbnailUrl: res.filesUploaded[0].url });
+  }
+
   getStepContent(stepIndex) {
     switch (stepIndex) {
       case 0:
@@ -285,6 +293,8 @@ export default class EventCreator extends React.Component {
             eventIsPublic={this.state.eventIsPublic}
             handleTextChanges={this.handleTextChanges}
             handleToggleChanges={this.handleToggleChanges}
+            handleThumbnailUpload={this.handleThumbnailUpload}
+            thumbnailUrl={this.state.thumbnailUrl}
             firstNextClicked={this.state.firstNextClicked}
           />
         );
