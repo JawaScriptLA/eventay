@@ -300,7 +300,7 @@ export default class EventCreator extends React.Component {
         );
       case 1:
         return (
-          <div>
+          <div style={{ width: '70%', margin: 'auto' }}>
             <TimeRanges
               handleDateChanges={this.handleDateChanges}
               handleDropdownChanges={this.handleDropdownChanges}
@@ -324,7 +324,7 @@ export default class EventCreator extends React.Component {
         );
       case 2:
         return (
-          <div>
+          <div style={{ width: '60%', margin: 'auto' }}>
             <FriendsTable
               allFriends={this.state.allFriends}
               handleSelectionChange={this.handleSelectionChange}
@@ -345,7 +345,7 @@ export default class EventCreator extends React.Component {
           />
         ];
         return (
-          <div>
+          <div style={{ width: '70%', margin: 'auto' }}>
             <Table
               height="500px"
               onRowSelection={rowIds => {
