@@ -39,10 +39,11 @@ export default class EventViewer extends Component {
     
       axios.get(`/api/attendant/${this.state.event.id}`, this.state.config)
         .then((attendants) => {
-          let isAttendant = attendants.data.reduce((acc, attendant) => (acc || attendant.user_id === this.state.user.id), false);
+          let attendantStatus = attendants.data.reduce((acc, attendant) => acc[0] ? acc : attendant.user_id === this.state.user.id ? [true, attendant.status] : acc, [false, '']);
+          console.log('user:', this.state.user.id, 'host:', this.state.event.host_id, 'event:', this.state.event.id);
           this.setState({
             attendants: attendants.data,
-            role: this.state.event.host_id === this.state.user.id ? 'host' : isAttendant ? 'attendant' : 'stranger'
+            role: this.state.event.host_id === this.state.user.id ? 'host' : attendantStatus[0] ? attendantStatus[1] : 'stranger'
           });
         })
         .catch((err) => console.error('Error attendants:', err));
@@ -134,6 +135,13 @@ export default class EventViewer extends Component {
           - ${this.state.event.end_time
               .replace('T', ' ')
               .substring(0, this.state.event.end_time.length - 5)}` : <span>Loading...</span>
+        }
+        {
+          this.state.role === 'host' ? <div>host</div> :
+          this.state.role === 'pending' ? <div>pending</div> :
+          this.state.role === 'declined' ? <div>declined</div> :
+          this.state.role === 'going' ? <div>going</div> :
+          this.state.role === 'maybe' ? <div>maybe</div> : <div>stranger</div>
         }
         {this.state.host ?
           <div>
