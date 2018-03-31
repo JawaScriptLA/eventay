@@ -43,8 +43,6 @@ router.post('/showRecommendedTimes', async (req, res) => {
     currEnd += halfHourAsMilliseconds;
   }
 
-  console.log('available times:', availableTimes);
-
   // Eliminate times based on filters
   if (excludeWeekends) {
     for (timeChunk in availableTimes) {

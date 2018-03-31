@@ -1,7 +1,10 @@
 import React from 'react';
+import ReactFilestack, { client } from 'filestack-react';
+import filestack from '../../../../config.js';
 
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const BasicEventInfo = props => {
   return (
@@ -13,6 +16,11 @@ const BasicEventInfo = props => {
           value={props.eventName}
           fullWidth={true}
           onChange={props.handleTextChanges}
+          errorText={
+            props.firstNextClicked && !props.eventName.length
+              ? 'Event name is required'
+              : null
+          }
         />
       </div>
       <div>
@@ -34,8 +42,36 @@ const BasicEventInfo = props => {
           onChange={props.handleTextChanges}
         />
       </div>
-      <div>ADD THUMBNAIL HERE</div>
-      {/* // TODO: use filestack to upload thumbnail */}
+      <div style={{ margin: '3% 0% 7% 0%' }}>
+        <span>Upload event photo: </span>
+        <ReactFilestack
+          apikey={filestack.API_KEY2}
+          buttonText="Upload event photo"
+          render={({ onPick }) => (
+            <RaisedButton
+              style={{ float: 'right' }}
+              label="Upload"
+              onClick={onPick}
+            />
+          )}
+          options={{
+            accept: 'image/*',
+            maxFiles: 1,
+            fromSources: ['local_file_system', 'imagesearch', 'url']
+          }}
+          onSuccess={props.handleThumbnailUpload}
+        />
+      </div>
+
+      {props.thumbnailUrl && (
+        <div>
+          <img
+            style={{ height: '40%', width: '40%', margin: 'auto' }}
+            src={props.thumbnailUrl}
+          />
+        </div>
+      )}
+
       <Toggle
         label="Mark event as public:"
         style={{ marginTop: '5%' }}

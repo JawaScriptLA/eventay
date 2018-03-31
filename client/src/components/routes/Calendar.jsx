@@ -15,34 +15,39 @@ let formats = {
     local.format(end, 'MMM DD', culture),
   dateFormat: (date, culture, local) => local.format(date, 'DD', culture),
   eventTimeRangeFormat: ({ start, end }, culture, local) =>
-    local.format(start, 'h:mm a', culture) + ' - ' + local.format(end, 'h:mm a', culture),
+    local.format(start, 'h:mm a', culture) +
+    ' - ' +
+    local.format(end, 'h:mm a', culture)
 };
 
 export default class Calendar extends Component {
   constructor(props) {
-    super (props);
+    super(props);
     this.state = { events: [] };
   }
-  
-  componentDidMount() {
-    const config = { headers: { 'Authorization': 'bearer ' + localStorage.token} };
+
+  componentWillMount() {
+    const config = {
+      headers: { Authorization: 'bearer ' + localStorage.token }
+    };
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (userInfo) {
-      axios.get(`/api/event/${userInfo.id}`, config)
+      axios
+        .get(`/api/event/${userInfo.id}`, config)
         .then(({ data }) => {
-          data.forEach((event) => {
+          data.forEach(event => {
             event.desc = event.description;
-            event.start = event.start_time;
-            event.end = event.end_time;
+            event.start = new Date(event.start_time);
+            event.end = new Date(event.end_time);
           });
           this.setState({ events: data });
         })
-        .catch((err) => {
+        .catch(err => {
           console.log('Error:', err);
         });
     }
   }
-  
+
   selectEvent(event) {
     this.props.history.push({
       pathname: `/event/${event.id}`,
@@ -60,10 +65,11 @@ export default class Calendar extends Component {
           events={this.state.events}
           onSelectEvent={this.selectEvent}
           views={['month', 'week']}
-          startAccessor='start'
-          endAccessor='end'
+          startAccessor="start"
+          endAccessor="end"
           defaultDate={new Date()}
           showMultiDayTimes
+          popup={true}
         />
       </div>
     );

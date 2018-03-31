@@ -1,15 +1,11 @@
 import React from 'react';
 
 import DatePicker from 'material-ui/DatePicker';
-// import TimePicker from 'material-ui/TimePicker';
-// import SelectField from 'material-ui/SelectField';
-// import MenuItem from 'material-ui/MenuItem';
-import Checkbox from 'material-ui/Checkbox';
 
 const TimeRanges = props => {
   return (
     <div>
-      <h2>I'd like my event to occur some time between...</h2>
+      <h2>I'd like my event to occur between:</h2>
       <div>
         <DatePicker
           floatingLabelText="Date range (start)"
@@ -20,10 +16,13 @@ const TimeRanges = props => {
           onChange={(nullArg, newDate) => {
             props.handleDateChanges(newDate, 'startDate');
           }}
+          errorText={
+            props.secondNextClicked && !props.startDate
+              ? 'Start date is required'
+              : null
+          }
+          style={{ display: 'inline-block', margin: '2%' }}
         />
-      </div>
-      <div>
-        <h2>and...</h2>
         <DatePicker
           floatingLabelText="Date range (end)"
           firstDayOfWeek={0}
@@ -33,28 +32,14 @@ const TimeRanges = props => {
           onChange={(nullArg, newDate) => {
             props.handleDateChanges(newDate, 'endDate');
           }}
+          errorText={
+            props.secondNextClicked && !props.endDate
+              ? 'End date is required'
+              : null
+          }
+          style={{ display: 'inline-block', margin: '2%' }}
         />
       </div>
-
-      {/* TODO: move these to bottom of page */}
-      <Checkbox
-        label="Exclude weekend times (Saturday/Sunday)"
-        name="excludeWeekends"
-        checked={props.excludeWeekends}
-        onCheck={props.handleCheckbox}
-      />
-      <Checkbox
-        label="Exclude overnight times (11p-6a)"
-        name="excludeOvernight"
-        checked={props.excludeOvernight}
-        onCheck={props.handleCheckbox}
-      />
-      <Checkbox
-        label="Exclude workday times (9a-4p)"
-        name="excludeWorkday"
-        checked={props.excludeWorkday}
-        onCheck={props.handleCheckbox}
-      />
     </div>
   );
 };
