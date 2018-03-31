@@ -83,7 +83,16 @@ export default class EventViewer extends Component {
       event_id: this.state.event.id,
       parent_id: null,
     }, this.state.config)
-      .then(res => console.log(res.status));
+      .then((res) => {
+        const updatedPostList = this.state.posts;
+          axios.get(`/api/user/id/${res.data[0].user_id}`, this.state.config)
+            .then(({ data }) => {
+              const temp = res.data[0];
+              temp.userInfo = data;
+              updatedPostList.push({ post: temp, comments: []});
+              this.setState({ posts: updatedPostList });
+            });
+        });
   }
 
   render() {
