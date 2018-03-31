@@ -60,7 +60,8 @@ module.exports = {
   getAllAttending: async ({ user_id }) => {
     try {
       const data = await db.queryAsync(`SELECT * FROM attendants WHERE user_id=${user_id}`);
-      res.send(data.rows);
+      console.log('data:', data);
+      return data.rows;
     } catch (err) {
       console.log(`Error during attendants GET request: ${err}`);
       res.sendStatus(500);

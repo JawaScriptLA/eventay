@@ -32,15 +32,26 @@ export default class Calendar extends Component {
     };
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (userInfo) {
-      axios
-        .get(`/api/event/${userInfo.id}`, config)
+      axios.get(`/api/attendants/${userInfo.id}`, config)
         .then(({ data }) => {
-          data.forEach(event => {
-            event.desc = event.description;
-            event.start = new Date(event.start_time);
-            event.end = new Date(event.end_time);
-          });
-          this.setState({ events: data });
+          for (let i = 0; i < data.length; i++) {
+            axios.get(`/api/event/eventinfo/${data[i].event_id}`, config)
+              .then(({ data: [ event ] }) => {
+                event.desc = event.description;
+                event.start = event.start_time;
+                event.end = event.end_time;
+                event.status = data[i].status;
+                let events = this.state.events;
+                events.push(event);
+                this.setState({ events: events });
+              });
+          }
+          // data.forEach((event) => {
+          //   event.desc = event.description;
+          //   event.start = event.start_time;
+          //   event.end = event.end_time;
+          // });
+          // this.setState({ events: data });
         })
         .catch(err => {
           console.log('Error:', err);
@@ -56,6 +67,7 @@ export default class Calendar extends Component {
   }
 
   render() {
+    console.log('events:', this.state.events);
     return (
       <div id="calendar">
         <BigCalendar
