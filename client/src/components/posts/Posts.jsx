@@ -9,6 +9,10 @@ class Posts extends React.Component {
   constructor(props){
     super(props);
 
+    this.state = {
+      commentTextInput: ''
+    }
+
     this.renderPosts = this.renderPosts.bind(this);
   }
 
@@ -27,8 +31,14 @@ class Posts extends React.Component {
               {post.post.body}
             </CardText>
             <Divider />
-            <Comments comments={post.comments}/>
-            <TextField hintText="Respond..." />
+            <Comments
+              postId={post.post.id}
+              comments={post.comments}
+              posts={this.state.posts}
+              user={this.props.user}
+              event={this.props.event}
+              config={this.props.config}
+            />
           </Card>
         )
       })

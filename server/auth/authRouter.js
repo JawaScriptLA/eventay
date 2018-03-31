@@ -19,6 +19,7 @@ module.exports = passportObj => {
           )
           RETURNING username
         `;
+        console.log(query);
         const data = await db.queryAsync(query);
       } catch (err) {
         console.log(`Error during signup: ${err}`);
