@@ -7,6 +7,7 @@ import FriendsTable from './FriendsTable.jsx';
 import NavBar from '../NavBar.jsx';
 import TimeRanges from './TimeRanges.jsx';
 import BasicEventInfo from './BasicEventInfo.jsx';
+import TimeOptions from './TimeOptions.jsx';
 
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
 import Dialog from 'material-ui/Dialog';
@@ -48,6 +49,7 @@ export default class EventCreator extends React.Component {
       stepIndex: 0,
       dialogOpen: false,
       firstNextClicked: false,
+      secondNextClicked: false,
       authHeader: { headers: { Authorization: 'Bearer ' + localStorage.token } }
     };
     this.getAllFriends();
@@ -93,22 +95,9 @@ export default class EventCreator extends React.Component {
   }
 
   generateRecommendations() {
-    // const start = calculateTotalTime(
-    //   this.state.startDate.getTime()
-    //   // this.state.startHours,
-    //   // this.state.startMinutes,
-    //   // this.state.startAMPM
-    // );
-    // const end = calculateTotalTime(
-    //   this.state.endDate.getTime()
-    //   // this.state.endHours,
-    //   // this.state.endMinutes,
-    //   // this.state.endAMPM
-    // );
     const startMilliseconds = this.state.startDate.getTime();
     const endMilliseconds = this.state.endDate.getTime();
 
-    // const timeRange = [[start, end]];
     const durationAsMilliseconds =
       (Number(this.state.durationHrs) * 60 + Number(this.state.durationMins)) *
       60000;
@@ -189,6 +178,13 @@ export default class EventCreator extends React.Component {
         return;
       }
     }
+    if (stepIndex === 1) {
+      this.setState({ secondNextClicked: true });
+      if (!this.state.startDate || !this.state.endDate) {
+        return;
+      }
+    }
+
     if (stepIndex < 3) {
       this.setState({
         stepIndex: stepIndex + 1
@@ -263,7 +259,6 @@ export default class EventCreator extends React.Component {
     });
   }
 
-  // handleSelectionChange2(selectedRow, recommendations) {
   handleSelectionChange2(selectedRow, startTime, endTime) {
     if (!startTime) {
       this.setState({
@@ -299,23 +294,21 @@ export default class EventCreator extends React.Component {
             <TimeRanges
               handleDateChanges={this.handleDateChanges}
               handleDropdownChanges={this.handleDropdownChanges}
-              handleCheckbox={this.handleCheckbox}
-              excludeWeekends={this.state.excludeWeekends}
-              excludeOvernight={this.state.excludeOvernight}
-              excludeWorkday={this.state.excludeWorkday}
               startDate={this.state.startDate}
-              // startHours={this.state.startHours}
-              // startMinutes={this.state.startMinutes}
-              // startAMPM={this.state.startAMPM}
               endDate={this.state.endDate}
-              // endHours={this.state.endHours}
-              // endMinutes={this.state.endMinutes}
-              // endAMPM={this.state.endAMPM}
+              secondNextClicked={this.state.secondNextClicked}
             />
             <DurationFields
               durationHrs={this.state.durationHrs}
               durationMins={this.state.durationMins}
               handleTextChanges={this.handleTextChanges}
+            />
+
+            <TimeOptions
+              excludeWeekends={this.state.excludeWeekends}
+              excludeOvernight={this.state.excludeOvernight}
+              excludeWorkday={this.state.excludeWorkday}
+              handleCheckbox={this.handleCheckbox}
             />
           </div>
         );
