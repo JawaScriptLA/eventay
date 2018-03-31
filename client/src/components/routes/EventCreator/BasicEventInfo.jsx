@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactFilestack, { client } from 'filestack-react';
+import filestack from '../../../../config.js';
 
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
@@ -40,7 +42,17 @@ const BasicEventInfo = props => {
         />
       </div>
       <div>ADD THUMBNAIL HERE</div>
-      {/* // TODO: use filestack to upload thumbnail */}
+      <ReactFilestack
+        apikey={filestack.API_KEY2}
+        buttonText="Upload event photo"
+        options={{
+          accept: 'image/*',
+          maxFiles: 1,
+          fromSources: ['local_file_system', 'imagesearch', 'url']
+        }}
+        // onSuccess={this.yourCallbackFunction}
+      />
+
       <Toggle
         label="Mark event as public:"
         style={{ marginTop: '5%' }}
