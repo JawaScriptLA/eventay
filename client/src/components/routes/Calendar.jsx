@@ -34,6 +34,7 @@ export default class Calendar extends Component {
     if (userInfo) {
       axios.get(`/api/attendants/${userInfo.id}`, config)
         .then(({ data }) => {
+          data = data.filter((event) => event.status !== 'pending' && event.status !== 'declined');
           for (let i = 0; i < data.length; i++) {
             axios.get(`/api/event/eventinfo/${data[i].event_id}`, config)
               .then(({ data: [ event ] }) => {
@@ -67,11 +68,10 @@ export default class Calendar extends Component {
   }
 
   eventPropGetter(event) {
-    return event.status === 'maybe' ? { color: 'lightGrey' } : event.status === 'pending' || event.status === 'declined' ? { color: 'white' } : {};
+    return { style: event.status === 'maybe' ? { color: '#E8DEDE' } : {} };
   }
 
   render() {
-    console.log('events:', this.state.events);
     return (
       <div id="calendar">
         <BigCalendar
