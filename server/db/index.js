@@ -16,7 +16,12 @@ const setup = async () => {
   await sql.drop('table', 'friends');
   await sql.drop('table', 'events');
   await sql.drop('table', 'users');
-  await sql.drop('database', config.rdb.name);
+  await sql.drop(
+    'database',
+    config.rdb.environment === 'test'
+      ? config.rdb.name_testing
+      : config.rdb.name_dev
+  );
   await sql.createDatabase();
   await sql.createUsersTable();
   await sql.createEventsTable();
@@ -29,4 +34,6 @@ const setup = async () => {
   process.exit();
 };
 
-setup();
+module.exports = setup;
+
+// setup();

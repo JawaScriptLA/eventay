@@ -18,18 +18,50 @@ module.exports = {
   },
   useDatabase: async () => {
     try {
-      await db.queryAsync(`USE IF EXISTS ${config.rdb.name}`);
-      console.log('Using database', config.rdb.name);
+      await db.queryAsync(
+        `USE IF EXISTS ${
+          config.rdb.environment === 'test'
+            ? config.rdb.name_testing
+            : config.rdb.name_dev
+        }`
+      );
+      console.log(
+        'Using database',
+        config.rdb.environment === 'test'
+          ? config.rdb.name_testing
+          : config.rdb.name_dev
+      );
     } catch (err) {
-      console.log('Error using database', config.rdb.name);
+      console.log(
+        'Error using database',
+        config.rdb.environment === 'test'
+          ? config.rdb.name_testing
+          : config.rdb.name_dev
+      );
     }
   },
   createDatabase: async () => {
     try {
-      await db.queryAsync(`CREATE DATABASE ${config.rdb.name}`);
-      console.log('Successfully created database', config.rdb.name);
+      await db.queryAsync(
+        `CREATE DATABASE ${
+          config.rdb.environment === 'test'
+            ? config.rdb.name_testing
+            : config.rdb.name_dev
+        }`
+      );
+      console.log(
+        'Successfully created database',
+        config.rdb.environment === 'test'
+          ? config.rdb.name_testing
+          : config.rdb.name_dev
+      );
     } catch (err) {
-      console.log('Error creating database', config.rdb.name);
+      console.log(
+        'Error creating database',
+        config.rdb.environment === 'test'
+          ? config.rdb.name_testing
+          : config.rdb.name_dev
+      );
     }
   },
   createUsersTable: async () => {

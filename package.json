@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server",
     "chat:start": "nodemon chat-server",
+    "start": "nodemon server/server.js",
     "build": "webpack -w",
-    "db:setup": "node server/db/index.js",
+    "db:setup": "node server/db/clearDB.js",
     "db:seed": "psql -d eventayRDB -a -f server/db/seedData.sql",
     "test": "jest"
   },
@@ -68,6 +68,7 @@
     "morgan": "^1.9.0",
     "nodemon": "^1.17.2",
     "style-loader": "^0.20.3",
+    "supertest": "^3.0.0",
     "webpack": "^3.11.0"
   }
 }

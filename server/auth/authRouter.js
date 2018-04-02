@@ -6,7 +6,7 @@ module.exports = passportObj => {
   authRouter.post('/signup', (req, res, next) => {
     passportObj.authenticate('signup', async (err, user, info) => {
       if (err) {
-        return res.status(401).end();
+        return res.sendStatus(401);
       }
       try {
         const { username } = req.body;
@@ -19,11 +19,9 @@ module.exports = passportObj => {
           )
           RETURNING username
         `;
-        console.log(query);
         const data = await db.queryAsync(query);
       } catch (err) {
         console.log(`Error during signup: ${err}`);
-
         res.sendStatus(401);
       }
 

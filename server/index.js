@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const path = require('path');
-const authRouter = require('./auth/authRouter.js');
 const router = require('./router.js');
 const app = express();
 
@@ -24,16 +23,17 @@ initPassport(passportObj);
 app.use('/api', router(passportObj));
 
 app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, '/../client/public/index.html'), (err) => {
+  res.sendFile(path.join(__dirname, '/../client/public/index.html'), err => {
     if (err) {
       res.status(500).send(err);
     }
   });
 });
 
-const port = 1337;
-app.listen(port, () => {
-  console.log('Listening in port', port);
-});
+// const port = 1337;
+// app.listen(port, () => {
+//   console.log('Listening in port', port);
+// });
 
 module.exports.passportObj = passportObj;
+module.exports.app = app;
