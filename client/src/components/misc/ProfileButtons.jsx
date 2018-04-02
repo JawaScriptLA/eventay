@@ -21,7 +21,7 @@ class ProfileButtons extends React.Component {
       return (
         <span>
           <FlatButton label="Remove Friend" onClick={this.props.handleRemoveFriend} />
-          <FlatButton label="Send Message" onClick={() => console.log('Send Message clicked')} />
+          <FlatButton label="Send Message" onClick={this.props.initiateChat} />
           <FlatButton label="Invite" onClick={() => console.log('Invite clicked')} />
           <FlatButton label="Block" onClick={this.props.handleBlockUser} />
         </span>

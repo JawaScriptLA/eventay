@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { bindActionCreators } from 'redux';
+import io from 'socket.io-client';
 import {
   TextField,
   Divider,
@@ -63,6 +64,7 @@ class Profile extends React.Component {
     this.handleRemoveFriend = this.handleRemoveFriend.bind(this);
     this.handleBlockUser = this.handleBlockUser.bind(this);
     this.handleAcceptFriendReq = this.handleAcceptFriendReq.bind(this);
+    this.initiateChat = this.initiateChat.bind(this);
   }
 
   componentWillReceiveProps() {
@@ -256,6 +258,11 @@ class Profile extends React.Component {
     }
   }
 
+  initiateChat() {
+    console.log('initiate chat');
+    const socket = io.connect(`http://localhost:9001`);
+  }
+
   getEvents(userId) {
     axios
       .get(`/api/event/${userId}`, this.state.authHeader)
@@ -337,6 +344,7 @@ class Profile extends React.Component {
               handleBlockUser={this.handleBlockUser}
               handleRemoveFriend={this.handleRemoveFriend}
               handleAcceptFriendReq={this.handleAcceptFriendReq}
+              initiateChat={this.initiateChat}
             />
             {this.state.isSelf || this.state.isFriend ? (
               <EventList

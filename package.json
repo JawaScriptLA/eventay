@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server",
+    "chat:start": "nodemon chat-server",
     "build": "webpack -w",
     "db:setup": "node server/db/index.js",
     "db:seed": "psql -d eventayRDB -a -f server/db/seedData.sql"
