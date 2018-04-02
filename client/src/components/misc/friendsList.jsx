@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Chip, Avatar, List, ListItem } from 'material-ui';
 import { bindActionCreators } from 'redux';
 import * as friendsActions from '../../actions/friendsActions';
 import * as userInfoActions from '../../actions/userInfoActions';
@@ -11,6 +12,14 @@ class FriendsList extends React.Component {
     const user = JSON.parse(localStorage.getItem('userInfo'));
     props.userInfoActions.receiveUserInfo(user);
     this.getFriendsList();
+
+    this.state = {
+      enableForChat: false,
+    }
+  }
+
+  componentWillMount() {
+    this.props.history ? this.setState({ enableForChat: false }) : this.setState({ enableForChat: true });
   }
 
   getFriendsList() {
@@ -25,22 +34,30 @@ class FriendsList extends React.Component {
   }
 
   renderData(item) {
+
     return (
-      <div
-        onClick={() => this.props.history.push(`/profile/${item.username}`)}
+      <ListItem
+        primaryText={item.username}
+        leftAvatar={<Avatar src={item.profile_picture} />}
+        onClick={
+          this.props.history ?
+          () => this.props.history.push(`/profile/${item.username}`) :
+          () => this.props.handleChatWindow(item)
+        }
+        value={item.username}
         key={item.id}
-      >
-        {item.username}
-      </div>
-    );
+      />
+    )
   }
 
   render() {
     if (this.props.friendsList.length) {
       return (
         <div>
-          <strong>Friends</strong>
-          {this.props.friendsList.map(friend => this.renderData(friend))}
+          <strong>Friends</strong> <br />
+          <List style={{ maxHeight: '10em', overflow: 'scroll', width: '20%'}} >
+            {this.props.friendsList.map(friend => this.renderData(friend))}
+          </List>
         </div>
       );
     } else {

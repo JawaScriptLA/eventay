@@ -259,8 +259,7 @@ class Profile extends React.Component {
   }
 
   initiateChat() {
-    console.log('initiate chat');
-    const socket = io.connect(`http://localhost:9001`);
+    
   }
 
   getEvents(userId) {
