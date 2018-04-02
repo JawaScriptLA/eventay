@@ -66,6 +66,10 @@ export default class Calendar extends Component {
     });
   }
 
+  eventPropGetter(event) {
+    return event.status === 'maybe' ? { color: 'lightGrey' } : event.status === 'pending' || event.status === 'declined' ? { color: 'white' } : {};
+  }
+
   render() {
     console.log('events:', this.state.events);
     return (
@@ -75,6 +79,7 @@ export default class Calendar extends Component {
           culture="en"
           formats={formats}
           events={this.state.events}
+          eventPropGetter={this.eventPropGetter}
           onSelectEvent={this.selectEvent}
           views={['month', 'week']}
           startAccessor="start"
