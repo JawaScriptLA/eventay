@@ -269,6 +269,7 @@ class Profile extends React.Component {
       .get(`/api/event/${userId}`, this.state.authHeader)
       .then(response => {
         if (!this.state.isSelf) {
+          console.log(response.data);
           const pubEvents = response.data.filter(event => event.publicity);
           this.setState({ events: pubEvents});
         } else {
