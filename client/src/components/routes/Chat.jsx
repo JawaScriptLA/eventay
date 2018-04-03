@@ -1,5 +1,6 @@
 import React from 'react';
 import { Paper, TextField, List, Avatar } from 'material-ui';
+import io from 'socket.io-client';
 import FriendsList from '../misc/friendsList.jsx'
 import ListItem from 'material-ui/List/ListItem';
 
@@ -12,6 +13,7 @@ class Chat extends React.Component {
       messages: [],
       message: '',
       currentChatReceiver: null,
+      socket: null,
     }
 
     this.handleChatWindow = this.handleChatWindow.bind(this);
@@ -20,7 +22,23 @@ class Chat extends React.Component {
 
   componentWillMount(){
     if (this.props.location.state) {
-      this.setState({ currentChatReceiver: this.props.location.state });
+      this.setState({
+        currentChatReceiver: this.props.location.state,
+        socket: io.connect('http://localhost:9001'),
+      });
+    }
+  }
+
+  componentDidMount() {
+    if (this.state.currentChatReceiver) {
+      this.state.socket.on('chat', (data) => {
+        console.log(data);
+        if (data.receiver.id === this.state.user.id) {
+          const messageList = this.state.messages;
+          messageList.push(data)
+          this.setState({ messages: messageList });
+        }
+      })
     }
   }
   
@@ -29,16 +47,16 @@ class Chat extends React.Component {
   }
 
   handleInput(e) {
-    this.setState({ [e.target.name]: e.target.value })
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   renderMessages(messageList) {
     return messageList.map(message => (
       <ListItem
         disabled={true}
-        primaryText={`${message.user.username}: `}
+        primaryText={`${message.sender.username}: `}
         secondaryText={message.message}
-        leftAvatar={<Avatar src={message.user.profile_picture} />}
+        leftAvatar={<Avatar src={message.sender.profile_picture} />}
         key={Math.floor(Math.random() * 10000)}
       />
     ));
@@ -47,10 +65,15 @@ class Chat extends React.Component {
   sendMessage(e) {
     if (e.key === 'Enter') {
       const messageList = this.state.messages;
-      messageList.push({ 
+      const payload = {
         message: this.state.message,
-        user: this.state.user,
-      });
+        sender: this.state.user,
+        receiver: this.state.currentChatReceiver,
+      };
+
+      messageList.push(payload);
+
+      this.state.socket.emit('chat', payload);
 
       this.setState({ messages: messageList, message: '' });
     }
@@ -79,7 +102,7 @@ class Chat extends React.Component {
         <TextField
           hintText={this.state.currentChatReceiver ? "Say something..." : "Select a receipient first..."}
           disabled={!!!this.state.currentChatReceiver}
-          style={{ overflow: 'scroll'}}
+          style={{ overflow: 'scroll' }}
           name='message'
           value={this.state.message}
           onChange={this.handleInput.bind(this)}
