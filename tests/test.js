@@ -10,10 +10,9 @@ beforeAll(async () => {
   await authDB.dropDatabase();
 });
 
-describe('Initial setup', () => {
+describe('Initialization', () => {
   test('Successfully issue GET request to /', async () => {
     const response = await request(app).get('/');
-    console.log('response is', response.headers);
     expect(response.statusCode).toBe(200);
     expect(response.headers['content-type']).toEqual(
       expect.stringContaining('text/html')
@@ -40,6 +39,30 @@ describe('Utility functions', () => {
     );
     expect(utils.convertTime('2018-04-09 00:00:00')).toBe(
       'Mon Apr 09, 2018 12:00 am'
+    );
+  });
+
+  test('conflictExists properly determines whether two time ranges conflict', () => {
+    let time1 = [
+      Date.parse('2018-04-01 00:00:00'),
+      Date.parse('2018-04-05 00:00:00')
+    ];
+    let time2 = [
+      Date.parse('2018-04-04 00:00:00'),
+      Date.parse('2018-04-07 00:00:00')
+    ];
+    let time3 = [
+      Date.parse('2018-04-07 00:00:00'),
+      Date.parse('2018-04-10 00:00:00')
+    ];
+    expect(utils.conflictExists(time1[0], time1[1], time2[0], time2[1])).toBe(
+      true
+    );
+    expect(utils.conflictExists(time1[0], time1[1], time3[0], time3[1])).toBe(
+      false
+    );
+    expect(utils.conflictExists(time2[0], time2[1], time3[0], time3[1])).toBe(
+      false
     );
   });
 });
