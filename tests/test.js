@@ -3,8 +3,8 @@ const setup = require('../server/db/index.js');
 
 const { app } = require('../server/index.js');
 
-beforeAll(() => {
-  // return setup();
+beforeAll(async () => {
+  await setup();
 });
 
 describe('GET /', () => {

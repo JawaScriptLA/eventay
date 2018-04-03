@@ -31,7 +31,6 @@ const setup = async () => {
   await sql.createLikesTable();
   await sql.createEmojisTable();
   await sql.createReactionsTable();
-  process.exit();
 };
 
 module.exports = setup;
