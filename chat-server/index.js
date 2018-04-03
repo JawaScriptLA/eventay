@@ -11,6 +11,7 @@ const io = socket(server);
 io.on('connection', (socket) => {
   console.log('made socket connection', socket.id);
   socket.on('chat', (data) => {
+    // primitive implementation. need to revise in future
     io.sockets.emit('chat', data);
   });
 });

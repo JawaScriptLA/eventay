@@ -214,7 +214,6 @@ class Profile extends React.Component {
 
   handleUpdatePhoto(photo) {
     const url = photo.filesUploaded[0].url;
-    console.log(url);
     // todo update bio info
     axios
       .put(
@@ -270,7 +269,6 @@ class Profile extends React.Component {
       .get(`/api/event/${userId}`, this.state.authHeader)
       .then(response => {
         if (!this.state.isSelf) {
-          console.log(response.data);
           const pubEvents = response.data.filter(event => event.publicity);
           this.setState({ events: pubEvents});
         } else {
