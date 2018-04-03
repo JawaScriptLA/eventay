@@ -10,12 +10,15 @@ import Profile from './components/routes/Profile.jsx';
 import Protected from './components/Protected.jsx';
 import Test from './components/routes/Test.jsx';
 
+import Landing from './components/routes/landing/Landing.jsx';
+
 export default class App extends Component {
   render() {
     return (
       <Router>
         <Switch>
           <Route path="/test" exact component={Test} />
+          <Route path="/landing" component={Landing} />
           <Route path="/signup" exact component={Signup} />
           <Route path="/login" exact component={Login} />
           <Route
