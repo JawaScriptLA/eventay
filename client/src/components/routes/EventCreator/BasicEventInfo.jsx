@@ -11,7 +11,7 @@ const BasicEventInfo = props => {
     <div style={{ width: '50%', margin: 'auto' }}>
       <div>
         <TextField
-          floatingLabelText="Enter event name here..."
+          floatingLabelText="event name ..."
           name="eventName"
           value={props.eventName}
           fullWidth={true}
@@ -25,7 +25,7 @@ const BasicEventInfo = props => {
       </div>
       <div>
         <TextField
-          floatingLabelText="Enter description here..."
+          floatingLabelText="description ..."
           name="eventDescription"
           value={props.eventDescription}
           multiLine={true}
@@ -35,7 +35,7 @@ const BasicEventInfo = props => {
       </div>
       <div>
         <TextField
-          floatingLabelText="Enter location here..."
+          floatingLabelText="location ..."
           name="eventLocation"
           value={props.eventLocation}
           fullWidth={true}
@@ -43,7 +43,7 @@ const BasicEventInfo = props => {
         />
       </div>
       <div style={{ margin: '3% 0% 7% 0%' }}>
-        <span>Upload event photo: </span>
+        <span>event photo: </span>
         <ReactFilestack
           apikey={filestack.API_KEY2}
           buttonText="Upload event photo"
@@ -73,7 +73,7 @@ const BasicEventInfo = props => {
       )}
 
       <Toggle
-        label="Mark event as public:"
+        label="make public:"
         style={{ marginTop: '5%' }}
         name="eventIsPublic"
         onToggle={(e, isToggled) => props.handleToggleChanges(e, isToggled)}
