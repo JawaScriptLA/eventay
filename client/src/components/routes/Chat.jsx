@@ -14,36 +14,49 @@ class Chat extends React.Component {
       message: '',
       currentChatReceiver: null,
       socket: null,
+      isListeningForChats: false,
     }
 
     this.handleChatWindow = this.handleChatWindow.bind(this);
     this.renderMessages = this.renderMessages.bind(this);
+    this.initializeSocket = this.initializeSocket.bind(this);
+  }
+
+  initializeSocket(receiver) {
+    this.setState({
+      currentChatReceiver: receiver,
+    });
+    if (!this.state.socket) {
+      this.setState({ socket: io.connect('http://localhost:9001') })
+    }
+    // wait for event queue to finish
+    setTimeout(() => {
+      this.state.socket.emit('leaveRoom', {
+        userInfo: this.state.user,
+      });
+      this.state.socket.emit('handshake', {
+        userInfo: this.state.user,
+      });
+
+      if (!this.state.isListeningForChats) {
+        this.setState({ isListeningForChats: true });
+        this.state.socket.on('chat', data => {
+          const messageList = this.state.messages;
+          messageList.push(data);
+          this.setState({ messages: messageList });
+        });
+      }
+    }, 0);
   }
 
   componentWillMount(){
     if (this.props.location.state) {
-      this.setState({
-        currentChatReceiver: this.props.location.state,
-        socket: io.connect('http://localhost:9001'),
-      });
-    }
-  }
-
-  componentDidMount() {
-    if (this.state.currentChatReceiver) {
-      this.state.socket.on('chat', (data) => {
-        console.log(data);
-        if (data.receiver.id === this.state.user.id) {
-          const messageList = this.state.messages;
-          messageList.push(data)
-          this.setState({ messages: messageList });
-        }
-      })
+      this.initializeSocket(this.props.location.state);
     }
   }
   
   handleChatWindow(friend) {
-    this.setState({ currentChatReceiver: friend })
+    this.initializeSocket(friend);
   }
 
   handleInput(e) {
@@ -69,13 +82,11 @@ class Chat extends React.Component {
         message: this.state.message,
         sender: this.state.user,
         receiver: this.state.currentChatReceiver,
-      };
-
-      messageList.push(payload);
-
+      }
       this.state.socket.emit('chat', payload);
-
+      messageList.push(payload);
       this.setState({ messages: messageList, message: '' });
+      console.log(payload);
     }
   }
 
