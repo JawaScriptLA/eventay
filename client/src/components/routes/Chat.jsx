@@ -1,5 +1,6 @@
 import React from 'react';
 import { Paper, TextField, List, Avatar } from 'material-ui';
+import io from 'socket.io-client';
 import FriendsList from '../misc/friendsList.jsx'
 import ListItem from 'material-ui/List/ListItem';
 
@@ -12,20 +13,50 @@ class Chat extends React.Component {
       messages: [],
       message: '',
       currentChatReceiver: null,
+      socket: null,
+      isListeningForChats: false,
     }
 
     this.handleChatWindow = this.handleChatWindow.bind(this);
     this.renderMessages = this.renderMessages.bind(this);
+    this.initializeSocket = this.initializeSocket.bind(this);
+  }
+
+  initializeSocket(receiver) {
+    this.setState({
+      currentChatReceiver: receiver,
+    });
+    if (!this.state.socket) {
+      this.setState({ socket: io.connect('http://localhost:9001') })
+    }
+    // wait for event queue to finish
+    setTimeout(() => {
+      this.state.socket.emit('leaveRoom', {
+        userInfo: this.state.user,
+      });
+      this.state.socket.emit('handshake', {
+        userInfo: this.state.user,
+      });
+
+      if (!this.state.isListeningForChats) {
+        this.setState({ isListeningForChats: true });
+        this.state.socket.on('chat', data => {
+          const messageList = this.state.messages;
+          messageList.push(data);
+          this.setState({ messages: messageList });
+        });
+      }
+    }, 0);
   }
 
   componentWillMount(){
     if (this.props.location.state) {
-      this.setState({ currentChatReceiver: this.props.location.state });
+      this.initializeSocket(this.props.location.state);
     }
   }
   
   handleChatWindow(friend) {
-    this.setState({ currentChatReceiver: friend })
+    this.initializeSocket(friend);
   }
 
   handleInput(e) {
@@ -36,9 +67,9 @@ class Chat extends React.Component {
     return messageList.map(message => (
       <ListItem
         disabled={true}
-        primaryText={`${message.user.username}: `}
+        primaryText={`${message.sender.username}: `}
         secondaryText={message.message}
-        leftAvatar={<Avatar src={message.user.profile_picture} />}
+        leftAvatar={<Avatar src={message.sender.profile_picture} />}
         key={Math.floor(Math.random() * 10000)}
       />
     ));
@@ -47,12 +78,15 @@ class Chat extends React.Component {
   sendMessage(e) {
     if (e.key === 'Enter') {
       const messageList = this.state.messages;
-      messageList.push({ 
+      const payload = {
         message: this.state.message,
-        user: this.state.user,
-      });
-
+        sender: this.state.user,
+        receiver: this.state.currentChatReceiver,
+      }
+      this.state.socket.emit('chat', payload);
+      messageList.push(payload);
       this.setState({ messages: messageList, message: '' });
+      console.log(payload);
     }
   }
 
