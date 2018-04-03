@@ -259,7 +259,10 @@ class Profile extends React.Component {
   }
 
   initiateChat() {
-    
+    this.props.history.push({
+      pathname: "/chat",
+      state: this.state.profileInfo,
+    });
   }
 
   getEvents(userId) {

@@ -55,7 +55,7 @@ class FriendsList extends React.Component {
       return (
         <div>
           <strong>Friends</strong> <br />
-          <List style={{ maxHeight: '10em', overflow: 'scroll', width: '20%'}} >
+          <List style={{ maxHeight: '10em', overflow: 'scroll', width: '20%', border: '1px solid #d3d3d3'}} >
             {this.props.friendsList.map(friend => this.renderData(friend))}
           </List>
         </div>

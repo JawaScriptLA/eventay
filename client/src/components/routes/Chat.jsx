@@ -11,11 +11,17 @@ class Chat extends React.Component {
       user: JSON.parse(localStorage.userInfo),
       messages: [],
       message: '',
-      currentChatReceiver: {},
+      currentChatReceiver: null,
     }
 
     this.handleChatWindow = this.handleChatWindow.bind(this);
     this.renderMessages = this.renderMessages.bind(this);
+  }
+
+  componentWillMount(){
+    if (this.props.location.state) {
+      this.setState({ currentChatReceiver: this.props.location.state });
+    }
   }
   
   handleChatWindow(friend) {
@@ -56,17 +62,24 @@ class Chat extends React.Component {
         style={{ padding: '5px' }}
         zDepth={1}>
         <h1>Chat View</h1>
-        <FriendsList handleChatWindow={this.handleChatWindow} />
+        <FriendsList
+          handleChatWindow={this.handleChatWindow} />
         <div className='chat-window'>
         <Paper
           depth={-1}
-          style={{ minHeight: '30em', maxHeight: '100em', }}
+          style={{ minHeight: '30em', maxHeight: '100em' }}
         >
-        <List style={{ height: '30em', overflow: 'scroll'}}>
+        {
+          this.state.currentChatReceiver ? `Chatting with ${this.state.currentChatReceiver.username}`:
+          'Select a friend to start chatting'
+        }
+        <List style={{ height: '25em', overflow: 'scroll'}}>
           {this.renderMessages(this.state.messages)}
         </List>
         <TextField
-          hintText="Say something"
+          hintText={this.state.currentChatReceiver ? "Say something..." : "Select a receipient first..."}
+          disabled={!!!this.state.currentChatReceiver}
+          style={{ overflow: 'scroll'}}
           name='message'
           value={this.state.message}
           onChange={this.handleInput.bind(this)}
