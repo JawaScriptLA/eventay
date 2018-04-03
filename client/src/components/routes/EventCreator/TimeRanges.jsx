@@ -5,7 +5,7 @@ import DatePicker from 'material-ui/DatePicker';
 const TimeRanges = props => {
   return (
     <div>
-      <h2>I'd like my event to occur between:</h2>
+      <h2 style={{fontWeight: '300'}}>I'd like my event to occur between:</h2>
       <div>
         <DatePicker
           floatingLabelText="Date range (start)"
