@@ -1,5 +1,5 @@
 var LocalStrategy = require('passport-local').Strategy;
-var User = require('./models/user.js');
+var { User } = require('./models/user.js');
 var bCrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 

@@ -17,7 +17,7 @@ db.on('error', () => {
   console.log(`mongoose connection error with ${mongooseDbName}`);
 });
 
-module.exports = mongoose.model(
+const User = mongoose.model(
   'User',
   mongoose.Schema({
     username: String,
@@ -25,3 +25,6 @@ module.exports = mongoose.model(
     email: String
   })
 );
+
+module.exports.User = User;
+module.exports.authDB = db;

@@ -139,7 +139,6 @@ export default class EventCreator extends React.Component {
       .post(
         '/api/event',
         {
-          // TODO: add thumbnail to post request
           title: this.state.eventName,
           description: this.state.eventDescription,
           location: this.state.eventLocation,

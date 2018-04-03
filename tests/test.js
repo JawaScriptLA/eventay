@@ -1,10 +1,12 @@
 const request = require('supertest');
 const setup = require('../server/db/index.js');
+const { authDB } = require('../server/auth/models/user.js');
 
 const { app } = require('../server/index.js');
 
 beforeAll(async () => {
   await setup();
+  await authDB.dropDatabase();
 });
 
 describe('GET /', () => {
@@ -20,9 +22,10 @@ describe('GET /', () => {
         username: 'bobb',
         password: 'hey'
       });
-    console.log(res.statusCode);
     expect(res.statusCode).toBe(200);
   });
 });
 
-// TODO: disconnect from MongoDB and postgres
+afterAll(() => {
+  console.log('Test suite completed');
+});

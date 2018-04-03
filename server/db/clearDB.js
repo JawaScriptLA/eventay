@@ -1,6 +1,7 @@
 const setup = require('./index.js');
 
-setup();
-setTimeout(() => {
+const clearDB = async () => {
+  await setup();
   process.exit();
-}, 1000);
+};
+clearDB();
