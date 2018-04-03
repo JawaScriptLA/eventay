@@ -9,6 +9,7 @@ import EventViewer from './components/routes/EventViewer.jsx';
 import Profile from './components/routes/Profile.jsx';
 import Protected from './components/Protected.jsx';
 import Test from './components/routes/Test.jsx';
+import Chat from './components/routes/Chat.jsx';
 
 export default class App extends Component {
   render() {
@@ -33,6 +34,10 @@ export default class App extends Component {
             component={props => (
               <Protected component={EventViewer} {...props} />
             )}
+          />
+          <Route
+          path="/chat"
+          component={props => <Protected component={Chat} {...props} />}
           />
           <Route
             path="/"
