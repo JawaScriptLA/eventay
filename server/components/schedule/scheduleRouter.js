@@ -4,7 +4,7 @@ const {
   conflictExists,
   includesWeekend,
   isOvernight,
-  isWorkday,
+  isDuringWorkday,
   millisecondsUntilMidnight
 } = require('../../../utils/utils.js');
 
@@ -68,7 +68,7 @@ router.post('/showRecommendedTimes', async (req, res) => {
     for (timeChunk in availableTimes) {
       let firstStartTime = availableTimes[timeChunk][0];
       let firstEndTime = availableTimes[timeChunk][1];
-      if (isWorkday(firstStartTime, firstEndTime)) {
+      if (isDuringWorkday(firstStartTime, firstEndTime)) {
         delete availableTimes[timeChunk];
       }
     }

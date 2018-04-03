@@ -81,18 +81,7 @@ module.exports = {
     return false;
   },
 
-  millisecondsUntilMidnight: date => {
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let newMinutes = (60 - minutes) % 60;
-    let newHours = (24 - hours) % 24;
-    if (minutes !== 0) {
-      newHours--;
-    }
-    return newMinutes * 60000 + newHours * 3600000;
-  },
-
-  isWorkday: (startTimeStr, endTimeStr) => {
+  isDuringWorkday: (startTimeStr, endTimeStr) => {
     let start = new Date(startTimeStr);
     let startHour = start.getHours();
     let end = new Date(endTimeStr);
@@ -115,5 +104,16 @@ module.exports = {
       }
     }
     return true;
+  },
+
+  millisecondsUntilMidnight: date => {
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let newMinutes = (60 - minutes) % 60;
+    let newHours = (24 - hours) % 24;
+    if (minutes !== 0) {
+      newHours--;
+    }
+    return newMinutes * 60000 + newHours * 3600000;
   }
 };
