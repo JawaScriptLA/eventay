@@ -112,6 +112,12 @@ export default class EventViewer extends Component {
       })
       .catch((err) => console.error(err));
   }
+
+  handleResponse(status) {
+    axios.put('/api/attendant', { user_id: this.state.user.id, event_id: this.state.event.id, status: status }, this.state.config)
+      .then((res) => this.setState({ role: status }))
+      .catch((err) => console.error(err));
+  }
   
   render() {
     if (!this.state.event) {
@@ -137,11 +143,35 @@ export default class EventViewer extends Component {
               .substring(0, this.state.event.end_time.length - 5)}` : <span>Loading...</span>
         }
         {
-          this.state.role === 'host' ? <div>host</div> :
-          this.state.role === 'pending' ? <div>pending</div> :
-          this.state.role === 'declined' ? <div>declined</div> :
-          this.state.role === 'going' ? <div>going</div> :
-          this.state.role === 'maybe' ? <div>maybe</div> : <div>stranger</div>
+          this.state.role === 'host' ?
+            <div>
+              <FriendsList history={this.props.history} invite={this.handleInvite} />
+            </div>
+          : this.state.role === 'pending' ?
+            <div>
+              <button onClick={() => this.handleResponse('going')}>Accept</button>
+              <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
+              <button onClick={() => this.handleResponse('declined')}>Decline</button>
+            </div>
+          : this.state.role === 'declined' ?
+            <div>
+              <button onClick={() => this.handleResponse('going')}>Accept</button>
+              <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
+            </div>
+          : this.state.role === 'going' ?
+            <div>
+              <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
+              <button onClick={() => this.handleResponse('declined')}>Decline</button>
+            </div>
+          : this.state.role === 'maybe' ?
+            <div>
+              <button onClick={() => this.handleResponse('going')}>Accept</button>
+              <button onClick={() => this.handleResponse('declined')}>Decline</button>
+            </div>
+          :
+            <div>
+              stranger
+            </div>
         }
         {this.state.host ?
           <div>
@@ -160,7 +190,6 @@ export default class EventViewer extends Component {
             event={this.state.event}
             config={this.state.config}
           /> : null}
-        <FriendsList history={this.props.history} invite={this.handleInvite} />
       </div>
     );
   }

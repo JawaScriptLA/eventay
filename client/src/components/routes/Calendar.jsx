@@ -34,7 +34,7 @@ export default class Calendar extends Component {
     if (userInfo) {
       axios.get(`/api/attendants/${userInfo.id}`, config)
         .then(({ data }) => {
-          data = data.filter((event) => event.status !== 'pending' && event.status !== 'declined');
+          data = data.filter((event) => event.status !== 'pending');
           for (let i = 0; i < data.length; i++) {
             axios.get(`/api/event/eventinfo/${data[i].event_id}`, config)
               .then(({ data: [ event ] }) => {
@@ -47,12 +47,6 @@ export default class Calendar extends Component {
                 this.setState({ events: events });
               });
           }
-          // data.forEach((event) => {
-          //   event.desc = event.description;
-          //   event.start = event.start_time;
-          //   event.end = event.end_time;
-          // });
-          // this.setState({ events: data });
         })
         .catch(err => {
           console.log('Error:', err);
@@ -68,7 +62,7 @@ export default class Calendar extends Component {
   }
 
   eventPropGetter(event) {
-    return { style: event.status === 'maybe' ? { color: '#E8DEDE' } : {} };
+    return { style: { backgroundColor: event.status === 'maybe' ? '#E8DEDE' : event.status === 'declined' ? '#FE0000' : '#01FFFF' } };
   }
 
   render() {
