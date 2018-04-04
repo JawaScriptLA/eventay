@@ -23,5 +23,5 @@ io.on('connection', (socket) => {
 
   socket.on('typing', (data) => {
     socket.to(data.receiver.username).emit('typing', data);
-  })
+  });
 });

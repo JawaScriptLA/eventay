@@ -31,11 +31,13 @@ class Chat extends React.Component {
     if (!this.state.socket) {
       this.setState({ socket: io.connect('http://localhost:9001') })
     }
+    
     // wait for event queue to finish
     setTimeout(() => {
       this.state.socket.emit('leaveRoom', {
         userInfo: this.state.user,
       });
+
       this.state.socket.emit('handshake', {
         userInfo: this.state.user,
       });
