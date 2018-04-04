@@ -25,13 +25,20 @@ class Chat extends React.Component {
   }
 
   initializeSocket(receiver) {
-    this.setState({
-      currentChatReceiver: receiver,
-    });
     if (!this.state.socket) {
-      this.setState({ socket: io.connect('http://localhost:9001') })
+      this.setState({ socket: io.connect('http://localhost:9001') });
     }
-    
+    if (!this.state.currentChatReceiver || receiver.username !== this.state.currentChatReceiver.username) {
+      this.setState({
+        currentChatReceiver: receiver,
+      }, () => {
+        if(this.state.socket) {
+          this.state.socket.emit('fetchChat', { user: this.state.user, target: this.state.currentChatReceiver });
+        } else {
+          console.error('socket unavailable'); // shouldnt really ever happen.
+        }
+      });
+    }
     // wait for event queue to finish
     setTimeout(() => {
       this.state.socket.emit('leaveRoom', {
@@ -44,6 +51,9 @@ class Chat extends React.Component {
 
       if (!this.state.isListeningForChats) {
         this.setState({ isListeningForChats: true });
+        this.state.socket.on('getChat', data => {
+          this.setState({ messages: data });
+        });
         this.state.socket.on('chat', data => {
           if (data.sender.username === this.state.currentChatReceiver.username) {
             const messageList = this.state.messages;
@@ -72,10 +82,6 @@ class Chat extends React.Component {
   
   handleChatWindow(friend) {
     this.initializeSocket(friend);
-    console.log(this.state.currentChatReceiver);
-    if(friend.username !== this.state.currentChatReceiver.username) {
-      this.setState({ messages: [] });
-    }
   }
 
   handleInput(e) {
@@ -93,9 +99,9 @@ class Chat extends React.Component {
     return messageList.map(message => (
       <ListItem
         disabled={true}
-        primaryText={<strong>{`${message.sender.username}: `}</strong>}
+        primaryText={<strong>{`${(typeof message.sender === 'string')? JSON.parse(message.sender).username: message.sender.username}: `}</strong>}
         secondaryText={message.message}
-        leftAvatar={<Avatar src={message.sender.profile_picture} />}
+        leftAvatar={<Avatar src={(typeof message.sender === 'string')? JSON.parse(message.sender).profile_picture : message.sender.profile_picture} />}
         key={Math.floor(Math.random() * 10000)}
       />
     ));

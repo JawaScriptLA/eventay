@@ -13,6 +13,16 @@ io.on('connection', (socket) => {
     socket.join(data.userInfo.username);
   });
 
+  socket.on('fetchChat', ({ user, target }) => {
+    const chatHistory = [];
+    Chat.find().or([{ senderUsername: user.username, receiverUsername: target.username },
+      {senderUsername: target.username, receiverUsername: user.username}])
+      .then(data => {
+        console.log('emitting getChat');
+        setTimeout(() => io.to(user.username).emit('getChat', data), 200);
+      });
+  });
+
   socket.on('leaveRoom', (data) => {
     socket.leave(data.userInfo.username);
   });
