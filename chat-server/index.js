@@ -1,6 +1,6 @@
 const express = require('express');
 const socket = require('socket.io');
-
+const Chat = require('./chat-db/chat.js')
 const PORT = 9001;
 const app = express();
 const server = app.listen(PORT, () => console.log('Chat server up and running at Port ', PORT));
@@ -18,6 +18,18 @@ io.on('connection', (socket) => {
   });
 
   socket.on('chat', (data) => {
+    let newChat = new Chat();
+    newChat.message = data.message;
+    newChat.senderUsername = data.senderUsername;
+    newChat.receiverUsername = data.receiverUsername;
+    newChat.sender = JSON.stringify(data.sender);
+    newChat.receiver = JSON.stringify(data.receiver);
+    newChat.save(err => {
+      if (err) {
+        console.error(err);
+        throw err;
+      }
+    });
     io.to(data.receiver.username).emit('chat', data);
   });
 

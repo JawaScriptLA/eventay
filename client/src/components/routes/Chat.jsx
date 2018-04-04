@@ -71,10 +71,11 @@ class Chat extends React.Component {
   }
   
   handleChatWindow(friend) {
+    this.initializeSocket(friend);
+    console.log(this.state.currentChatReceiver);
     if(friend.username !== this.state.currentChatReceiver.username) {
       this.setState({ messages: [] });
     }
-    this.initializeSocket(friend);
   }
 
   handleInput(e) {
@@ -107,6 +108,8 @@ class Chat extends React.Component {
         message: this.state.message,
         sender: this.state.user,
         receiver: this.state.currentChatReceiver,
+        senderUsername: this.state.user.username,
+        receiverUsername: this.state.currentChatReceiver.username
       }
       this.state.socket.emit('chat', payload);
       messageList.push(payload);
