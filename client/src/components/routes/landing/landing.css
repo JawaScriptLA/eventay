@@ -54,3 +54,7 @@
   grid-column: col-start / span 1;
   width: 100%;
 }
+
+#notifs-content {
+  grid-column: col-start 2 / span 1;
+}
