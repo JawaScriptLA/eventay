@@ -53,8 +53,10 @@ class Chat extends React.Component {
           }
         });
         this.state.socket.on('typing', (data) => {
-          this.setState({ currentChatReceiverTyping: true });
-          setTimeout(() => this.setState({ currentChatReceiverTyping: false}), 2000);
+          if (data.sender.username === this.state.currentChatReceiver.username) {
+            this.setState({ currentChatReceiverTyping: true });
+            setTimeout(() => this.setState({ currentChatReceiverTyping: false}), 2000);
+          }
         });
       }
     }, 0);
@@ -67,6 +69,9 @@ class Chat extends React.Component {
   }
   
   handleChatWindow(friend) {
+    if(friend.username !== this.state.currentChatReceiver.username) {
+      this.setState({ messages: [] });
+    }
     this.initializeSocket(friend);
   }
 
