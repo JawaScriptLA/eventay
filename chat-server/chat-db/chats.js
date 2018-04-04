@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const mongoUri = 'mongodb://localhost/eventay';
+const mongoUri = 'mongodb://localhost/eventay-chat';
 mongoose.connect(mongoUri);
 const db = mongoose.connection;
 
