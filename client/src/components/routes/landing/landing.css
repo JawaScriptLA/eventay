@@ -1,60 +1,56 @@
-#nav-top {
-  background-image: linear-gradient(-20deg, #00cdac 0%, #8ddad5 100%);
-  display: grid;
-  margin-bottom: 1%;
-}
+/* NAVIGATION MENU */
 
-.nav {
+#nav-top {
+  display: flex;
+  background-image: linear-gradient(-20deg, #00cdac 0%, #8ddad5 100%);
   font-size: 1.2em;
 }
 
 .about {
-  grid-column: 1;
-  grid-row: 1;
-  padding-left: 10%;
-  padding-top: 8%;
-  /* background-color: green; */
+  flex: 1 1 auto;
 }
 
 .logo {
-  grid-column: 2;
-  grid-row: 1;
+  flex: 1 1 auto;
   text-align: center;
-  font-family: Stalemate;
-  font-size: 350%;
-  font-weight: 700;
-  padding-top: 2%;
-  /* background-color: red; */
 }
 
 .login {
-  grid-column: 3;
-  grid-row: 1;
+  flex: 1 1 auto;
   text-align: right;
-  padding-right: 10%;
-  padding-top: 8%;
-  /* background-color: yellow; */
 }
 
-#main {
+/* CONTENT LEVEL 1 */
+
+#levels {
   display: grid;
+  grid-template-columns: repeat(2, [col-start] 1fr);
+  grid-gap: 5px;
 }
 
-#img-carousel img {
-  display: block;
-  grid-column: 1;
-  grid-row:1;
-  max-width: 120%;
-  max-height: auto;
-  width: auto;
-  height: auto;
+#profile-image > img {
+  grid-column: col-start / span 1;
+  width: 100%;
 }
 
-#content {
-  display: block;
-  grid-column: 3;
-  grid-row: 1;
-  line-height: 200%;
-  max-width: 80%;
-  margin-left: 16%;
+#profile-description {
+  grid-column: col-start 2 / span 1;
+}
+
+/* CONTENT LEVEL 2 */
+
+#event-description {
+  grid-column: col-start / span 1;
+}
+
+#event-image > img {
+  grid-column: col-start 2 / span 1;
+  width: 100%;
+}
+
+/* CONTENT LEVEL 3 */
+
+#notifs-image > img {
+  grid-column: col-start / span 1;
+  width: 100%;
 }
