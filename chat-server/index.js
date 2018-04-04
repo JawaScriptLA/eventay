@@ -20,4 +20,8 @@ io.on('connection', (socket) => {
   socket.on('chat', (data) => {
     io.to(data.receiver.username).emit('chat', data);
   });
+
+  socket.on('typing', (data) => {
+    socket.to(data.receiver.username).emit('typing', data);
+  })
 });

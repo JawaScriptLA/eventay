@@ -1,8 +1,9 @@
 import React from 'react';
-import { Paper, TextField, List, Avatar } from 'material-ui';
+import { Paper, TextField, List, Avatar, Chip } from 'material-ui';
 import io from 'socket.io-client';
 import FriendsList from '../misc/friendsList.jsx'
 import ListItem from 'material-ui/List/ListItem';
+import NavBar from './NavBar.jsx'
 
 class Chat extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class Chat extends React.Component {
       currentChatReceiver: null,
       socket: null,
       isListeningForChats: false,
+      currentChatReceiverTyping: false,
     }
 
     this.handleChatWindow = this.handleChatWindow.bind(this);
@@ -41,9 +43,18 @@ class Chat extends React.Component {
       if (!this.state.isListeningForChats) {
         this.setState({ isListeningForChats: true });
         this.state.socket.on('chat', data => {
-          const messageList = this.state.messages;
-          messageList.push(data);
-          this.setState({ messages: messageList });
+          if (data.sender.username === this.state.currentChatReceiver.username) {
+            const messageList = this.state.messages;
+            messageList.push(data);
+            this.setState({ messages: messageList });
+          } else {
+            // chat meant for you but you are talking to someone else
+            console.log(data);
+          }
+        });
+        this.state.socket.on('typing', (data) => {
+          this.setState({ currentChatReceiverTyping: true });
+          setTimeout(() => this.setState({ currentChatReceiverTyping: false}), 2000);
         });
       }
     }, 0);
@@ -60,14 +71,21 @@ class Chat extends React.Component {
   }
 
   handleInput(e) {
-    this.setState({ [e.target.name]: e.target.value })
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+    
+    this.state.socket.emit('typing', {
+      receiver: this.state.currentChatReceiver,
+      sender: this.state.user,
+    });
   }
 
   renderMessages(messageList) {
     return messageList.map(message => (
       <ListItem
         disabled={true}
-        primaryText={`${message.sender.username}: `}
+        primaryText={<strong>{`${message.sender.username}: `}</strong>}
         secondaryText={message.message}
         leftAvatar={<Avatar src={message.sender.profile_picture} />}
         key={Math.floor(Math.random() * 10000)}
@@ -95,7 +113,7 @@ class Chat extends React.Component {
       <Paper
         style={{ padding: '5px' }}
         zDepth={1}>
-        <h1>Chat View</h1>
+        <NavBar history={this.props.history} />
         <FriendsList
           handleChatWindow={this.handleChatWindow} />
         <div className='chat-window'>
@@ -110,6 +128,9 @@ class Chat extends React.Component {
         <List style={{ height: '25em', overflow: 'scroll'}}>
           {this.renderMessages(this.state.messages)}
         </List>
+        <div style={{ height: '3em' }}>
+          {this.state.currentChatReceiverTyping ? <Chip>{`${this.state.currentChatReceiver.username} is typing...`}</Chip> : null}
+        </div>
         <TextField
           hintText={this.state.currentChatReceiver ? "Say something..." : "Select a receipient first..."}
           disabled={!!!this.state.currentChatReceiver}
