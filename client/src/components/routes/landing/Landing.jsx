@@ -21,13 +21,15 @@ export default class Landing extends Component {
           <div className='nav about'>About</div>
           <div className='nav logo'>Eventé</div>
           <div className='nav login'>
-            <a className="auth signup"
-              href="/signup"
-              style={{textDecoration: 'none', color: 'black', paddingRight: '7%'}}
-              >Signup</a>
-            <a className='auth login' href="/login"
-              style={{textDecoration: 'none', color: 'black'}}
-            >Login</a>
+            <div id='buttons'>
+              <a className="auth signup"
+                href="/signup"
+                style={{textDecoration: 'none', color: 'black', paddingRight: '7%'}}
+                >Signup</a>
+              <a className='auth log' href="/login"
+                style={{textDecoration: 'none', color: 'black'}}
+              >Login</a>
+            </div>
           </div>
         </nav>
 
