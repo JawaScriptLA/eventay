@@ -179,14 +179,30 @@ export default class NavBar extends Component {
                     />
                     <FlatButton
                       value={notif.title}
-                      label="Deny"
+                      label="Maybe"
+                      onClick={() =>
+                        this.handleNotifInvite(
+                          'event',
+                          'maybe',
+                          {
+                            user_id: `${this.state.userInfo.id}`,
+                            event_id: `${notif.id}`,
+                            status: 'maybe'
+                          }
+                        )
+                      }
+                    />
+                    <FlatButton
+                      value={notif.title}
+                      label="Decline"
                       onClick={() =>
                         this.handleNotifInvite(
                           'event',
                           'deny',
                           {
                             user_id: `${this.state.userInfo.id}`,
-                            event_id: `${notif.id}`
+                            event_id: `${notif.id}`,
+                            status: 'declined'
                           }
                         )
                       }
@@ -219,17 +235,20 @@ export default class NavBar extends Component {
           .then(result => console.log('DENY FRIEND REQ: '));
       }
     } else if (inviteType === 'event') {
-      if (decision === 'accept') {
-        axios.put(`/api/attendant`, content, this.state.config)
-          .then(result => console.log('ACCEPT EVENT REQ: ', result) );
-      } else if (decision === 'deny') {
-        const payload = {
-          data: content,
-          headers: this.state.config.headers,
-        };
-        axios.delete(`/api/attendant`, payload)
-          .then(result => console.log('DENY FRIEND REQ: ', result) );
-      }
+      axios.put('/api/attendant', content, this.state.config)
+        .then(() => console.log('Success'))
+        .catch((err) => console.error('Error'));
+      // if (decision === 'accept') {
+      //   axios.put(`/api/attendant`, content, this.state.config)
+      //     .then(result => console.log('ACCEPT EVENT REQ: ', result) );
+      // } else if (decision === 'deny') {
+      //   const payload = {
+      //     data: content,
+      //     headers: this.state.config.headers,
+      //   };
+      //   axios.delete(`/api/attendant`, payload)
+      //     .then(result => console.log('DENY FRIEND REQ: ', result) );
+      // }
     }
   }
 

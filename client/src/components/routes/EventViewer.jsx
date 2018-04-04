@@ -133,18 +133,17 @@ export default class EventViewer extends Component {
         <h2>{this.state.event.title}</h2>
         <img src={this.state.event.thumbnail}/>
         <p>{this.state.event.description}</p>
-        {
+        <span>{
           this.state.event.start_time ? 
-          `Time: ${this.state.event.start_time
-              .replace('T', ' ')
-              .substring(0, this.state.event.start_time.length - 5)} 
-          - ${this.state.event.end_time
-              .replace('T', ' ')
-              .substring(0, this.state.event.end_time.length - 5)}` : <span>Loading...</span>
-        }
+          `Time: ${this.state.event.start_time.replace('T', ' ')
+            .substring(0, this.state.event.start_time.length - 5)} 
+          - ${this.state.event.end_time.replace('T', ' ')
+            .substring(0, this.state.event.end_time.length - 5)}` : 'Loading...'
+        }</span>
         {
           this.state.role === 'host' ?
             <div>
+              <button>Edit</button>
               <FriendsList history={this.props.history} invite={this.handleInvite} />
             </div>
           : this.state.role === 'pending' ?
