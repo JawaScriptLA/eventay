@@ -40,7 +40,6 @@ export default class EventViewer extends Component {
       axios.get(`/api/attendant/${this.state.event.id}`, this.state.config)
         .then((attendants) => {
           let attendantStatus = attendants.data.reduce((acc, attendant) => acc[0] ? acc : attendant.user_id === this.state.user.id ? [true, attendant.status] : acc, [false, '']);
-          console.log('user:', this.state.user.id, 'host:', this.state.event.host_id, 'event:', this.state.event.id);
           this.setState({
             attendants: attendants.data,
             role: this.state.event.host_id === this.state.user.id ? 'host' : attendantStatus[0] ? attendantStatus[1] : 'stranger'
@@ -98,8 +97,8 @@ export default class EventViewer extends Component {
         });
   }
 
-  handleInvite({ target: { name } }) {
-    axios.get(`/api/user/${name}`, this.state.config)
+  handleInvite({ target: { innerHTML } }) {
+    axios.get(`/api/user/${'' + innerHTML}`, this.state.config)
       .then(({ data }) => {
         axios.post(`/api/attendant`, {
           access: 'member',
@@ -108,7 +107,7 @@ export default class EventViewer extends Component {
           event_id: this.state.event.id,
           invitor_id: this.state.user.id
         }, this.state.config)
-          .then(() => console.log(`Successfully invited ${name}.`));
+          .then(() => console.log(`Successfully invited ${'' + innerHTML}.`));
       })
       .catch((err) => console.error(err));
   }
