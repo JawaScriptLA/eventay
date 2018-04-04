@@ -47,7 +47,6 @@ module.exports = passportObj => {
         return res.status(401).end();
       }
       req.logIn(user, async err => {
-        console.log('user: ', user);
         const userPayload = {};
         const userRecord = await db.queryAsync(
           `SELECT * FROM users WHERE username='${user.username}'`

@@ -30,4 +30,13 @@ describe('Authentication', () => {
       });
     expect(res.statusCode).toBe(200);
   });
+  test('', async () => {
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({
+        username: 'testuser1',
+        password: 'pw1'
+      });
+    expect(res.body.userInfo.username).toBe('testuser1');
+  });
 });
