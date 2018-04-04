@@ -39,6 +39,7 @@ class FriendsList extends React.Component {
         primaryText={item.username}
         leftAvatar={<Avatar src={item.profile_picture} />}
         onClick={
+          this.props.invite ? this.props.invite :
           this.props.history ?
           () => this.props.history.push(`/profile/${item.username}`) :
           () => this.props.handleChatWindow(item)

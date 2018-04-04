@@ -25,7 +25,7 @@ router.route('/')
       await controller.addAttendant(req.body);
       res.sendStatus(200);
     } catch (err) {
-      res.statusCode(500).send(err);
+      res.sendStatus(500);
     }
   })
   .put(async (req, res) => {
