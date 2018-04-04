@@ -4,7 +4,7 @@ import Checkbox from 'material-ui/Checkbox';
 const TimeOptions = props => {
   return (
     <div>
-      <h2>Additional options:</h2>
+      <h2 style={{fontWeight: '300'}}>Additional options:</h2>
       <Checkbox
         label="Exclude weekend times (Saturday/Sunday)"
         name="excludeWeekends"

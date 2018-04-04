@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 const DurationFields = props => {
   return (
     <div>
-      <h2>Specify duration:</h2>
+      <h2 style={{fontWeight: '300'}}>Specify duration:</h2>
       <TextField
         floatingLabelText="Enter # of hours..."
         name="durationHrs"

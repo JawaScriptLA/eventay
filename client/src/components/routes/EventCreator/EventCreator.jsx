@@ -409,20 +409,20 @@ export default class EventCreator extends React.Component {
     return (
       <div>
         <NavBar history={this.props.history} />
-        <h1>Create new event!</h1>
+        <h1 style={{textAlign: 'center', fontWeight: '300'}}>create event</h1>
         <div style={{ width: '100%', maxWidth: 1000, margin: 'auto' }}>
           <Stepper activeStep={this.state.stepIndex}>
             <Step>
-              <StepLabel>What's the occasion?</StepLabel>
+              <StepLabel>what's the occasion?</StepLabel>
             </Step>
             <Step>
-              <StepLabel>Time Preferences</StepLabel>
+              <StepLabel>time preferences</StepLabel>
             </Step>
             <Step>
-              <StepLabel>Invite friends</StepLabel>
+              <StepLabel>invite friends</StepLabel>
             </Step>
             <Step>
-              <StepLabel>Select time</StepLabel>
+              <StepLabel>select time</StepLabel>
             </Step>
           </Stepper>
           <div>
