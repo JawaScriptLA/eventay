@@ -4,13 +4,11 @@ const { User } = require('./models/user.js');
 
 module.exports = passportObj => {
   passportObj.serializeUser((user, done) => {
-    console.log('serializing user:', user);
     done(null, user._id);
   });
 
   passportObj.deserializeUser((id, done) => {
     User.findById(id, (err, user) => {
-      console.log('deserializing user:', user);
       done(err, user);
     });
   });

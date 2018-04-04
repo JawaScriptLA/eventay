@@ -56,7 +56,6 @@ module.exports = passportObj => {
         if (err) {
           return res.status(401).end();
         }
-        console.log('userPayload: ', userPayload);
         res.send(userPayload);
       });
     })(req, res, next);

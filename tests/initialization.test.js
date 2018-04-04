@@ -5,8 +5,8 @@ const { authDB } = require('../server/auth/models/user.js');
 const { app } = require('../server/index.js');
 
 beforeAll(async () => {
-  await setup();
   await authDB.dropDatabase();
+  await setup();
 });
 
 describe('Initialization', () => {
