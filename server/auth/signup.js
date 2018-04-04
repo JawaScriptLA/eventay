@@ -11,7 +11,7 @@ module.exports = passport => {
       (req, username, password, done) => {
         User.findOne({ username: username }, (err, user) => {
           if (err) {
-            console.log('Error in SignUp: ' + err);
+            console.log('Error in signup: ' + err);
             return done(err);
           }
 
