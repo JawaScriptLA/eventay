@@ -51,7 +51,9 @@ class Comment extends React.Component {
             style={{ objectFit: 'cover'}}
           />}
         >
-          <span><strong>{comment.userInfo.username}: </strong></span>
+          <span
+            onClick={() => this.props.history.push(`/profile/${comment.userInfo.username}`)}
+          ><strong>{comment.userInfo.username}: </strong></span>
           <p style={{ maxHeight: '8em', overflow: 'scroll', }}>
             {comment.body}
           </p>

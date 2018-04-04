@@ -9,9 +9,19 @@ const server = app.listen(PORT, () => console.log('Chat server up and running at
 const io = socket(server);
 
 io.on('connection', (socket) => {
-  console.log('made socket connection', socket.id);
+  socket.on('handshake', (data) => {
+    socket.join(data.userInfo.username);
+  });
+
+  socket.on('leaveRoom', (data) => {
+    socket.leave(data.userInfo.username);
+  });
+
   socket.on('chat', (data) => {
-    // primitive implementation. need to revise in future
-    io.sockets.emit('chat', data);
+    io.to(data.receiver.username).emit('chat', data);
+  });
+
+  socket.on('typing', (data) => {
+    socket.to(data.receiver.username).emit('typing', data);
   });
 });
