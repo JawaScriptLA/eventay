@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../../../../public/reset.css';
+// import '../../../../public/reset.css';
 import styles from './landing.css';
 
 import img_profile from '../../../assets/profile.png';
