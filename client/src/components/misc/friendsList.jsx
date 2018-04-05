@@ -34,12 +34,12 @@ class FriendsList extends React.Component {
   }
 
   renderData(item) {
-
     return (
       <ListItem
         primaryText={item.username}
         leftAvatar={<Avatar src={item.profile_picture} />}
         onClick={
+          this.props.invite ? this.props.invite :
           this.props.history ?
           () => this.props.history.push(`/profile/${item.username}`) :
           () => this.props.handleChatWindow(item)
@@ -47,7 +47,7 @@ class FriendsList extends React.Component {
         value={item.username}
         key={item.id}
       />
-    )
+    );
   }
 
   render() {

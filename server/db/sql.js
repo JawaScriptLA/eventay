@@ -133,8 +133,8 @@ module.exports = {
         CREATE TABLE IF NOT EXISTS attendants
         (
           id SERIAL,
-          access ACCESS NOT NULL DEFAULT 'member',
           status ATTENDANTS_STATUS NOT NULL DEFAULT 'pending',
+          access ACCESS NOT NULL DEFAULT 'member',
           user_id INT NOT NULL,
           event_id INT NOT NULL,
           invitor_id INT,
@@ -148,7 +148,9 @@ module.exports = {
             ON DELETE CASCADE,
           CONSTRAINT fk_attendants_invitor_id
             FOREIGN KEY(invitor_id) REFERENCES users(id)
-            ON DELETE CASCADE
+            ON DELETE CASCADE,
+          CONSTRAINT uniq_user_id_event_id
+            UNIQUE (user_id, event_id)
         )
       `);
       console.log('Successfully created attendants table.');

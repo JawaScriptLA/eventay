@@ -32,15 +32,21 @@ export default class Calendar extends Component {
     };
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (userInfo) {
-      axios
-        .get(`/api/event/${userInfo.id}`, config)
+      axios.get(`/api/attendants/${userInfo.id}`, config)
         .then(({ data }) => {
-          data.forEach(event => {
-            event.desc = event.description;
-            event.start = new Date(event.start_time);
-            event.end = new Date(event.end_time);
-          });
-          this.setState({ events: data });
+          data = data.filter((event) => event.status !== 'pending');
+          for (let i = 0; i < data.length; i++) {
+            axios.get(`/api/event/eventinfo/${data[i].event_id}`, config)
+              .then(({ data: [ event ] }) => {
+                event.desc = event.description;
+                event.start = event.start_time;
+                event.end = event.end_time;
+                event.status = data[i].status;
+                let events = this.state.events;
+                events.push(event);
+                this.setState({ events: events });
+              });
+          }
         })
         .catch(err => {
           console.log('Error:', err);
@@ -55,6 +61,10 @@ export default class Calendar extends Component {
     });
   }
 
+  eventPropGetter(event) {
+    return { style: { backgroundColor: event.status === 'maybe' ? '#E8DEDE' : event.status === 'declined' ? '#FE0000' : '#01FFFF' } };
+  }
+
   render() {
     return (
       <div id="calendar">
@@ -63,6 +73,7 @@ export default class Calendar extends Component {
           culture="en"
           formats={formats}
           events={this.state.events}
+          eventPropGetter={this.eventPropGetter}
           onSelectEvent={this.selectEvent}
           views={['month', 'week']}
           startAccessor="start"
