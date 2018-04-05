@@ -31,7 +31,6 @@ class Chat extends React.Component {
   }
 
   initializeSocket(receiver) {
-    console.log(config);
     if (!this.state.socket) {
       this.setState({ socket: io.connect(`http://${config.url}:9001`) });
     }
@@ -127,7 +126,6 @@ class Chat extends React.Component {
       this.state.socket.emit('chat', payload);
       messageList.push(payload);
       this.setState({ messages: messageList, message: '' });
-      console.log(payload);
     }
   }
 
