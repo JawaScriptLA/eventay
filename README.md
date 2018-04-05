@@ -15,7 +15,7 @@ Follow these instructions if you want a working copy of Eventé up and running i
 7. `mongod` 
 8. `npm run chat:start`
 9. `npm start`
-10. You should now be able to navigate to 127.0.0.1:1337 and it will take you to the login page
+10. Navigate to `127.0.0.1:1337` for glory.
 
 ### Prerequisites
 
