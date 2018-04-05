@@ -45,10 +45,23 @@ Give an example
 
 ## Built With
 
-* [NodeJS](https://nodejs.org/en/) - The runtime framework used
+* [NodeJS](https://nodejs.org/en/) - Runtime framework
 * [npm](https://www.npmjs.com/) - Dependency Management
 * [ReactJS](https://rometools.github.io/rome/) - Front-end framework
 * [Material-ui](http://www.material-ui.com/) - UI library
+* [Express]() - Runtime 
+* [TravisCI]() - Continuous Integration
+* [Jest]() - Testing
+
+Others: 
+* [MongoDB]()
+* [Postgres]()
+* [Passport]()
+* [Redux]()
+* [JWT]()
+* [AWS]()
+* [FileStack]()
+* [Babel]()
 
 ## Contributing
 
@@ -60,13 +73,13 @@ _Owner_
 * **Jason Sato** - *Product Owner, Algorithm Guru, Testing* - [Github](https://github.com/hirosato223)
 
 _Dev Team_
-* **Alexander Monirji** - *Deployment, UI and API* - [Github](https://github.com/alexmonirji)
-* **Antonio Castro** - *Front End, API, Websockets* - [Github](https://github.com/toncas)
-* **Will Ruiz** - *Database Schema Designer, Front End, API, nginx* - [Github](https://github.com/waruiz)
+* **Alexander Monirji** - *Full Stack, Deployment, and API* - [Github](https://github.com/alexmonirji)
+* **Antonio Castro** - *Full Stack, API, Websockets* - [Github](https://github.com/toncas)
+* **Will Ruiz** - *Full Stack, Database Schema Designer, API, nginx* - [Github](https://github.com/waruiz)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is __Unlicensed__ - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
 
