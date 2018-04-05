@@ -1,4 +1,6 @@
 const sql = require('./sql.js');
+const User = require('../auth/models/user.js');
+var mongoose = require('mongoose');
 let config;
 
 try {
@@ -8,6 +10,24 @@ try {
 }
 
 const setup = async () => {
+  mongoose.connect(
+    `${
+      config.rdb.environment === 'test'
+        ? config.auth.uri_testing
+        : config.auth.uri_dev
+    }`,
+    () => {
+      mongoose.connection.db.dropDatabase();
+      console.log(
+        `Dropped mongoDB database: ${
+          config.rdb.environment === 'test'
+            ? config.auth.uri_testing
+            : config.auth.uri_dev
+        }`
+      );
+    }
+  );
+
   await sql.drop('table', 'reactions');
   await sql.drop('table', 'emojis');
   await sql.drop('table', 'likes');

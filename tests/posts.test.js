@@ -1,12 +1,10 @@
 const request = require('supertest');
 const setup = require('../server/db/index.js');
-const { authDB } = require('../server/auth/models/user.js');
 
 const { app } = require('../server/index.js');
 
 const auth = {};
 beforeAll(async () => {
-  await authDB.dropDatabase();
   await setup();
   const res = await request(app)
     .post('/api/auth/signup')
@@ -15,13 +13,6 @@ beforeAll(async () => {
       password: 'pw1'
     });
   auth.token = res.body.token;
-
-  await request(app)
-    .post('/api/auth/signup')
-    .send({
-      username: 'testuser1',
-      password: 'pw1'
-    });
 
   // await request(app)
   //   .post('/api/event')

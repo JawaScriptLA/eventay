@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const path = require('path');
 const router = require('./router.js');
 const app = express();
+const authDb = require('./auth/db.js');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

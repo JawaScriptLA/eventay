@@ -1,11 +1,9 @@
 const request = require('supertest');
 const setup = require('../server/db/index.js');
-const { authDB } = require('../server/auth/models/user.js');
 
 const { app } = require('../server/index.js');
 
 beforeAll(async () => {
-  await authDB.dropDatabase();
   await setup();
 });
 
