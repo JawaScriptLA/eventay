@@ -65,6 +65,16 @@ export default class NavBar extends Component {
     this.setState( {openNotifs: true} );
   }
 
+  cleanupNotifs (elem, notification) {
+    this.state[notification].forEach((obj, i) => {
+      if (obj.id === elem) {
+        var some = this.state[notification].slice();
+        some.splice(i, 1);
+        this.setState({[notification]: some})
+      }
+    })
+  }
+
   renderNotifs () {
     let content = [];
     let counter = 0;
@@ -82,6 +92,7 @@ export default class NavBar extends Component {
               counter++;
               return (
                 <ListItem
+                  id={counter}
                   key={counter}
                   disabled={true}
                   leftAvatar={
@@ -110,7 +121,8 @@ export default class NavBar extends Component {
                           'accept',
                           {user_id: `${this.state.userInfo.id}`,
                             target_id: `${notif.id}`,
-                            status: 'accepted'}
+                            status: 'accepted'},
+                          notif.id
                         )
                       }
                     />
@@ -122,7 +134,8 @@ export default class NavBar extends Component {
                           'friend',
                           'deny',
                           {user_id: `${notif.id}`,
-                          target_id: `${this.state.userInfo.id}`}
+                          target_id: `${this.state.userInfo.id}`},
+                          notif.id
                         )}
                     />
                   </div>
@@ -173,7 +186,8 @@ export default class NavBar extends Component {
                             user_id: `${this.state.userInfo.id}`,
                             event_id: `${notif.id}`,
                             status: 'going'
-                          }
+                          },
+                          notif.id
                         )
                       }
                     />
@@ -201,9 +215,9 @@ export default class NavBar extends Component {
                           'deny',
                           {
                             user_id: `${this.state.userInfo.id}`,
-                            event_id: `${notif.id}`,
-                            status: 'declined'
-                          }
+                            event_id: `${notif.id}`
+                          },
+                          notif.id
                         )
                       }
                     />
@@ -220,35 +234,40 @@ export default class NavBar extends Component {
     return content;
   }
 
-  handleNotifInvite (inviteType, decision, content) {
+  handleNotifInvite (inviteType, decision, content, elem) {
     if (inviteType === 'friend') {
       if (decision === 'accept') {
         axios.put(`/api/friend/`, content, this.state.config)
-          .then(result => console.log('ACCEPT FRIEND REQ'))
-          .catch(err => console.log(err));
+          .then(result => {
+            this.cleanupNotifs(elem, 'pendingFriends');
+          })
+          .catch(err => {throw err});
       } else if (decision === 'deny') {
         const payload = {
           data: content,
           headers: this.state.config.headers,
         }
         axios.delete(`/api/friend/`, payload)
-          .then(result => console.log('DENY FRIEND REQ: '));
+          .then(result => {
+            this.cleanupNotifs(elem, 'pendingFriends');
+          });
       }
     } else if (inviteType === 'event') {
-      axios.put('/api/attendant', content, this.state.config)
-        .then(() => console.log('Success'))
-        .catch((err) => console.error('Error'));
-      // if (decision === 'accept') {
-      //   axios.put(`/api/attendant`, content, this.state.config)
-      //     .then(result => console.log('ACCEPT EVENT REQ: ', result) );
-      // } else if (decision === 'deny') {
-      //   const payload = {
-      //     data: content,
-      //     headers: this.state.config.headers,
-      //   };
-      //   axios.delete(`/api/attendant`, payload)
-      //     .then(result => console.log('DENY FRIEND REQ: ', result) );
-      // }
+      if (decision === 'accept') {
+        axios.put(`/api/attendant`, content, this.state.config)
+          .then(result => {
+            this.cleanupNotifs(elem, 'pendingInvites');
+          });
+      } else if (decision === 'deny') {
+        const payload = {
+          data: content,
+          headers: this.state.config.headers,
+        };
+        axios.delete(`/api/attendant`, payload)
+          .then(result => {
+            this.cleanupNotifs(elem, 'pendingInvites');
+          });
+      }
     }
   }
 
