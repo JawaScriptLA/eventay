@@ -12,7 +12,6 @@ router.get('/:user_id', async (req, res) => {
 
 router.get('/eventinfo/:event_id', async (req, res) => {
   try {
-    console.log(req.params);
     let data = await controller.getEventDetails(req.params);
     res.send(data);
   } catch (err) {

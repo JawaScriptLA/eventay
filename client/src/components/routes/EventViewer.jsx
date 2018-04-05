@@ -33,43 +33,36 @@ export default class EventViewer extends Component {
 
   componentWillMount() {
     this.setState({ user: JSON.parse(localStorage.getItem('userInfo')) });
-    this.props.location.state
-      ? ((this.props.location.state.event.start_time = this.props.location.state.event.start_time
-          .replace('T', ' ')
-          .substring(0, this.props.location.state.event.start_time.length - 5)),
-        // (this.props.location.state.event.start_time = this.props.location.state.event.start_time
-        //   .replace('T', ' ')
-        //   .substring(0, this.props.location.state.event.start_time.length - 5)),
-        // (this.props.location.state.event.end_time = this.props.location.state.event.end_time
-        //   .replace('T', ' ')
-        //   .substring(0, this.props.location.state.event.end_time.length - 5)),
-        (this.props.location.state.event.end_time = this.props.location.state.event.end_time
-          .replace('T', ' ')
-          .substring(0, this.props.location.state.event.end_time.length - 5)),
-        this.setState({
-          event: this.props.location.state.event,
-          changeTitle: this.props.location.state.event.title,
-          changeDescription: this.props.location.state.event.description
-        }))
-      : axios
-          .get(
-            `/api/event/eventinfo/${this.props.match.params.id}`,
-            this.state.config
-          )
-          .then(res => {
-            res.data[0].start_time = res.data[0].start_time
-              .replace('T', ' ')
-              .substring(0, res.data[0].start_time.length - 5);
-            res.data[0].end_time = res.data[0].end_time
-              .replace('T', ' ')
-              .substring(0, res.data[0].end_time.length - 5);
-            this.setState({
-              event: res.data[0],
-              changeTitle: res.data[0].title,
-              changeDescription: res.data[0].description
-            });
-          })
-          .catch(err => console.error('Error get event info: ', err));
+    this.props.location.state ? (
+      this.props.location.state.event.start_time = this.props.location.state.event.start_time.replace('T', ' ')
+        .substring(0, this.props.location.state.event.start_time.length - 5),
+      this.props.location.state.event.start = this.props.location.state.event.start.replace('T', ' ')
+        .substring(0, this.props.location.state.event.start.length - 5),
+      this.props.location.state.event.end_time = this.props.location.state.event.end_time.replace('T', ' ')
+        .substring(0, this.props.location.state.event.end_time.length - 5),
+      this.props.location.state.event.end = this.props.location.state.event.end.replace('T', ' ')
+        .substring(0, this.props.location.state.event.end.length - 5),
+      this.setState({
+        event: this.props.location.state.event,
+        changeTitle: this.props.location.state.event.title,
+        changeDescription: this.props.location.state.event.description,
+
+      })
+    ) : 
+      axios.get(`/api/event/eventinfo/${this.props.match.params.id}`, this.state.config)
+        .then((res) => {
+          res.data[0].start_time = res.data[0].start_time.replace('T', ' ')
+            .substring(0, res.data[0].start_time.length - 5);
+          res.data[0].end_time = res.data[0].end_time.replace('T', ' ')
+            .substring(0, res.data[0].end_time.length - 5);
+          this.setState({
+            event: res.data[0],
+            changeTitle: res.data[0].title,
+            changeDescription: res.data[0].description,
+
+          });
+        })
+        .catch((err) => console.error('Error get event info: ', err));
   }
 
   init() {

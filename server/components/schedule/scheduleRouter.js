@@ -9,7 +9,6 @@ const {
 } = require('../../../utils/utils.js');
 
 router.post('/showRecommendedTimes', async (req, res) => {
-  console.log('req.body is:', req.body);
   const {
     startMilliseconds,
     endMilliseconds,

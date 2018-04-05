@@ -2,7 +2,6 @@ const db = require('../../db/db');
 
 module.exports = {
   search: async (req, res) => {
-    console.log('im in the searchh');
     const { user_id, query } = req.params;
     try {
       const makeQuery = (phrase, field) => {
@@ -23,7 +22,6 @@ module.exports = {
         WHERE (host_id=${user_id} AND (${makeQuery(query, 'title')}))
         OR (publicity=TRUE AND (${makeQuery(query, 'title')}))
       `;
-      console.log(dbQueryFriends);
       const dataFriends = await db.queryAsync(dbQueryFriends);
       const dataEvents = await db.queryAsync(dbQueryEvents);
       let obj = {};
