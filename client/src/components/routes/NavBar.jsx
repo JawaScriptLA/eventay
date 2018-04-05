@@ -253,21 +253,9 @@ export default class NavBar extends Component {
           });
       }
     } else if (inviteType === 'event') {
-      if (decision === 'accept') {
-        axios.put(`/api/attendant`, content, this.state.config)
-          .then(result => {
-            this.cleanupNotifs(elem, 'pendingInvites');
-          });
-      } else if (decision === 'deny') {
-        const payload = {
-          data: content,
-          headers: this.state.config.headers,
-        };
-        axios.delete(`/api/attendant`, payload)
-          .then(result => {
-            this.cleanupNotifs(elem, 'pendingInvites');
-          });
-      }
+      axios.put('/api/attendant', content, this.state.config)
+        .then(() => console.log('Success'))
+        .catch((err) => console.error('Error'));
     }
   }
 
