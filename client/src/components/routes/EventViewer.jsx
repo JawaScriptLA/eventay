@@ -23,7 +23,8 @@ export default class EventViewer extends Component {
       posts: [],
       mode: 'view',
       changeTitle: '',
-      changeDescription: ''
+      changeDescription: '',
+
     };
     this.generatePost = this.generatePost.bind(this);
     this.handleInvite = this.handleInvite.bind(this);
@@ -217,13 +218,14 @@ export default class EventViewer extends Component {
       <div>
         <NavBar history={this.props.history} />
         {this.state.mode === 'view' ?
-          <h2>{this.state.event.title}</h2> :
-          <span><input
+          <h2>{this.state.event.title}</h2>
+        : <input
             onChange={this.handleChange}
             type="text"
             name="changeTitle"
             value={this.state.changeTitle}
-          ></input><br/></span>}
+          ></input>}
+        <br/>
         {this.state.event.start_time ?
           `${this.state.event.start_time.split(' ')[4]}` === `${this.state.event.start_time.split(' ')[5]}` ?
             `${this.state.event.start_time.split(' ')[4]}`
@@ -247,13 +249,10 @@ export default class EventViewer extends Component {
             `${this.state.event.start_time.split(' ')[3]}`
           : `${this.state.event.start_time.split(' ')[3]} - ${this.state.event.end_time.split(' ')[3]}`
         : null}
-        <img src={this.state.event.thumbnail}/><br/>
+        <br/>
         {
           this.state.role === 'host' ?
-            <div>
-              {this.state.mode === 'view' ? <button onClick={this.handleEdit}>Edit</button> : <button onClick={this.handleSave}>Save</button>}
-              <FriendsList history={this.props.history} invite={this.handleInvite} />
-            </div>
+            this.state.mode === 'view' ? <button onClick={this.handleEdit}>Edit</button> : <button onClick={this.handleSave}>Save</button>
           : this.state.role === 'pending' ?
             <div>
               <button onClick={() => this.handleResponse('going')}>Accept</button>
@@ -279,34 +278,31 @@ export default class EventViewer extends Component {
               <button onClick={() => this.handleResponse('declined')}>Decline</button>
             </div>
           :
-            <div>
-              stranger
-            </div>
+            <div>Not Invited</div>
         }
-        {this.state.mode === 'view' ?
-          <span><p>{this.state.event.description}</p><br/></span> :
-          <span><input
-            onChange={this.handleChange}
-            type="text"
-            name="changeDescription"
-            value={this.state.changeDescription}
-          ></input><br/></span>}
-        {this.state.host ?
-          <div>
-            <p>Host: {this.state.host.username}</p>
-            <Avatar size={100} src={this.state.host.profile_picture} />
-          </div>
-        ) : null}
-        <AttendantsList
-          attendants={this.state.attendants}
-          history={this.props.history}
-        />{' '}
-        <br />
+        <br/>
+        <div>
+          {this.state.event ? <Avatar size={100} src={this.state.event.thumbnail} /> : null}
+          {this.state.host ? <p>{this.state.host.username}</p> : null}
+        </div>
+        {
+          this.state.mode === 'view' ?
+            <p>{this.state.event.description}</p> :
+            <input
+              onChange={this.handleChange}
+              type="text"
+              name="changeDescription"
+              value={this.state.changeDescription}
+            ></input>
+        }
+        <br/>
+        <AttendantsList attendants={this.state.attendants} history={this.props.history} /><br/>
+        {this.state.role === 'host' ? <FriendsList history={this.props.history} invite={this.handleInvite} /> : null}
         <CreatePost
           generatePost={this.generatePost}
           role={this.state.role}
         /> <br />
-        {this.state.posts.length ? (
+        {this.state.posts.length ?
           <Posts
             role={this.state.role}
             history={this.props.history}
@@ -315,7 +311,7 @@ export default class EventViewer extends Component {
             event={this.state.event}
             config={this.state.config}
           />
-        ) : null}
+        : null}
       </div>
     );
   }
