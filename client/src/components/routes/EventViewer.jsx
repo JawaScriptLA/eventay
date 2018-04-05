@@ -287,22 +287,67 @@ export default class EventViewer extends Component {
           ></input> : null}
         <br/>
         {this.state.event.startMonth ?
-          this.state.event.startMonth === this.state.event.endMonth ?
-            this.state.event.startMonth
-          : `${this.state.event.startMonth} - ${this.state.event.endMonth}`
+          this.state.mode === 'view' ?
+            this.state.event.startMonth === this.state.event.endMonth ?
+              this.state.event.startMonth
+            : `${this.state.event.startMonth} - ${this.state.event.endMonth}`
+          : <input
+              onChange={this.handleChange}
+              type="text"
+              name="changeStartMonth"
+              value={this.state.changeStartMonth}
+            ></input>
         : null}
+        {this.state.mode === 'edit' ? ' - ' : null}
+        {this.state.mode === 'edit' ?
+          <input
+            onChange={this.handleChange}
+            type="text"
+            name="changeEndMonth"
+            value={this.state.changeEndMonth}
+          ></input> : null}
         <br/>
         {this.state.event.startDate ?
-          this.state.event.startDate === this.state.event.endDate ?
-            this.state.event.startDate
-          : `${this.state.event.startDate} - ${this.state.event.endDate}`
+          this.state.mode === 'view' ?
+            this.state.event.startDate === this.state.event.endDate ?
+              this.state.event.startDate
+            : `${this.state.event.startDate} - ${this.state.event.endDate}`
+          : <input
+              onChange={this.handleChange}
+              type="text"
+              name="changeStartDate"
+              value={this.state.changeStartDate}
+            ></input>
         : null}
+        {this.state.mode === 'edit' ? ' - ' : null}
+        {this.state.mode === 'edit' ?
+          <input
+            onChange={this.handleChange}
+            type="text"
+            name="changeEndDate"
+            value={this.state.changeEndDate}
+          ></input> : null}
         <br/>
         {this.state.event.startYear ?
-          this.state.event.startYear === this.state.event.endYear ?
-            this.state.event.startYear
-          : `${this.state.event.startYear} - ${this.state.event.endYear}`
+          this.state.mode === 'view' ?
+            this.state.event.startYear === this.state.event.endYear ?
+              this.state.event.startYear
+            : `${this.state.event.startYear} - ${this.state.event.endYear}`
+          : <input
+              onChange={this.handleChange}
+              type="text"
+              name="changeStartYear"
+              value={this.state.changeStartYear}
+            ></input>
         : null}
+        {this.state.mode === 'edit' ? ' - ' : null}
+        {this.state.mode === 'edit' ?
+          <input
+            onChange={this.handleChange}
+            type="text"
+            name="changeEndYear"
+            value={this.state.changeEndYear}
+          ></input> : null}
         <br/>
         {
           this.state.role === 'host' ?
