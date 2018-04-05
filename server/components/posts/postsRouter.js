@@ -15,7 +15,6 @@ router
   .post(async (req, res) => {
     try {
       const data = await controller.createPost(req.body);
-      console.log('DATA: ', data.rows);
       res.send(data.rows);
     } catch (err) {
       console.error('createPost error: ', err.cause);
