@@ -37,10 +37,10 @@ Testing suite in progress
 
 ### Break down into end to end tests
 
-Explain what these tests test and why
+Todo: Explain what these tests test and why
 
 ```
-Give an example
+Todo: commands for tests
 ```
 
 ## Built With
@@ -52,10 +52,10 @@ Give an example
 * [Express]() - Runtime 
 * [TravisCI]() - Continuous Integration
 * [Jest]() - Testing
+* [Postgres]() - Primary DB
 
 Others: 
 * [MongoDB]()
-* [Postgres]()
 * [Passport]()
 * [Redux]()
 * [JWT]()
