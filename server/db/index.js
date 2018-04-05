@@ -1,6 +1,6 @@
 const sql = require('./sql.js');
 const User = require('../auth/models/user.js');
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 let config;
 
 try {
