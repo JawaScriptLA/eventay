@@ -6,6 +6,7 @@ import CreatePost from '../posts/CreatePost.jsx';
 import { Avatar } from 'material-ui';
 import Posts from '../posts/Posts.jsx';
 import FriendsList from '../misc/friendsList.jsx';
+import { convertTime } from '../../../../utils/utils.js';
 
 export default class EventViewer extends Component {
   constructor(props) {
@@ -34,14 +35,10 @@ export default class EventViewer extends Component {
   componentWillMount() {
     this.setState({ user: JSON.parse(localStorage.getItem('userInfo')) });
     this.props.location.state ? (
-      this.props.location.state.event.start_time = this.props.location.state.event.start_time.replace('T', ' ')
-        .substring(0, this.props.location.state.event.start_time.length - 5),
-      this.props.location.state.event.start = this.props.location.state.event.start.replace('T', ' ')
-        .substring(0, this.props.location.state.event.start.length - 5),
-      this.props.location.state.event.end_time = this.props.location.state.event.end_time.replace('T', ' ')
-        .substring(0, this.props.location.state.event.end_time.length - 5),
-      this.props.location.state.event.end = this.props.location.state.event.end.replace('T', ' ')
-        .substring(0, this.props.location.state.event.end.length - 5),
+      this.props.location.state.event.start_time = convertTime(this.props.location.state.event.start_time),
+      this.props.location.state.event.start = convertTime(this.props.location.state.event.start),
+      this.props.location.state.event.end_time = convertTime(this.props.location.state.event.end_time),
+      this.props.location.state.event.end = convertTime(this.props.location.state.event.end),
       this.setState({
         event: this.props.location.state.event,
         changeTitle: this.props.location.state.event.title,
@@ -51,10 +48,8 @@ export default class EventViewer extends Component {
     ) : 
       axios.get(`/api/event/eventinfo/${this.props.match.params.id}`, this.state.config)
         .then((res) => {
-          res.data[0].start_time = res.data[0].start_time.replace('T', ' ')
-            .substring(0, res.data[0].start_time.length - 5);
-          res.data[0].end_time = res.data[0].end_time.replace('T', ' ')
-            .substring(0, res.data[0].end_time.length - 5);
+          res.data[0].start_time = convertTime(res.data[0].start_time);
+          res.data[0].end_time = convertTime(res.data[0].end_time);
           this.setState({
             event: res.data[0],
             changeTitle: res.data[0].title,
@@ -221,88 +216,82 @@ export default class EventViewer extends Component {
     return (
       <div>
         <NavBar history={this.props.history} />
-        {this.state.mode === 'view' ? (
-          <span>
-            <h2>{this.state.event.title}</h2>
-            <br />
-          </span>
-        ) : (
-          <span>
-            <input
-              onChange={this.handleChange}
-              type="text"
-              name="changeTitle"
-              value={this.state.changeTitle}
-            />
-            <br />
-          </span>
-        )}
-        <img src={this.state.event.thumbnail} />
-        <br />
-        {this.state.mode === 'view' ? (
-          <span>
-            <p>{this.state.event.description}</p>
-            <br />
-          </span>
-        ) : (
-          <span>
-            <input
-              onChange={this.handleChange}
-              type="text"
-              name="changeDescription"
-              value={this.state.changeDescription}
-            />
-            <br />
-          </span>
-        )}
-        {this.state.event.start_time
-          ? `Time: ${this.state.event.start_time} - ${
-              this.state.event.end_time
-            }`
-          : 'Loading...'}
-        {this.state.role === 'host' ? (
-          <div>
-            {this.state.mode === 'view' ? (
-              <button onClick={this.handleEdit}>Edit</button>
-            ) : (
-              <button onClick={this.handleSave}>Save</button>
-            )}
-            <FriendsList
-              history={this.props.history}
-              invite={this.handleInvite}
-            />
-          </div>
-        ) : this.state.role === 'pending' ? (
-          <div>
-            <button onClick={() => this.handleResponse('going')}>Accept</button>
-            <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
-            <button onClick={() => this.handleResponse('declined')}>
-              Decline
-            </button>
-          </div>
-        ) : this.state.role === 'declined' ? (
-          <div>
-            <button onClick={() => this.handleResponse('going')}>Accept</button>
-            <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
-          </div>
-        ) : this.state.role === 'going' ? (
-          <div>
-            <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
-            <button onClick={() => this.handleResponse('declined')}>
-              Decline
-            </button>
-          </div>
-        ) : this.state.role === 'maybe' ? (
-          <div>
-            <button onClick={() => this.handleResponse('going')}>Accept</button>
-            <button onClick={() => this.handleResponse('declined')}>
-              Decline
-            </button>
-          </div>
-        ) : (
-          <div>stranger</div>
-        )}
-        {this.state.host ? (
+        {this.state.mode === 'view' ?
+          <h2>{this.state.event.title}</h2> :
+          <span><input
+            onChange={this.handleChange}
+            type="text"
+            name="changeTitle"
+            value={this.state.changeTitle}
+          ></input><br/></span>}
+        {this.state.event.start_time ?
+          `${this.state.event.start_time.split(' ')[4]}` === `${this.state.event.start_time.split(' ')[5]}` ?
+            `${this.state.event.start_time.split(' ')[4]}`
+          : `${this.state.event.start_time.split(' ')[4]} - ${this.state.event.end_time.split(' ')[4]}`
+        : 'Loading...'}
+        <br/>
+        {this.state.event.start_time ?
+          `${this.state.event.start_time.split(' ')[1]}` === `${this.state.event.end_time.split(' ')[1]}` ?
+            `${this.state.event.start_time.split(' ')[1]}`
+          : `${this.state.event.start_time.split(' ')[1]} - ${this.state.event.end_time.split(' ')[1]}`
+        : null}
+        <br/>
+        {this.state.event.start_time ?
+          `${this.state.event.start_time.split(' ')[2]}` === `${this.state.event.end_time.split(' ')[2]}` ?
+            `${this.state.event.start_time.split(' ')[2].substring(0, this.state.event.start_time.split(' ')[2].length - 1)}`
+          : `${this.state.event.start_time.split(' ')[2].substring(0, this.state.event.start_time.split(' ')[2].length - 1)} - ${this.state.event.end_time.split(' ')[2].substring(0, this.state.event.end_time.split(' ')[2].length - 1)}`
+        : null}
+        <br/>
+        {this.state.event.start_time ?
+          `${this.state.event.start_time.split(' ')[3]}` === `${this.state.event.end_time.split(' ')[3]}` ?
+            `${this.state.event.start_time.split(' ')[3]}`
+          : `${this.state.event.start_time.split(' ')[3]} - ${this.state.event.end_time.split(' ')[3]}`
+        : null}
+        <img src={this.state.event.thumbnail}/><br/>
+        {
+          this.state.role === 'host' ?
+            <div>
+              {this.state.mode === 'view' ? <button onClick={this.handleEdit}>Edit</button> : <button onClick={this.handleSave}>Save</button>}
+              <FriendsList history={this.props.history} invite={this.handleInvite} />
+            </div>
+          : this.state.role === 'pending' ?
+            <div>
+              <button onClick={() => this.handleResponse('going')}>Accept</button>
+              <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
+              <button onClick={() => this.handleResponse('declined')}>Decline</button>
+            </div>
+          : this.state.role === 'declined' ?
+            <div>
+              Not Going
+              <button onClick={() => this.handleResponse('going')}>Accept</button>
+              <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
+            </div>
+          : this.state.role === 'going' ?
+            <div>
+              Attending
+              <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
+              <button onClick={() => this.handleResponse('declined')}>Decline</button>
+            </div>
+          : this.state.role === 'maybe' ?
+            <div>
+              Maybe
+              <button onClick={() => this.handleResponse('going')}>Accept</button>
+              <button onClick={() => this.handleResponse('declined')}>Decline</button>
+            </div>
+          :
+            <div>
+              stranger
+            </div>
+        }
+        {this.state.mode === 'view' ?
+          <span><p>{this.state.event.description}</p><br/></span> :
+          <span><input
+            onChange={this.handleChange}
+            type="text"
+            name="changeDescription"
+            value={this.state.changeDescription}
+          ></input><br/></span>}
+        {this.state.host ?
           <div>
             <p>Host: {this.state.host.username}</p>
             <Avatar size={100} src={this.state.host.profile_picture} />
