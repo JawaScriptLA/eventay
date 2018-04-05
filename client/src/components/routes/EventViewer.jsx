@@ -24,7 +24,14 @@ export default class EventViewer extends Component {
       mode: 'view',
       changeTitle: '',
       changeDescription: '',
-
+      changeStartTime: '',
+      changeEndTime: '',
+      changeStartMonth: '',
+      changeEndMonth: '',
+      changeStartDate: '',
+      changeEndDate: '',
+      changeStartYear: '',
+      changeEndYear: ''
     };
     this.generatePost = this.generatePost.bind(this);
     this.handleInvite = this.handleInvite.bind(this);
@@ -36,26 +43,50 @@ export default class EventViewer extends Component {
   componentWillMount() {
     this.setState({ user: JSON.parse(localStorage.getItem('userInfo')) });
     this.props.location.state ? (
-      this.props.location.state.event.start_time = convertTime(this.props.location.state.event.start_time),
-      this.props.location.state.event.start = convertTime(this.props.location.state.event.start),
-      this.props.location.state.event.end_time = convertTime(this.props.location.state.event.end_time),
-      this.props.location.state.event.end = convertTime(this.props.location.state.event.end),
+      this.props.location.state.event.startTime = `${convertTime(this.props.location.state.event.start_time).split(' ')[4]} ${convertTime(this.props.location.state.event.start_time).split(' ')[5]}`,
+      this.props.location.state.event.endTime = `${convertTime(this.props.location.state.event.end_time).split(' ')[4]} ${convertTime(this.props.location.state.event.end_time).split(' ')[5]}`,
+      this.props.location.state.event.startMonth = convertTime(this.props.location.state.event.start_time).split(' ')[1],
+      this.props.location.state.event.endMonth = convertTime(this.props.location.state.event.end_time).split(' ')[1],
+      this.props.location.state.event.startDate = convertTime(this.props.location.state.event.start_time).split(' ')[2].substring(0, convertTime(this.props.location.state.event.start_time).split(' ')[2].length - 1),
+      this.props.location.state.event.endDate = convertTime(this.props.location.state.event.start_time).split(' ')[2].substring(0, convertTime(this.props.location.state.event.end_time).split(' ')[2].length - 1),
+      this.props.location.state.event.startYear = convertTime(this.props.location.state.event.start_time).split(' ')[3],
+      this.props.location.state.event.endYear = convertTime(this.props.location.state.event.start_time).split(' ')[3],
       this.setState({
         event: this.props.location.state.event,
         changeTitle: this.props.location.state.event.title,
         changeDescription: this.props.location.state.event.description,
-
+        changeStartTime: `${this.props.location.state.event.startTime.split(' ')[0]} ${this.props.location.state.event.startTime.split(' ')[1]}`,
+        changeEndTime: `${this.props.location.state.event.endTime.split(' ')[0]} ${this.props.location.state.event.endTime.split(' ')[1]}`,
+        changeStartMonth: this.props.location.state.event.startMonth,
+        changeEndMonth: this.props.location.state.event.endMonth,
+        changeStartDate: this.props.location.state.event.startDate,
+        changeEndDate: this.props.location.state.event.endDate,
+        changeStartYear: this.props.location.state.event.startYear,
+        changeEndYear: this.props.location.state.event.endYear
       })
     ) : 
       axios.get(`/api/event/eventinfo/${this.props.match.params.id}`, this.state.config)
         .then((res) => {
-          res.data[0].start_time = convertTime(res.data[0].start_time);
-          res.data[0].end_time = convertTime(res.data[0].end_time);
+          res.data[0].startTime = `${convertTime(res.data[0].start_time).split(' ')[4]} ${convertTime(res.data[0].start_time).split(' ')[5]}`;
+          res.data[0].endTime = `${convertTime(res.data[0].end_time).split(' ')[4]} ${convertTime(res.data[0].end_time).split(' ')[5]}`;
+          res.data[0].startMonth = convertTime(res.data[0].start_time).split(' ')[1];
+          res.data[0].endMonth = convertTime(res.data[0].end_time).split(' ')[1];
+          res.data[0].startDate = convertTime(res.data[0].start_time).split(' ')[2].substring(0, convertTime(res.data[0].start_time).split(' ')[2].length - 1);
+          res.data[0].endDate = convertTime(res.data[0].end_time).split(' ')[2].substring(0, convertTime(res.data[0].end_time).split(' ')[2].length - 1);
+          res.data[0].startYear = convertTime(res.data[0].start_time).split(' ')[3];
+          res.data[0].endYear = convertTime(res.data[0].end_time).split(' ')[3];
           this.setState({
             event: res.data[0],
             changeTitle: res.data[0].title,
             changeDescription: res.data[0].description,
-
+            changeStartTime: `${res.data[0].start_time.split(' ')[4]} ${res.data[0].start_time.split(' ')[5]}`,
+            changeEndTime: `${res.data[0].end_time.split(' ')[4]} ${res.data[0].end_time.split(' ')[5]}`,
+            changeStartMonth: res.data[0].startMonth,
+            changeEndMonth: res.data[0].endMonth,
+            changeStartDate: res.data[0].startDate,
+            changeEndDate: res.data[0].endDate,
+            changeStartYear: res.data[0].startYear,
+            changeEndYear: res.data[0].endYear
           });
         })
         .catch((err) => console.error('Error get event info: ', err));
@@ -196,6 +227,14 @@ export default class EventViewer extends Component {
   handleSave() {
     this.state.event.title = this.state.changeTitle;
     this.state.event.description = this.state.changeDescription;
+    this.state.event.startTime = this.state.changeStartTime;
+    this.state.event.endTime = this.state.changeEndTime;
+    this.state.event.startMonth = this.state.changeStartMonth;
+    this.state.event.endMonth = this.state.changeEndMonth;
+    this.state.event.startDate = this.state.changeStartDate;
+    this.state.event.endDate = this.state.changeEndDate;
+    this.state.event.startYear = this.state.changeStartYear;
+    this.state.event.endYear = this.state.changeEndYear;
     this.setState({
       mode: 'view',
       event: this.state.event
@@ -226,28 +265,43 @@ export default class EventViewer extends Component {
             value={this.state.changeTitle}
           ></input>}
         <br/>
-        {this.state.event.start_time ?
-          `${this.state.event.start_time.split(' ')[4]}` === `${this.state.event.start_time.split(' ')[5]}` ?
-            `${this.state.event.start_time.split(' ')[4]}`
-          : `${this.state.event.start_time.split(' ')[4]} - ${this.state.event.end_time.split(' ')[4]}`
+        {this.state.event.startTime ?
+          this.state.mode === 'view' ?
+            this.state.event.startTime === this.state.event.endTime ?
+              this.state.event.startTime
+            : `${this.state.event.startTime} - ${this.state.event.endTime}`
+          : <input
+              onChange={this.handleChange}
+              type="text"
+              name="changeStartTime"
+              value={this.state.changeStartTime}
+            ></input>
         : 'Loading...'}
+        {this.state.mode === 'edit' ? ' - ' : null}
+        {this.state.mode === 'edit' ?
+          <input
+            onChange={this.handleChange}
+            type="text"
+            name="changeEndTime"
+            value={this.state.changeEndTime}
+          ></input> : null}
         <br/>
-        {this.state.event.start_time ?
-          `${this.state.event.start_time.split(' ')[1]}` === `${this.state.event.end_time.split(' ')[1]}` ?
-            `${this.state.event.start_time.split(' ')[1]}`
-          : `${this.state.event.start_time.split(' ')[1]} - ${this.state.event.end_time.split(' ')[1]}`
+        {this.state.event.startMonth ?
+          this.state.event.startMonth === this.state.event.endMonth ?
+            this.state.event.startMonth
+          : `${this.state.event.startMonth} - ${this.state.event.endMonth}`
         : null}
         <br/>
-        {this.state.event.start_time ?
-          `${this.state.event.start_time.split(' ')[2]}` === `${this.state.event.end_time.split(' ')[2]}` ?
-            `${this.state.event.start_time.split(' ')[2].substring(0, this.state.event.start_time.split(' ')[2].length - 1)}`
-          : `${this.state.event.start_time.split(' ')[2].substring(0, this.state.event.start_time.split(' ')[2].length - 1)} - ${this.state.event.end_time.split(' ')[2].substring(0, this.state.event.end_time.split(' ')[2].length - 1)}`
+        {this.state.event.startDate ?
+          this.state.event.startDate === this.state.event.endDate ?
+            this.state.event.startDate
+          : `${this.state.event.startDate} - ${this.state.event.endDate}`
         : null}
         <br/>
-        {this.state.event.start_time ?
-          `${this.state.event.start_time.split(' ')[3]}` === `${this.state.event.end_time.split(' ')[3]}` ?
-            `${this.state.event.start_time.split(' ')[3]}`
-          : `${this.state.event.start_time.split(' ')[3]} - ${this.state.event.end_time.split(' ')[3]}`
+        {this.state.event.startYear ?
+          this.state.event.startYear === this.state.event.endYear ?
+            this.state.event.startYear
+          : `${this.state.event.startYear} - ${this.state.event.endYear}`
         : null}
         <br/>
         {
