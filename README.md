@@ -9,7 +9,7 @@ Follow these instructions if you want a working copy of Eventé up and running i
 1. Open up your terminal
 2. `cd to/your/top/level/directory`
 2. `git clone https://github.com/JawaScriptLA/eventay.git`
-4. `cd eventay` _Yep... we went through a name change mid way through development_
+4. `cd eventay`
 5. `npm install`
 6. `npm run build`
 7. `mongod` 
@@ -55,12 +55,14 @@ Give an example
 We're currently not accepting contributions at this time. Perhaps some day in the future.
 
 ## Authors
+
+_Owner_
 * **Jason Sato** - *Product Owner, Algorithm Guru, Testing* - [Github](https://github.com/hirosato223)
 
 _Dev Team_
 * **Alexander Monirji** - *Deployment, UI and API* - [Github](https://github.com/alexmonirji)
 * **Antonio Castro** - *Front End, API, Websockets* - [Github](https://github.com/toncas)
-* **Will Ruiz** - *Database Schema Designer, Front End, API, nginx* [Github](https://github.com/waruiz)
+* **Will Ruiz** - *Database Schema Designer, Front End, API, nginx* - [Github](https://github.com/waruiz)
 
 ## License
 
