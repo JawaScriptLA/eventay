@@ -9,7 +9,8 @@
     "build": "webpack -w",
     "db:setup": "node server/db/clearDB.js",
     "db:seed": "psql -d eventayRDB -a -f server/db/seedData.sql",
-    "test": "jest --forceExit"
+    "db:seed2": "node server/db/seedData.js",
+    "test": "jest --forceExit --runInBand"
   },
   "repository": {
     "type": "git",
