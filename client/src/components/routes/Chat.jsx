@@ -3,7 +3,13 @@ import { Paper, TextField, List, Avatar, Chip } from 'material-ui';
 import io from 'socket.io-client';
 import FriendsList from '../misc/friendsList.jsx'
 import ListItem from 'material-ui/List/ListItem';
-import NavBar from './NavBar.jsx'
+import NavBar from './NavBar.jsx';
+let config;
+try {
+   config = require('../../../config.js');
+} catch (err) {
+  config = require('../../../config.example.js');
+}
 
 class Chat extends React.Component {
   constructor(props) {
@@ -26,7 +32,7 @@ class Chat extends React.Component {
 
   initializeSocket(receiver) {
     if (!this.state.socket) {
-      this.setState({ socket: io.connect('http://localhost:9001') });
+      this.setState({ socket: io.connect(`http://${config.url}:9001`) });
     }
     if (!this.state.currentChatReceiver || receiver.username !== this.state.currentChatReceiver.username) {
       this.setState({
@@ -120,7 +126,6 @@ class Chat extends React.Component {
       this.state.socket.emit('chat', payload);
       messageList.push(payload);
       this.setState({ messages: messageList, message: '' });
-      console.log(payload);
     }
   }
 
