@@ -11,7 +11,7 @@ export default class AttendantsList extends Component {
     return (
       <div>
         <List style={{ maxHeight: '10em', overflow: 'scroll', width: '20%', border: '1px solid #d3d3d3'}}>
-          {this.props.attendants.map((attendant, key) => <Attendant attendant={attendant} key={key} id={key} />)}
+          {this.props.attendants.map((attendant, key) => <Attendant attendant={attendant} key={key} id={key} uninvite={this.props.uninvite} />)}
         </List>
       </div>
     );

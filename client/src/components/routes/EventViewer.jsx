@@ -35,6 +35,7 @@ export default class EventViewer extends Component {
     };
     this.generatePost = this.generatePost.bind(this);
     this.handleInvite = this.handleInvite.bind(this);
+    this.handleUninvite = this.handleUninvite.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -184,25 +185,38 @@ export default class EventViewer extends Component {
       });
   }
 
-  handleInvite({ target: { innerHTML } }) {
-    axios
-      .get(`/api/user/${'' + innerHTML}`, this.state.config)
+  handleInvite(name) {
+    axios.get(`/api/user/${name}`, this.state.config)
       .then(({ data }) => {
-        axios
-          .post(
-            `/api/attendant`,
-            {
-              access: 'member',
-              status: 'pending',
-              user_id: data.id,
-              event_id: this.state.event.id,
-              invitor_id: this.state.user.id
-            },
-            this.state.config
-          )
-          .then(() => console.log(`Successfully invited ${'' + innerHTML}.`));
+        axios.post(`/api/attendant`, {
+          access: 'member',
+          status: 'pending',
+          user_id: data.id,
+          event_id: this.state.event.id,
+          invitor_id: this.state.user.id
+        }, this.state.config)
+          .then(() => console.log(`Successfully invited ${name}.`));
       })
       .catch(err => console.error(err));
+  }
+
+  handleUninvite(name) {
+    if (this.state.role === 'host') {
+      axios.get(`/api/user/${name}`, this.state.config)
+        .then(({ data }) => {
+          axios.delete(`/api/attendant`, {
+            data: {
+              user_id: data.id,
+              event_id: this.state.event.id
+            },
+            headers: this.state.config.headers
+          })
+            .then(() => console.log(`Successfully uninvited ${name}.`));
+        })
+        .catch((err) => console.error(err));
+    } else {
+      console.log('Permission denied.');
+    }
   }
 
   handleResponse(status) {
@@ -395,7 +409,7 @@ export default class EventViewer extends Component {
             ></input>
         }
         <br/>
-        <AttendantsList attendants={this.state.attendants} history={this.props.history} /><br/>
+        <AttendantsList attendants={this.state.attendants} history={this.props.history} uninvite={this.handleUninvite} /><br/>
         {this.state.role === 'host' ? <FriendsList history={this.props.history} invite={this.handleInvite} /> : null}
         <CreatePost
           generatePost={this.generatePost}
