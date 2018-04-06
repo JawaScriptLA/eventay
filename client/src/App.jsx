@@ -12,6 +12,7 @@ import Test from './components/routes/Test.jsx';
 import Chat from './components/routes/Chat.jsx';
 
 import Landing from './components/routes/landing/Landing.jsx';
+import About from './components/routes/about/About.jsx';
 
 export default class App extends Component {
   render() {
@@ -20,6 +21,7 @@ export default class App extends Component {
         <Switch>
           <Route path="/test" exact component={Test} />
           <Route path="/landing" component={Landing} />
+          <Route path="/about" component={About} />
           <Route path="/signup" exact component={Signup} />
           <Route path="/login" exact component={Login} />
           <Route
