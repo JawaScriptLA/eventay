@@ -139,7 +139,6 @@ export default class EventCreator extends React.Component {
       .post(
         '/api/event',
         {
-          // TODO: add thumbnail to post request
           title: this.state.eventName,
           description: this.state.eventDescription,
           location: this.state.eventLocation,
@@ -279,6 +278,7 @@ export default class EventCreator extends React.Component {
   }
 
   handleThumbnailUpload(res) {
+    console.log(res.filesUploaded);
     this.setState({ thumbnailUrl: res.filesUploaded[0].url });
   }
 
@@ -409,7 +409,7 @@ export default class EventCreator extends React.Component {
     return (
       <div>
         <NavBar history={this.props.history} />
-        <h1 style={{textAlign: 'center', fontWeight: '300'}}>create event</h1>
+        <h1 style={{ textAlign: 'center', fontWeight: '300' }}>create event</h1>
         <div style={{ width: '100%', maxWidth: 1000, margin: 'auto' }}>
           <Stepper activeStep={this.state.stepIndex}>
             <Step>

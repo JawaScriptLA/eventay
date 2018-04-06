@@ -11,22 +11,35 @@ try {
 const db = new Pool({
   user: config.rdb.user,
   host: config.rdb.host,
-  database: config.rdb.name,
+  database:
+    config.rdb.environment === 'test'
+      ? config.rdb.name_testing
+      : config.rdb.name_dev,
   password: config.rdb.password,
   port: config.rdb.port,
   max: 20
 });
 
 db.on('connect', () => {
-  console.log('Successfully connected to database', config.rdb.name);
+  console.log(
+    'Successfully connected to database',
+    config.rdb.environment === 'test'
+      ? config.rdb.name_testing
+      : config.rdb.name_dev
+  );
 });
 
-db.on('remove', (client) => {
+db.on('remove', client => {
   console.log('Successfully removed client');
 });
 
 db.on('error', () => {
-  console.log('Error in database ', config.rdb.name);
+  console.log(
+    'Error in database ',
+    config.rdb.environment === 'test'
+      ? config.rdb.name_testing
+      : config.rdb.name_dev
+  );
 });
 
 db.connect();

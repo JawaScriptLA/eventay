@@ -15,3 +15,6 @@ config.js
 
 ## YARN ##
 yarn.lock
+
+## Jest Coverage ##
+coverage
