@@ -239,26 +239,24 @@ export default class EventViewer extends Component {
   }
 
   handleSave() {
-    let startTime = '';
-    let add = 0;
-    let hour = this.state.changeStartTime.substring(0, 2);
-    if (this.state.changeStartTime.substring(6, 8) === 'pm') {
-      if (hour !== 12) {
-        add = 12;
-      }
-    } else {
-      if (hour === 12) {
-        hour = '00';
-      }
-    }
-
-    let endTime = '';
-    // 2018-05-07T09:00:00.000Z
+    let startAdd = 0;
+    let startHour = this.state.changeStartTime.split(':')[0];
+    this.state.changeStartTime.split(' ')[1] === 'pm' ? startHour !== '12' ? startAdd = 12 : null : startHour === '12' ? startHour = '00' : null;
+    let startMonth = this.state.changeStartMonth === 'Jan' ? 0 : this.state.changeStartMonth === 'Feb' ? 1 : this.state.changeStartMonth === 'Mar' ? 2 : this.state.changeStartMonth === 'Apr' ? 3 : this.state.changeStartMonth === 'May' ? 4 : this.state.changeStartMonth === 'Jun' ? 5 : this.state.changeStartMonth === 'Jul' ? 6 : this.state.changeStartMonth === 'Aug' ? 7 : this.state.changeStartMonth === 'Sep' ? 8 : this.state.changeStartMonth === 'Oct' ? 9 : this.state.changeStartMonth === 'Nov' ? 10 : this.state.changeStartMonth === 'Dec' ? 12 : null;
+    let endMonth = this.state.changeEndMonth === 'Jan' ? 0 : this.state.changeEndMonth === 'Feb' ? 1 : this.state.changeEndMonth === 'Mar' ? 2 : this.state.changeEndMonth === 'Apr' ? 3 : this.state.changeEndMonth === 'May' ? 4 : this.state.changeEndMonth === 'Jun' ? 5 : this.state.changeEndMonth === 'Jul' ? 6 : this.state.changeEndMonth === 'Aug' ? 7 : this.state.changeEndMonth === 'Sep' ? 8 : this.state.changeEndMonth === 'Oct' ? 9 : this.state.changeEndMonth === 'Nov' ? 10 : this.state.changeEndMonth === 'Dec' ? 12 : null;
+    startHour = +startHour + startAdd;
+    let startMinute = +this.state.changeStartTime.split(':')[1].split(' ')[0];
+    let endAdd = 0;
+    let endHour = this.state.changeEndTime.split(':')[0];
+    this.state.changeEndTime.split(' ')[1] === 'pm' ? endHour !== '12' ? endAdd = 12 : null : endHour === '12' ? endHour = '00' : null;
+    endHour = +endHour + endAdd;
+    let endMinute = +this.state.changeEndTime.split(':')[1].split(' ')[0];
     axios.put('/api/event', {
       title: this.state.changeTitle,
       description: this.state.changeDescription,
-      start_time: startTime,
-      end_time: endTime
+      start_time: new Date(+this.state.changeStartYear, startMonth, +this.state.changeStartDate, startHour, startMinute),
+      end_time: new Date(+this.state.changeEndYear, endMonth, +this.state.changeEndDate, endHour, endMinute),
+      id: this.state.event.id
     }, this.state.config)
       .then(() => {
         this.state.event.title = this.state.changeTitle;
