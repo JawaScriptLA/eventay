@@ -5,10 +5,10 @@ export default class Protected extends React.Component {
   componentWillMount() {
     try {
       if (!localStorage.getItem('token')) {
-        this.props.history.push('/login');
+        this.props.history.push('/landing');
       }
     } catch (e) {
-      this.props.history.push('/login');
+      this.props.history.push('/landing');
     }
   }
 
