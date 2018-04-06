@@ -60,7 +60,7 @@ class FriendsDrawer extends Component {
         <RaisedButton
           label="See Friends"
           onClick={this.handleToggle}
-          style={{marginLeft: '10%'}}
+          style={{marginLeft: '10%', marginTop: '1%'}}
         />
         <Drawer
           docked={false}

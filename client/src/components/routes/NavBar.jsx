@@ -283,6 +283,7 @@ export default class NavBar extends Component {
               style={{
                 fontFamily: 'Stalemate, cursive',
                 fontSize: '2.7em',
+                marginLeft: '20%',
               }}
               onClick={
                 () => this.props.history.push('/')}
