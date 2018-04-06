@@ -305,18 +305,28 @@ export default class NavBar extends Component {
             id="notifications"
             onClick={this.handleNotifsOpen}
           >
-            <Badge
-              badgeContent={
-                this.state.pendingFriends.length +
-                this.state.pendingInvites.length
-              }
-              secondary={true}
-              badgeStyle={{ top: 12, right: 12 }}
-            >
-              <IconButton tooltip="Notifications">
-                <NotificationsIcon />
-              </IconButton>
-            </Badge>
+            <IconButton
+              style={{
+                marginRight: '-10px',
+                marginTop: '10px',
+              }}
+              tooltip="Notifications">
+              <NotificationsIcon />
+            </IconButton>
+            {
+              (this.state.pendingFriends.length +
+              this.state.pendingInvites.length) > 0 ?
+                (<Badge
+                  badgeContent={
+                    this.state.pendingFriends.length +
+                    this.state.pendingInvites.length
+                  }
+                  secondary={true}
+                  badgeStyle={{ top: 12, right: 12 }}
+                >
+                </Badge>)
+                : null
+            }
           </div>
           <Dialog
             title='Notifications'
