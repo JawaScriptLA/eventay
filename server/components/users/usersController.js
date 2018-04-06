@@ -30,7 +30,6 @@ module.exports = {
       let user = await db.queryAsync(`UPDATE users SET ${fields} WHERE username='${data.username}' RETURNING profile_picture, bio, likes_count`);
       return user.rows[0];
     } catch (err) {
-      console.log('throwing', err);
       throw err;
     }
   }

@@ -3,9 +3,13 @@ import axios from 'axios';
 import NavBar from './NavBar.jsx';
 import AttendantsList from '../misc/AttendantsList.jsx';
 import CreatePost from '../posts/CreatePost.jsx';
-import { Avatar } from 'material-ui';
+import { Avatar, Dialog, Paper, TextField, Divider } from 'material-ui';
 import Posts from '../posts/Posts.jsx';
 import FriendsList from '../misc/friendsList.jsx';
+import { convertTime } from '../../../../utils/utils.js';
+import ReactFilestack from 'filestack-react';
+import filestack from '../../../config.js';
+import RaisedButton from 'material-ui/RaisedButton';
 
 export default class EventViewer extends Component {
   constructor(props) {
@@ -22,54 +26,75 @@ export default class EventViewer extends Component {
       posts: [],
       mode: 'view',
       changeTitle: '',
-      changeDescription: ''
+      changeDescription: '',
+      changeStartTime: '',
+      changeEndTime: '',
+      changeStartMonth: '',
+      changeEndMonth: '',
+      changeStartDate: '',
+      changeEndDate: '',
+      changeStartYear: '',
+      changeEndYear: ''
     };
     this.generatePost = this.generatePost.bind(this);
     this.handleInvite = this.handleInvite.bind(this);
+    this.handleUninvite = this.handleUninvite.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleThumbnailUpload = this.handleThumbnailUpload.bind(this);
   }
 
   componentWillMount() {
     this.setState({ user: JSON.parse(localStorage.getItem('userInfo')) });
-    this.props.location.state
-      ? ((this.props.location.state.event.start_time = this.props.location.state.event.start_time
-          .replace('T', ' ')
-          .substring(0, this.props.location.state.event.start_time.length - 5)),
-        // (this.props.location.state.event.start_time = this.props.location.state.event.start_time
-        //   .replace('T', ' ')
-        //   .substring(0, this.props.location.state.event.start_time.length - 5)),
-        // (this.props.location.state.event.end_time = this.props.location.state.event.end_time
-        //   .replace('T', ' ')
-        //   .substring(0, this.props.location.state.event.end_time.length - 5)),
-        (this.props.location.state.event.end_time = this.props.location.state.event.end_time
-          .replace('T', ' ')
-          .substring(0, this.props.location.state.event.end_time.length - 5)),
-        this.setState({
-          event: this.props.location.state.event,
-          changeTitle: this.props.location.state.event.title,
-          changeDescription: this.props.location.state.event.description
-        }))
-      : axios
-          .get(
-            `/api/event/eventinfo/${this.props.match.params.id}`,
-            this.state.config
-          )
-          .then(res => {
-            res.data[0].start_time = res.data[0].start_time
-              .replace('T', ' ')
-              .substring(0, res.data[0].start_time.length - 5);
-            res.data[0].end_time = res.data[0].end_time
-              .replace('T', ' ')
-              .substring(0, res.data[0].end_time.length - 5);
-            this.setState({
-              event: res.data[0],
-              changeTitle: res.data[0].title,
-              changeDescription: res.data[0].description
-            });
-          })
-          .catch(err => console.error('Error get event info: ', err));
+    this.props.location.state ? (
+      this.props.location.state.event.startTime = `${convertTime(this.props.location.state.event.start_time).split(' ')[4]} ${convertTime(this.props.location.state.event.start_time).split(' ')[5]}`,
+      this.props.location.state.event.endTime = `${convertTime(this.props.location.state.event.end_time).split(' ')[4]} ${convertTime(this.props.location.state.event.end_time).split(' ')[5]}`,
+      this.props.location.state.event.startMonth = convertTime(this.props.location.state.event.start_time).split(' ')[1],
+      this.props.location.state.event.endMonth = convertTime(this.props.location.state.event.end_time).split(' ')[1],
+      this.props.location.state.event.startDate = convertTime(this.props.location.state.event.start_time).split(' ')[2].substring(0, convertTime(this.props.location.state.event.start_time).split(' ')[2].length - 1),
+      this.props.location.state.event.endDate = convertTime(this.props.location.state.event.start_time).split(' ')[2].substring(0, convertTime(this.props.location.state.event.end_time).split(' ')[2].length - 1),
+      this.props.location.state.event.startYear = convertTime(this.props.location.state.event.start_time).split(' ')[3],
+      this.props.location.state.event.endYear = convertTime(this.props.location.state.event.start_time).split(' ')[3],
+      this.setState({
+        event: this.props.location.state.event,
+        changeTitle: this.props.location.state.event.title,
+        changeDescription: this.props.location.state.event.description,
+        changeStartTime: `${this.props.location.state.event.startTime.split(' ')[0]} ${this.props.location.state.event.startTime.split(' ')[1]}`,
+        changeEndTime: `${this.props.location.state.event.endTime.split(' ')[0]} ${this.props.location.state.event.endTime.split(' ')[1]}`,
+        changeStartMonth: this.props.location.state.event.startMonth,
+        changeEndMonth: this.props.location.state.event.endMonth,
+        changeStartDate: this.props.location.state.event.startDate,
+        changeEndDate: this.props.location.state.event.endDate,
+        changeStartYear: this.props.location.state.event.startYear,
+        changeEndYear: this.props.location.state.event.endYear
+      })
+    ) : 
+      axios.get(`/api/event/eventinfo/${this.props.match.params.id}`, this.state.config)
+        .then((res) => {
+          res.data[0].startTime = `${convertTime(res.data[0].start_time).split(' ')[4]} ${convertTime(res.data[0].start_time).split(' ')[5]}`;
+          res.data[0].endTime = `${convertTime(res.data[0].end_time).split(' ')[4]} ${convertTime(res.data[0].end_time).split(' ')[5]}`;
+          res.data[0].startMonth = convertTime(res.data[0].start_time).split(' ')[1];
+          res.data[0].endMonth = convertTime(res.data[0].end_time).split(' ')[1];
+          res.data[0].startDate = convertTime(res.data[0].start_time).split(' ')[2].substring(0, convertTime(res.data[0].start_time).split(' ')[2].length - 1);
+          res.data[0].endDate = convertTime(res.data[0].end_time).split(' ')[2].substring(0, convertTime(res.data[0].end_time).split(' ')[2].length - 1);
+          res.data[0].startYear = convertTime(res.data[0].start_time).split(' ')[3];
+          res.data[0].endYear = convertTime(res.data[0].end_time).split(' ')[3];
+          this.setState({
+            event: res.data[0],
+            changeTitle: res.data[0].title,
+            changeDescription: res.data[0].description,
+            changeStartTime: `${res.data[0].start_time.split(' ')[4]} ${res.data[0].start_time.split(' ')[5]}`,
+            changeEndTime: `${res.data[0].end_time.split(' ')[4]} ${res.data[0].end_time.split(' ')[5]}`,
+            changeStartMonth: res.data[0].startMonth,
+            changeEndMonth: res.data[0].endMonth,
+            changeStartDate: res.data[0].startDate,
+            changeEndDate: res.data[0].endDate,
+            changeStartYear: res.data[0].startYear,
+            changeEndYear: res.data[0].endYear
+          });
+        })
+        .catch((err) => console.error('Error get event info: ', err));
   }
 
   init() {
@@ -164,25 +189,38 @@ export default class EventViewer extends Component {
       });
   }
 
-  handleInvite({ target: { innerHTML } }) {
-    axios
-      .get(`/api/user/${'' + innerHTML}`, this.state.config)
+  handleInvite(name) {
+    axios.get(`/api/user/${name}`, this.state.config)
       .then(({ data }) => {
-        axios
-          .post(
-            `/api/attendant`,
-            {
-              access: 'member',
-              status: 'pending',
-              user_id: data.id,
-              event_id: this.state.event.id,
-              invitor_id: this.state.user.id
-            },
-            this.state.config
-          )
-          .then(() => console.log(`Successfully invited ${'' + innerHTML}.`));
+        axios.post(`/api/attendant`, {
+          access: 'member',
+          status: 'pending',
+          user_id: data.id,
+          event_id: this.state.event.id,
+          invitor_id: this.state.user.id
+        }, this.state.config)
+          .then(() => console.log(`Successfully invited ${name}.`));
       })
       .catch(err => console.error(err));
+  }
+
+  handleUninvite(name) {
+    if (this.state.role === 'host') {
+      axios.get(`/api/user/${name}`, this.state.config)
+        .then(({ data }) => {
+          axios.delete(`/api/attendant`, {
+            data: {
+              user_id: data.id,
+              event_id: this.state.event.id
+            },
+            headers: this.state.config.headers
+          })
+            .then(() => console.log(`Successfully uninvited ${name}.`));
+        })
+        .catch((err) => console.error(err));
+    } else {
+      console.log('Permission denied.');
+    }
   }
 
   handleResponse(status) {
@@ -205,16 +243,59 @@ export default class EventViewer extends Component {
   }
 
   handleSave() {
-    this.state.event.title = this.state.changeTitle;
-    this.state.event.description = this.state.changeDescription;
-    this.setState({
-      mode: 'view',
-      event: this.state.event
-    });
+    let startAdd = 0;
+    let startHour = this.state.changeStartTime.split(':')[0];
+    this.state.changeStartTime.split(' ')[1] === 'pm' ? startHour !== '12' ? startAdd = 12 : null : startHour === '12' ? startHour = '00' : null;
+    let startMonth = this.state.changeStartMonth === 'Jan' ? 0 : this.state.changeStartMonth === 'Feb' ? 1 : this.state.changeStartMonth === 'Mar' ? 2 : this.state.changeStartMonth === 'Apr' ? 3 : this.state.changeStartMonth === 'May' ? 4 : this.state.changeStartMonth === 'Jun' ? 5 : this.state.changeStartMonth === 'Jul' ? 6 : this.state.changeStartMonth === 'Aug' ? 7 : this.state.changeStartMonth === 'Sep' ? 8 : this.state.changeStartMonth === 'Oct' ? 9 : this.state.changeStartMonth === 'Nov' ? 10 : this.state.changeStartMonth === 'Dec' ? 12 : null;
+    let endMonth = this.state.changeEndMonth === 'Jan' ? 0 : this.state.changeEndMonth === 'Feb' ? 1 : this.state.changeEndMonth === 'Mar' ? 2 : this.state.changeEndMonth === 'Apr' ? 3 : this.state.changeEndMonth === 'May' ? 4 : this.state.changeEndMonth === 'Jun' ? 5 : this.state.changeEndMonth === 'Jul' ? 6 : this.state.changeEndMonth === 'Aug' ? 7 : this.state.changeEndMonth === 'Sep' ? 8 : this.state.changeEndMonth === 'Oct' ? 9 : this.state.changeEndMonth === 'Nov' ? 10 : this.state.changeEndMonth === 'Dec' ? 12 : null;
+    startHour = +startHour + startAdd;
+    let startMinute = +this.state.changeStartTime.split(':')[1].split(' ')[0];
+    let endAdd = 0;
+    let endHour = this.state.changeEndTime.split(':')[0];
+    this.state.changeEndTime.split(' ')[1] === 'pm' ? endHour !== '12' ? endAdd = 12 : null : endHour === '12' ? endHour = '00' : null;
+    endHour = +endHour + endAdd;
+    let endMinute = +this.state.changeEndTime.split(':')[1].split(' ')[0];
+    axios.put('/api/event', {
+      title: this.state.changeTitle,
+      description: this.state.changeDescription,
+      start_time: new Date(+this.state.changeStartYear, startMonth, +this.state.changeStartDate, startHour, startMinute),
+      end_time: new Date(+this.state.changeEndYear, endMonth, +this.state.changeEndDate, endHour, endMinute),
+      id: this.state.event.id
+    }, this.state.config)
+      .then(() => {
+        this.state.event.title = this.state.changeTitle;
+        this.state.event.description = this.state.changeDescription;
+        this.state.event.startTime = this.state.changeStartTime;
+        this.state.event.endTime = this.state.changeEndTime;
+        this.state.event.startMonth = this.state.changeStartMonth;
+        this.state.event.endMonth = this.state.changeEndMonth;
+        this.state.event.startDate = this.state.changeStartDate;
+        this.state.event.endDate = this.state.changeEndDate;
+        this.state.event.startYear = this.state.changeStartYear;
+        this.state.event.endYear = this.state.changeEndYear;
+        this.setState({
+          mode: 'view',
+          event: this.state.event
+        });
+      })
+      .catch((err) => console.error(err));
   }
 
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
+  }
+
+  handleThumbnailUpload(res) {
+    let url = res.filesUploaded[0].url;
+    axios.put('/api/event', {
+      thumbnail: url,
+      id: this.state.event.id
+    }, this.state.config)
+      .then(() => {
+        this.state.event.thumbnail = url;
+        this.setState({ event: this.state.event });
+      })
+      .catch((err) => console.error(err));
   }
 
   render() {
@@ -228,103 +309,174 @@ export default class EventViewer extends Component {
     return (
       <div>
         <NavBar history={this.props.history} />
-        {this.state.mode === 'view' ? (
-          <span>
-            <h2>{this.state.event.title}</h2>
-            <br />
-          </span>
-        ) : (
-          <span>
-            <input
+        {this.state.mode === 'view' ?
+          <h2>{this.state.event.title}</h2>
+        : <span><TextField
+            onChange={this.handleChange}
+            type="text"
+            name="changeTitle"
+            value={this.state.changeTitle}
+          /><br/></span>}
+          {
+            this.state.mode === 'view' ?
+              <p>{this.state.event.description}</p> :
+              <TextField
+                onChange={this.handleChange}
+                type="text"
+                name="changeDescription"
+                value={this.state.changeDescription}
+              />
+          }
+        <Paper>
+          <div>
+            {this.state.event && this.state.event.thumbnail ? <Avatar size={200} src={this.state.event.thumbnail} /> : null}
+            {this.state.host ? <span><p><em>Hosted by: </em>{this.state.host.username}</p></span> : null}
+          </div>
+          <Divider/>
+        {this.state.event.startTime ?
+          this.state.mode === 'view' ?
+            this.state.event.startTime === this.state.event.endTime ?
+              this.state.event.startTime
+            : `${this.state.event.startTime} - ${this.state.event.endTime}`
+          : <TextField
               onChange={this.handleChange}
               type="text"
-              name="changeTitle"
-              value={this.state.changeTitle}
+              name="changeStartTime"
+              value={this.state.changeStartTime}
             />
-            <br />
-          </span>
-        )}
-        <img src={this.state.event.thumbnail} />
-        <br />
-        {this.state.mode === 'view' ? (
-          <span>
-            <p>{this.state.event.description}</p>
-            <br />
-          </span>
-        ) : (
-          <span>
-            <input
+        : 'Loading...'}
+        {this.state.mode === 'edit' ? ' - ' : null}
+        {this.state.mode === 'edit' ?
+          <TextField
+            onChange={this.handleChange}
+            type="text"
+            name="changeEndTime"
+            value={this.state.changeEndTime}
+          /> : null}
+        <br/>
+        {this.state.event.startMonth ?
+          this.state.mode === 'view' ?
+            this.state.event.startMonth === this.state.event.endMonth ?
+              this.state.event.startMonth
+            : `${this.state.event.startMonth} - ${this.state.event.endMonth}`
+          : <TextField
               onChange={this.handleChange}
               type="text"
-              name="changeDescription"
-              value={this.state.changeDescription}
+              name="changeStartMonth"
+              value={this.state.changeStartMonth}
             />
-            <br />
-          </span>
-        )}
-        {this.state.event.start_time
-          ? `Time: ${this.state.event.start_time} - ${
-              this.state.event.end_time
-            }`
-          : 'Loading...'}
-        {this.state.role === 'host' ? (
-          <div>
-            {this.state.mode === 'view' ? (
-              <button onClick={this.handleEdit}>Edit</button>
-            ) : (
-              <button onClick={this.handleSave}>Save</button>
-            )}
-            <FriendsList
-              history={this.props.history}
-              invite={this.handleInvite}
+        : null}
+        {this.state.mode === 'edit' ? ' - ' : null}
+        {this.state.mode === 'edit' ?
+          <TextField
+            onChange={this.handleChange}
+            type="text"
+            name="changeEndMonth"
+            value={this.state.changeEndMonth}
+          /> : null}
+        <br/>
+        {this.state.event.startDate ?
+          this.state.mode === 'view' ?
+            this.state.event.startDate === this.state.event.endDate ?
+              this.state.event.startDate
+            : `${this.state.event.startDate} - ${this.state.event.endDate}`
+          : <TextField
+              onChange={this.handleChange}
+              type="text"
+              name="changeStartDate"
+              value={this.state.changeStartDate}
             />
-          </div>
-        ) : this.state.role === 'pending' ? (
-          <div>
-            <button onClick={() => this.handleResponse('going')}>Accept</button>
-            <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
-            <button onClick={() => this.handleResponse('declined')}>
-              Decline
-            </button>
-          </div>
-        ) : this.state.role === 'declined' ? (
-          <div>
-            <button onClick={() => this.handleResponse('going')}>Accept</button>
-            <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
-          </div>
-        ) : this.state.role === 'going' ? (
-          <div>
-            <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
-            <button onClick={() => this.handleResponse('declined')}>
-              Decline
-            </button>
-          </div>
-        ) : this.state.role === 'maybe' ? (
-          <div>
-            <button onClick={() => this.handleResponse('going')}>Accept</button>
-            <button onClick={() => this.handleResponse('declined')}>
-              Decline
-            </button>
-          </div>
-        ) : (
-          <div>stranger</div>
-        )}
-        {this.state.host ? (
-          <div>
-            <p>Host: {this.state.host.username}</p>
-            <Avatar size={100} src={this.state.host.profile_picture} />
-          </div>
-        ) : null}
-        <AttendantsList
-          attendants={this.state.attendants}
-          history={this.props.history}
-        />{' '}
-        <br />
+        : null}
+        {this.state.mode === 'edit' ? ' - ' : null}
+        {this.state.mode === 'edit' ?
+          <TextField
+            onChange={this.handleChange}
+            type="text"
+            name="changeEndDate"
+            value={this.state.changeEndDate}
+          /> : null}
+        <br/>
+        {this.state.event.startYear ?
+          this.state.mode === 'view' ?
+            this.state.event.startYear === this.state.event.endYear ?
+              this.state.event.startYear
+            : `${this.state.event.startYear} - ${this.state.event.endYear}`
+          : <TextField
+              onChange={this.handleChange}
+              type="text"
+              name="changeStartYear"
+              value={this.state.changeStartYear}
+            />
+        : null}
+        {this.state.mode === 'edit' ? ' - ' : null}
+        {this.state.mode === 'edit' ?
+          <TextField
+            onChange={this.handleChange}
+            type="text"
+            name="changeEndYear"
+            value={this.state.changeEndYear}
+          /> : null}
+        </Paper>
+        <br/>
+        {
+          this.state.role === 'host' ?
+            this.state.mode === 'view' ?
+              <div>
+                <RaisedButton onClick={this.handleEdit}>Edit</RaisedButton>
+                <ReactFilestack
+                  apikey={filestack.API_KEY2}
+                  buttonText="Update event thumbnail"
+                  render={({ onPick }) => (
+                    <RaisedButton
+                      label="Update Event Thumbnail"
+                      onClick={onPick}
+                    />
+                  )}
+                  options={{
+                    accept: 'image/*',
+                    maxFiles: 1,
+                    fromSources: ['local_file_system', 'imagesearch', 'url']
+                  }}
+                  onSuccess={this.handleThumbnailUpload}
+                />
+              </div>
+            : <RaisedButton onClick={this.handleSave}>Save</RaisedButton>
+          : this.state.role === 'pending' ?
+            <div>
+              <button onClick={() => this.handleResponse('going')}>Accept</button>
+              <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
+              <button onClick={() => this.handleResponse('declined')}>Decline</button>
+            </div>
+          : this.state.role === 'declined' ?
+            <div>
+              Not Going
+              <button onClick={() => this.handleResponse('going')}>Accept</button>
+              <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
+            </div>
+          : this.state.role === 'going' ?
+            <div>
+              Attending
+              <button onClick={() => this.handleResponse('maybe')}>Maybe</button>
+              <button onClick={() => this.handleResponse('declined')}>Decline</button>
+            </div>
+          : this.state.role === 'maybe' ?
+            <div>
+              Maybe
+              <button onClick={() => this.handleResponse('going')}>Accept</button>
+              <button onClick={() => this.handleResponse('declined')}>Decline</button>
+            </div>
+          :
+            <div>Not Invited</div>
+        }
+        <br/>
+        <strong>Attendants</strong>
+        <AttendantsList attendants={this.state.attendants} history={this.props.history} uninvite={this.handleUninvite} /><br/>
+        {this.state.role === 'host' ? <FriendsList history={this.props.history} invite={this.handleInvite} /> : null}
         <CreatePost
           generatePost={this.generatePost}
           role={this.state.role}
         /> <br />
-        {this.state.posts.length ? (
+        {this.state.posts.length ?
           <Posts
             role={this.state.role}
             history={this.props.history}
@@ -333,7 +485,7 @@ export default class EventViewer extends Component {
             event={this.state.event}
             config={this.state.config}
           />
-        ) : null}
+        : null}
       </div>
     );
   }

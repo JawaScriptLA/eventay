@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Attendant from './Attendant.jsx';
-import axios from 'axios';
+import { List } from 'material-ui';
 
 export default class AttendantsList extends Component {
   constructor(props) {
@@ -10,7 +10,9 @@ export default class AttendantsList extends Component {
   render() {
     return (
       <div>
-        {this.props.attendants.map((attendant, key) => <Attendant attendant={attendant} key={key} />)}
+        <List style={{ maxHeight: '10em', overflow: 'scroll', width: '20%', border: '1px solid #d3d3d3'}}>
+          {this.props.attendants.map((attendant, key) => <Attendant attendant={attendant} key={key} id={key} uninvite={this.props.uninvite} />)}
+        </List>
       </div>
     );
   }

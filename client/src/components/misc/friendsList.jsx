@@ -4,6 +4,7 @@ import { Chip, Avatar, List, ListItem } from 'material-ui';
 import { bindActionCreators } from 'redux';
 import * as friendsActions from '../../actions/friendsActions';
 import * as userInfoActions from '../../actions/userInfoActions';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import propTypes from 'prop-types';
 
 class FriendsList extends React.Component {
@@ -37,9 +38,10 @@ class FriendsList extends React.Component {
     return (
       <ListItem
         primaryText={item.username}
+        rightIcon={this.props.invite ? <ContentAdd /> : null}
         leftAvatar={<Avatar src={item.profile_picture} />}
         onClick={
-          this.props.invite ? this.props.invite :
+          this.props.invite ? () => this.props.invite(item.username) :
           this.props.history ?
           () => this.props.history.push(`/profile/${item.username}`) :
           () => this.props.handleChatWindow(item)
