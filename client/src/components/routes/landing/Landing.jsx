@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../../../../public/reset.css';
+// import '../../../../public/reset.css';
 import styles from './landing.css';
 
 import img_profile from '../../../assets/profile.png';
@@ -18,7 +18,15 @@ export default class Landing extends Component {
       <div id='page'>
 
         <nav id='nav-top'>
-          <div className='nav about'>About</div>
+          <div className='nav about'>
+            <a
+              href="/about"
+              style={{
+                textDecoration: 'none',
+                color: 'black', paddingRight: '7%'
+              }}
+            >About</a>
+          </div>
           <div className='nav logo'>Eventé</div>
           <div className='nav login'>
             <div id='buttons'>
