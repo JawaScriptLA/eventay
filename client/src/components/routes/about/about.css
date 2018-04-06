@@ -1,0 +1,70 @@
+/* PAGE */
+#page {
+  font-family: 'Hind', sans-serif;
+}
+
+/* NAVIGATION MENU */
+
+#nav-top {
+  display: flex;
+  background-image: linear-gradient(-20deg, #00cdac 0%, #8ddad5 100%);
+  font-size: 1.2em;
+}
+
+.home {
+  flex: 1 1 auto;
+  margin-left: 2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.logo {
+  flex: 1 1 auto;
+  text-align: center;
+  font-family: Stalemate;
+  color: white;
+  font-weight: 600;
+  font-size: 3.7em;
+  margin-top: 2%;
+  margin-right: -7%;
+}
+
+.login {
+  flex: 1 1 auto;
+  text-align: right;
+  margin-right: 2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ALL CONTENT LEVELS */
+
+#levels {
+  line-height: 3em;
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-top: 2%;
+  display: grid;
+  grid-template-columns: repeat(2, [col-start] 1fr);
+  grid-gap: 40px;
+}
+
+.dev-name {
+  font-size: 1.5em;
+}
+
+.content {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dev-name, .content {
+  text-align: center;
+}
+
+.dev {
+  margin-bottom: 40px;
+}
