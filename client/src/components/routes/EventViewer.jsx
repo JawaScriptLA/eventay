@@ -321,9 +321,13 @@ export default class EventViewer extends Component {
           history={this.props.history}
         />{' '}
         <br />
-        <CreatePost generatePost={this.generatePost} /> <br />
+        <CreatePost
+          generatePost={this.generatePost}
+          role={this.state.role}
+        /> <br />
         {this.state.posts.length ? (
           <Posts
+            role={this.state.role}
             history={this.props.history}
             posts={this.state.posts}
             user={this.state.user}
