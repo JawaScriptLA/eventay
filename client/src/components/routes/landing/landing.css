@@ -1,6 +1,7 @@
 /* PAGE */
 #page {
   font-family: 'Hind', sans-serif;
+  background: linear-gradient(#ffffea, #ffffff);
 }
 
 /* NAVIGATION MENU */
@@ -59,31 +60,40 @@
 
 #profile-image > img {
   grid-column: col-start / span 1;
-  width: 100%;
+  width: 80%;
+  margin-left: 10%;
 }
 
 #profile-description {
   grid-column: col-start 2 / span 1;
+  width: 80%;
+  margin-right: 10%;
 }
 
 /* CONTENT LEVEL 2 */
 
 #event-description {
   grid-column: col-start / span 1;
+  width: 80%;
+  margin-left: 10%;
 }
 
 #event-image > img {
   grid-column: col-start 2 / span 1;
-  width: 100%;
+  width: 80%;
+  margin-right: 10%;
 }
 
 /* CONTENT LEVEL 3 */
 
 #notifs-image > img {
   grid-column: col-start / span 1;
-  width: 100%;
+  width: 80%;
+  margin-left: 10%;
 }
 
 #notifs-content {
   grid-column: col-start 2 / span 1;
+  width: 80%;
+  margin-right: 10%;
 }

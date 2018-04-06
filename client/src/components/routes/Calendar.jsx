@@ -75,10 +75,18 @@ export default class Calendar extends Component {
   }
 
   render() {
-    console.log(this.state.events);
     return (
-      <div id="calendar">
+      <div
+        id="calendar"
+        style={{
+          marginLeft: '10%',
+          marginRight: '10%',
+        }}
+      >
         <BigCalendar
+          style={{
+            fontSize: '1.5em',
+          }}
           {...this.props}
           culture="en"
           formats={formats}

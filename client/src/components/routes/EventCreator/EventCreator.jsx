@@ -173,7 +173,6 @@ export default class EventCreator extends React.Component {
   }
 
   handleNext() {
-    console.log('next button clicked');
     const { stepIndex } = this.state;
     if (stepIndex === 0) {
       this.setState({ firstNextClicked: true });
@@ -278,7 +277,6 @@ export default class EventCreator extends React.Component {
   }
 
   handleThumbnailUpload(res) {
-    console.log(res.filesUploaded);
     this.setState({ thumbnailUrl: res.filesUploaded[0].url });
   }
 
@@ -405,7 +403,6 @@ export default class EventCreator extends React.Component {
   }
 
   render() {
-    console.log('state is:', this.state);
     return (
       <div>
         <NavBar history={this.props.history} />
