@@ -4,6 +4,7 @@ import FriendsList from '../misc/friendsList.jsx';
 import NavBar from './NavBar.jsx';
 
 import Calendar from './Calendar.jsx';
+import FriendsDrawer from './FriendsDrawer.jsx';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -18,7 +19,8 @@ export default class Home extends React.Component {
         }}
       >
         <NavBar history={this.props.history} />
-        <FriendsList history={this.props.history} />
+        {/* <FriendsList history={this.props.history} /> */}
+        <FriendsDrawer history={this.props.history} />
         <Calendar history={this.props.history} />
       </div>
     );
