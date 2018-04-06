@@ -53,16 +53,20 @@ module.exports = {
   },
   updateEvent: async (data) => {
     try {
+      console.log('data:', data);
       let fields = Object.entries(data)
         .map(([ key, value ]) =>
           typeof value === 'string' ?
-            `${key} = '${value}'`
+            `${key}='${value}'`
           :
-            `${key} = ${value}`
+            `${key}=${value}`
         )
-        .join(', ');
-      await db.queryAsync(`UPDATE events SET ${fields} WHERE event_id=${data.event_id}`);
+        .join(',');
+        console.log('fields:', fields)
+      await db.queryAsync(`UPDATE events SET ${fields} WHERE id=${data.id}`);
+      console.log('put');
     } catch (err) {
+      console.log('err:', err);
       throw err;
     }
   },
