@@ -12,13 +12,8 @@ export default class Attendant extends Component {
         <ListItem
           primaryText={this.props.attendant.username}
           leftAvatar={<Avatar src={this.props.attendant.profile_picture} />}
-          onClick={
-            this.props.invite ? this.props.invite :
-            this.props.history ?
-            () => this.props.history.push(`/profile/${this.props.attendant.username}`) :
-            () => this.props.handleChatWindow(this.props.attendant)
-          }
-          value={this.props.attendant.username}
+          onClick={() => this.props.uninvite(this.props.attendant.username)}
+          value={`${this.props.attendant.username} ${this.props.attendant.status}`}
           key={this.props.id}
         />
       </div>
