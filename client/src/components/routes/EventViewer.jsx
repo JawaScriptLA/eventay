@@ -3,10 +3,13 @@ import axios from 'axios';
 import NavBar from './NavBar.jsx';
 import AttendantsList from '../misc/AttendantsList.jsx';
 import CreatePost from '../posts/CreatePost.jsx';
-import { Avatar } from 'material-ui';
+import { Avatar, Dialog } from 'material-ui';
 import Posts from '../posts/Posts.jsx';
 import FriendsList from '../misc/friendsList.jsx';
 import { convertTime } from '../../../../utils/utils.js';
+import ReactFilestack from 'filestack-react';
+import filestack from '../../../config.js';
+import RaisedButton from 'material-ui/RaisedButton';
 
 export default class EventViewer extends Component {
   constructor(props) {
@@ -281,6 +284,19 @@ export default class EventViewer extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  handleThumbnailUpload(res) {
+    let url = res.filesUploaded[0].url;
+    axios.put('/api/event', {
+      thumbnail: url,
+      id: this.state.event.id
+    }, this.state.config)
+      .then(() => {
+        this.state.event.thumbnail = url;
+        this.setState({ event: event });
+      })
+      .catch((err) => console.error(err));
+  }
+
   render() {
     if (!this.state.event) {
       return <div>This is not an event</div>;
@@ -294,13 +310,12 @@ export default class EventViewer extends Component {
         <NavBar history={this.props.history} />
         {this.state.mode === 'view' ?
           <h2>{this.state.event.title}</h2>
-        : <input
+        : <span><input
             onChange={this.handleChange}
             type="text"
             name="changeTitle"
             value={this.state.changeTitle}
-          ></input>}
-        <br/>
+          ></input><br/></span>}
         {this.state.event.startTime ?
           this.state.mode === 'view' ?
             this.state.event.startTime === this.state.event.endTime ?
@@ -387,7 +402,27 @@ export default class EventViewer extends Component {
         <br/>
         {
           this.state.role === 'host' ?
-            this.state.mode === 'view' ? <button onClick={this.handleEdit}>Edit</button> : <button onClick={this.handleSave}>Save</button>
+            this.state.mode === 'view' ?
+              <div>
+                <button onClick={this.handleEdit}>Edit</button>
+                <ReactFilestack
+                  apikey={filestack.API_KEY2}
+                  buttonText="Update event thumbnail"
+                  render={({ onPick }) => (
+                    <RaisedButton
+                      label="Update Event Thumbnail"
+                      onClick={onPick}
+                    />
+                  )}
+                  options={{
+                    accept: 'image/*',
+                    maxFiles: 1,
+                    fromSources: ['local_file_system', 'imagesearch', 'url']
+                  }}
+                  onSuccess={this.handleThumbnailUpload}
+                />
+              </div>
+            : <button onClick={this.handleSave}>Save</button>
           : this.state.role === 'pending' ?
             <div>
               <button onClick={() => this.handleResponse('going')}>Accept</button>
