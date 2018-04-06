@@ -31,9 +31,10 @@ class CreatePost extends React.Component {
         children={
           <div>
             <TextField
+              disabled={this.props.role === 'stranger'}
               rows={1}
               rowsMax={4}
-              hintText='Say something...'
+              hintText={(this.props.role !== 'stranger') ? 'Say something...': 'RSVP to post something...'}
               name='postText'
               fullWidth={true}
               value={this.state.postText}

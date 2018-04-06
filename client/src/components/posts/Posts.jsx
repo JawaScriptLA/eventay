@@ -32,6 +32,7 @@ class Posts extends React.Component {
             </CardText>
             <Divider />
             <Comments
+              role={this.props.role}
               history={this.props.history}
               postId={post.post.id}
               comments={post.comments}

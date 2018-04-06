@@ -11,6 +11,7 @@ module.exports = {
           WHERE user_id=${user_id} AND event_id=${event_id}
         ) RETURNING *
       `);
+      console.log('data', data.rows);
       return data;
     } catch (err) {
       throw err;
