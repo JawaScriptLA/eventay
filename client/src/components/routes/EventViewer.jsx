@@ -3,7 +3,7 @@ import axios from 'axios';
 import NavBar from './NavBar.jsx';
 import AttendantsList from '../misc/AttendantsList.jsx';
 import CreatePost from '../posts/CreatePost.jsx';
-import { Avatar, Dialog } from 'material-ui';
+import { Avatar, Dialog, Paper, TextField, Divider } from 'material-ui';
 import Posts from '../posts/Posts.jsx';
 import FriendsList from '../misc/friendsList.jsx';
 import { convertTime } from '../../../../utils/utils.js';
@@ -42,6 +42,7 @@ export default class EventViewer extends Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleThumbnailUpload = this.handleThumbnailUpload.bind(this);
   }
 
   componentWillMount() {
@@ -292,7 +293,7 @@ export default class EventViewer extends Component {
     }, this.state.config)
       .then(() => {
         this.state.event.thumbnail = url;
-        this.setState({ event: event });
+        this.setState({ event: this.state.event });
       })
       .catch((err) => console.error(err));
   }
@@ -310,101 +311,118 @@ export default class EventViewer extends Component {
         <NavBar history={this.props.history} />
         {this.state.mode === 'view' ?
           <h2>{this.state.event.title}</h2>
-        : <span><input
+        : <span><TextField
             onChange={this.handleChange}
             type="text"
             name="changeTitle"
             value={this.state.changeTitle}
-          ></input><br/></span>}
+          /><br/></span>}
+          {
+            this.state.mode === 'view' ?
+              <p>{this.state.event.description}</p> :
+              <TextField
+                onChange={this.handleChange}
+                type="text"
+                name="changeDescription"
+                value={this.state.changeDescription}
+              />
+          }
+        <Paper>
+          <div>
+            {this.state.event && this.state.event.thumbnail ? <Avatar size={200} src={this.state.event.thumbnail} /> : null}
+            {this.state.host ? <span><p><em>Hosted by: </em>{this.state.host.username}</p></span> : null}
+          </div>
+          <Divider/>
         {this.state.event.startTime ?
           this.state.mode === 'view' ?
             this.state.event.startTime === this.state.event.endTime ?
               this.state.event.startTime
             : `${this.state.event.startTime} - ${this.state.event.endTime}`
-          : <input
+          : <TextField
               onChange={this.handleChange}
               type="text"
               name="changeStartTime"
               value={this.state.changeStartTime}
-            ></input>
+            />
         : 'Loading...'}
         {this.state.mode === 'edit' ? ' - ' : null}
         {this.state.mode === 'edit' ?
-          <input
+          <TextField
             onChange={this.handleChange}
             type="text"
             name="changeEndTime"
             value={this.state.changeEndTime}
-          ></input> : null}
+          /> : null}
         <br/>
         {this.state.event.startMonth ?
           this.state.mode === 'view' ?
             this.state.event.startMonth === this.state.event.endMonth ?
               this.state.event.startMonth
             : `${this.state.event.startMonth} - ${this.state.event.endMonth}`
-          : <input
+          : <TextField
               onChange={this.handleChange}
               type="text"
               name="changeStartMonth"
               value={this.state.changeStartMonth}
-            ></input>
+            />
         : null}
         {this.state.mode === 'edit' ? ' - ' : null}
         {this.state.mode === 'edit' ?
-          <input
+          <TextField
             onChange={this.handleChange}
             type="text"
             name="changeEndMonth"
             value={this.state.changeEndMonth}
-          ></input> : null}
+          /> : null}
         <br/>
         {this.state.event.startDate ?
           this.state.mode === 'view' ?
             this.state.event.startDate === this.state.event.endDate ?
               this.state.event.startDate
             : `${this.state.event.startDate} - ${this.state.event.endDate}`
-          : <input
+          : <TextField
               onChange={this.handleChange}
               type="text"
               name="changeStartDate"
               value={this.state.changeStartDate}
-            ></input>
+            />
         : null}
         {this.state.mode === 'edit' ? ' - ' : null}
         {this.state.mode === 'edit' ?
-          <input
+          <TextField
             onChange={this.handleChange}
             type="text"
             name="changeEndDate"
             value={this.state.changeEndDate}
-          ></input> : null}
+          /> : null}
         <br/>
         {this.state.event.startYear ?
           this.state.mode === 'view' ?
             this.state.event.startYear === this.state.event.endYear ?
               this.state.event.startYear
             : `${this.state.event.startYear} - ${this.state.event.endYear}`
-          : <input
+          : <TextField
               onChange={this.handleChange}
               type="text"
               name="changeStartYear"
               value={this.state.changeStartYear}
-            ></input>
+            />
         : null}
         {this.state.mode === 'edit' ? ' - ' : null}
         {this.state.mode === 'edit' ?
-          <input
+          <TextField
             onChange={this.handleChange}
             type="text"
             name="changeEndYear"
             value={this.state.changeEndYear}
-          ></input> : null}
+          /> : null}
+        </Paper>
         <br/>
         {
           this.state.role === 'host' ?
             this.state.mode === 'view' ?
               <div>
-                <button onClick={this.handleEdit}>Edit</button>
+                <RaisedButton onClick={this.handleEdit}>Edit</RaisedButton>
                 <ReactFilestack
                   apikey={filestack.API_KEY2}
                   buttonText="Update event thumbnail"
@@ -422,7 +440,7 @@ export default class EventViewer extends Component {
                   onSuccess={this.handleThumbnailUpload}
                 />
               </div>
-            : <button onClick={this.handleSave}>Save</button>
+            : <RaisedButton onClick={this.handleSave}>Save</RaisedButton>
           : this.state.role === 'pending' ?
             <div>
               <button onClick={() => this.handleResponse('going')}>Accept</button>
@@ -451,21 +469,7 @@ export default class EventViewer extends Component {
             <div>Not Invited</div>
         }
         <br/>
-        <div>
-          {this.state.event ? <Avatar size={100} src={this.state.event.thumbnail} /> : null}
-          {this.state.host ? <p>{this.state.host.username}</p> : null}
-        </div>
-        {
-          this.state.mode === 'view' ?
-            <p>{this.state.event.description}</p> :
-            <input
-              onChange={this.handleChange}
-              type="text"
-              name="changeDescription"
-              value={this.state.changeDescription}
-            ></input>
-        }
-        <br/>
+        <strong>Attendants</strong>
         <AttendantsList attendants={this.state.attendants} history={this.props.history} uninvite={this.handleUninvite} /><br/>
         {this.state.role === 'host' ? <FriendsList history={this.props.history} invite={this.handleInvite} /> : null}
         <CreatePost
