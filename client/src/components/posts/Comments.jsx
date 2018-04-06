@@ -20,7 +20,6 @@ class Comment extends React.Component {
   handlePostComment(e) {
     if (e.key === 'Enter' && !!this.state.inputTextComment.replace(/\s/g,'')) {
       let bodyToSend = this.state.inputTextComment.replace("'", "''");
-      console.log('here', this.props);
       axios.post(`/api/post`, {
         body: bodyToSend,
         user_id: this.props.user.id,

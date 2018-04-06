@@ -57,7 +57,6 @@ export default class EventViewer extends Component {
             this.state.config
           )
           .then(res => {
-            console.log(res.data[0]);
             res.data[0].start_time = res.data[0].start_time
               .replace('T', ' ')
               .substring(0, res.data[0].start_time.length - 5);

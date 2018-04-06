@@ -75,7 +75,6 @@ export default class Calendar extends Component {
   }
 
   render() {
-    console.log(this.state.events);
     return (
       <div
         id="calendar"
