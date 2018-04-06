@@ -14,13 +14,13 @@ const insert = async () => {
   try {
     await db.queryAsync(`
       INSERT INTO users (username, profile_picture, bio) VALUES ('antonio',
-      'http://baypoint.academy/wp-content/uploads/2017/01/dummy-profile-pic-300x300.jpg', 'I love lamp');
+      'https://cdn.filestackcontent.com/F19a0BNQTCWJojbCvkRW', 'Nice to meet you!');
       INSERT INTO users (username, profile_picture, bio) VALUES ('alex',
-      'http://baypoint.academy/wp-content/uploads/2017/01/dummy-profile-pic-300x300.jpg', 'I love lamp');
+      'https://cdn.filestackcontent.com/hRkRlioRWiWaBNCXA3qg', 'Nice to meet you!');
       INSERT INTO users (username, profile_picture, bio) VALUES ('will',
-      'http://baypoint.academy/wp-content/uploads/2017/01/dummy-profile-pic-300x300.jpg', 'I love lamp');
+      'https://cdn.filestackcontent.com/jClQEddxQh2RP6GC14UC', 'Nice to meet you!');
       INSERT INTO users (username, profile_picture, bio) VALUES ('jason',
-      'http://baypoint.academy/wp-content/uploads/2017/01/dummy-profile-pic-300x300.jpg', 'I love lamp');
+      'https://cdn.filestackcontent.com/yKHFpKkGTVu31lJgqoli', 'Nice to meet you!');
       
       INSERT INTO friends (status, user_id, target_id) VALUES ('accepted',
       (SELECT id from users where username = 'antonio'), (SELECT id from users where username = 'alex'));
@@ -66,7 +66,7 @@ const insert = async () => {
       ('going', 'host', (SELECT id FROM users WHERE username = 'alex'), 5, (SELECT id FROM users WHERE username = 'alex'));
 
       INSERT INTO events (title, description, start_time, end_time, host_id, publicity) VALUES
-      ('Rock climbing!', 'Rock climbing!', '2018-04-09 07:00:00', '2018-04-09 09:00:00', 
+      ('Rock climbing', 'Rock climbing', '2018-04-09 07:00:00', '2018-04-09 09:00:00', 
       (SELECT id from users where username = 'jason'), 'true');
       INSERT INTO attendants (status, access, user_id, event_id, invitor_id) VALUES
       ('going', 'host', (SELECT id FROM users WHERE username = 'jason'), 6, (SELECT id FROM users WHERE username = 'jason'));
@@ -78,10 +78,52 @@ const insert = async () => {
       ('going', 'host', (SELECT id FROM users WHERE username = 'jason'), 7, (SELECT id FROM users WHERE username = 'jason'));
 
       INSERT INTO events (title, description, start_time, end_time, host_id, publicity) VALUES
-      ('Rock climbing!', 'Rock climbing!', '2018-04-11 07:00:00', '2018-04-11 09:00:00', 
+      ('Rock climbing', 'Rock climbing', '2018-04-11 07:00:00', '2018-04-11 09:00:00', 
       (SELECT id from users where username = 'jason'), 'true');
       INSERT INTO attendants (status, access, user_id, event_id, invitor_id) VALUES
       ('going', 'host', (SELECT id FROM users WHERE username = 'jason'), 8, (SELECT id FROM users WHERE username = 'jason'));
+
+      INSERT INTO events (title, description, start_time, end_time, host_id, publicity) VALUES
+      ('Add seed data/final testing', 'Add seed data/final testing', '2018-04-05 09:00:00', '2018-04-05 20:00:00', 
+      (SELECT id from users where username = 'jason'), 'true');
+      INSERT INTO attendants (status, access, user_id, event_id, invitor_id) VALUES
+      ('going', 'host', (SELECT id FROM users WHERE username = 'jason'), 9, (SELECT id FROM users WHERE username = 'jason'));
+
+      INSERT INTO events (title, description, start_time, end_time, host_id, publicity) VALUES
+      ('Built out tests', 'Built out tests', '2018-04-04 09:00:00', '2018-04-04 20:00:00', 
+      (SELECT id from users where username = 'jason'), 'true');
+      INSERT INTO attendants (status, access, user_id, event_id, invitor_id) VALUES
+      ('going', 'host', (SELECT id FROM users WHERE username = 'jason'), 10, (SELECT id FROM users WHERE username = 'jason'));
+
+      INSERT INTO events (title, description, start_time, end_time, host_id, publicity) VALUES
+      ('Front end styling/begin testing', 'Front end styling/begin testing', '2018-04-03 09:00:00', '2018-04-03 20:00:00', 
+      (SELECT id from users where username = 'jason'), 'true');
+      INSERT INTO attendants (status, access, user_id, event_id, invitor_id) VALUES
+      ('going', 'host', (SELECT id FROM users WHERE username = 'jason'), 11, (SELECT id FROM users WHERE username = 'jason'));
+
+      INSERT INTO events (title, description, start_time, end_time, host_id, publicity) VALUES
+      ('Start applying to jobs', 'Start applying to jobs', '2018-04-16 00:00:00', '2018-04-16 00:00:00', 
+      (SELECT id from users where username = 'jason'), 'true');
+      INSERT INTO attendants (status, access, user_id, event_id, invitor_id) VALUES
+      ('going', 'host', (SELECT id FROM users WHERE username = 'jason'), 12, (SELECT id FROM users WHERE username = 'jason'));
+
+      INSERT INTO events (title, description, start_time, end_time, host_id, publicity) VALUES
+      ('Vacation', 'Vacation', '2018-04-18 00:00:00', '2018-04-21 00:00:00', 
+      (SELECT id from users where username = 'jason'), 'true');
+      INSERT INTO attendants (status, access, user_id, event_id, invitor_id) VALUES
+      ('going', 'host', (SELECT id FROM users WHERE username = 'jason'), 13, (SELECT id FROM users WHERE username = 'jason'));
+
+      INSERT INTO events (title, description, start_time, end_time, host_id, publicity) VALUES
+      ('Career week', 'Career week', '2018-04-09 00:00:00', '2018-04-13 00:00:00', 
+      (SELECT id from users where username = 'jason'), 'true');
+      INSERT INTO attendants (status, access, user_id, event_id, invitor_id) VALUES
+      ('going', 'host', (SELECT id FROM users WHERE username = 'jason'), 14, (SELECT id FROM users WHERE username = 'jason'));
+
+      INSERT INTO events (title, description, start_time, end_time, host_id, publicity) VALUES
+      ('Hack Reactor Graduation!', 'Hack Reactor Graduation!', '2018-04-13 00:00:00', '2018-04-13 00:00:00', 
+      (SELECT id from users where username = 'jason'), 'true');
+      INSERT INTO attendants (status, access, user_id, event_id, invitor_id) VALUES
+      ('going', 'host', (SELECT id FROM users WHERE username = 'jason'), 15, (SELECT id FROM users WHERE username = 'jason'));
     `);
 
     var arr = [
