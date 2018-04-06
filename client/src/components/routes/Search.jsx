@@ -123,14 +123,14 @@ export default class Search extends Component {
   render() {
     return (
       <div
-        style={{
-          float: 'none',
-          maxWidth: 800,
-          marginRight: 'auto',
-          marginLeft: 'auto',
-          marginTop: 'auto',
-          marginBottom: 'auto'
-        }}
+          style={{
+            float: 'none',
+            maxWidth: 800,
+            marginRight: 'auto',
+            marginLeft: 'auto',
+            marginTop: 'auto',
+            marginBottom: 'auto'
+          }}
       >
         <SearchBar
           onChange={e => this.handleSearchInput(e)}

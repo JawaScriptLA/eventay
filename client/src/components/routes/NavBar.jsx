@@ -275,6 +275,9 @@ export default class NavBar extends Component {
     return (
       <div id="nav-bar">
         <AppBar
+          style={{
+            backgroundImage: 'linear-gradient(-20deg, #00cdac 0%, #8ddad5 100%)',
+          }}
           title={
             <span
               style={{

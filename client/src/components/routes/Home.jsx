@@ -12,7 +12,11 @@ export default class Home extends React.Component {
 
   render() {
     return (
-      <div>
+      <div
+        style={{
+          background: 'linear-gradient(#ffffea, #ffffff)',
+        }}
+      >
         <NavBar history={this.props.history} />
         <FriendsList history={this.props.history} />
         <Calendar history={this.props.history} />
