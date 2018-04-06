@@ -61,7 +61,7 @@ module.exports = {
             `${key} = ${value}`
         )
         .join(', ');
-      await db.queryAsync(`UPDATE events SET ${fields} WHERE user_id=${data.user_id}`);
+      await db.queryAsync(`UPDATE events SET ${fields} WHERE event_id=${data.event_id}`);
     } catch (err) {
       throw err;
     }

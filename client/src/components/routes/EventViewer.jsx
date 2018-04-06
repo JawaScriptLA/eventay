@@ -239,20 +239,44 @@ export default class EventViewer extends Component {
   }
 
   handleSave() {
-    this.state.event.title = this.state.changeTitle;
-    this.state.event.description = this.state.changeDescription;
-    this.state.event.startTime = this.state.changeStartTime;
-    this.state.event.endTime = this.state.changeEndTime;
-    this.state.event.startMonth = this.state.changeStartMonth;
-    this.state.event.endMonth = this.state.changeEndMonth;
-    this.state.event.startDate = this.state.changeStartDate;
-    this.state.event.endDate = this.state.changeEndDate;
-    this.state.event.startYear = this.state.changeStartYear;
-    this.state.event.endYear = this.state.changeEndYear;
-    this.setState({
-      mode: 'view',
-      event: this.state.event
-    });
+    let startTime = '';
+    let add = 0;
+    let hour = this.state.changeStartTime.substring(0, 2);
+    if (this.state.changeStartTime.substring(6, 8) === 'pm') {
+      if (hour !== 12) {
+        add = 12;
+      }
+    } else {
+      if (hour === 12) {
+        hour = '00';
+      }
+    }
+
+    let endTime = '';
+    // 2018-05-07T09:00:00.000Z
+    axios.put('/api/event', {
+      title: this.state.changeTitle,
+      description: this.state.changeDescription,
+      start_time: startTime,
+      end_time: endTime
+    }, this.state.config)
+      .then(() => {
+        this.state.event.title = this.state.changeTitle;
+        this.state.event.description = this.state.changeDescription;
+        this.state.event.startTime = this.state.changeStartTime;
+        this.state.event.endTime = this.state.changeEndTime;
+        this.state.event.startMonth = this.state.changeStartMonth;
+        this.state.event.endMonth = this.state.changeEndMonth;
+        this.state.event.startDate = this.state.changeStartDate;
+        this.state.event.endDate = this.state.changeEndDate;
+        this.state.event.startYear = this.state.changeStartYear;
+        this.state.event.endYear = this.state.changeEndYear;
+        this.setState({
+          mode: 'view',
+          event: this.state.event
+        });
+      })
+      .catch((err) => console.error(err));
   }
 
   handleChange(e) {
